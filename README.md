@@ -1,9 +1,13 @@
 coding
 ===
 coding is fun.
-coding needs practise everyday.
+
+coding is a kind of  philosophy.
+
 coding leads to the peace of mind.
-coding is a philosophy.
+
+coding needs practice everyday.
+
 let's coding!
 
 it is a repository collects all the small piece of practising codes for reference.
