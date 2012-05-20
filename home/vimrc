@@ -1,0 +1,6 @@
+source $VIMRUNTIME/vimrc_example.vim
+set nobackup
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set expandtab
