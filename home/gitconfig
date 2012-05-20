@@ -1,13 +1,15 @@
 [user]
-        name = Evan Liu
-        email = hmisty@gmail.com
+    name = Evan Liu
+    email = hmisty@gmail.com
 
 [alias]
-	ad = add
-        st = status
-        ci = commit
-        br = branch
-        co = checkout
-        df = diff
-        lg = log -p
+    ad = add
+    st = status
+    ci = commit
+    br = branch
+    co = checkout
+    df = diff
+    lg = log -p
+    ps = push
+    pl = pull
 
