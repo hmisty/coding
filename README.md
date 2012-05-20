@@ -20,6 +20,10 @@ perl
 erlang
 ---
 
+home
+---
+the common configuration files for ~
+
 the MIT license
 ---
 opyright (c) 2012
