@@ -1,3 +1,17 @@
+%% hmisty 20120520
+%% usage:
+%% term 1:
+%%      $ erl
+%%      > c(chat_server1).
+%%      > chat_server1:start(4000).
+%% term 2:
+%%      $ nc localhost 4000
+%%      id a
+%%      m a b hi i am alice
+%% term 3:
+%%      $ nc localhost 4000
+%%      id b
+%%      m b a hi i am bob
 -module(chat_server1).
 -export([start/1]).
 
@@ -63,9 +77,15 @@ handle(Bytes, TabIds, PidWriter) ->
         ["m",From,To|Msgs] ->
             Msg = string:join(Msgs, " "),
             io:format("got msg:~p from:~p to:~p~n", [Msg, From, To]),
-            [{To,PidTo}|_] = ets:lookup(TabIds, To),
-            PidTo ! Bytes,
-            {ok, "got your msg: " ++ Msg ++ ".\n"};
+            case ets:lookup(TabIds, To) of
+                [{To,PidTo}|_] ->
+                    io:format("ets lookup ~p successfully~n", [To]),
+                    PidTo ! Bytes,
+                    {ok, "successfully sent your msg: " ++ Msg ++ ".\n"};
+                _ ->
+                    io:format("ets lookup ~p failed~n", [To]),
+                    {error, "sent failed, " ++ To ++ " is not online.\n"}
+            end;
         _ ->
             io:format("got unknown:~p~n", [Parts]),
             {error, "unknown command\n"}
