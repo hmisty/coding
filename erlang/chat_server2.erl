@@ -1,21 +1,15 @@
 %% hmisty
 %%
-%% the distributed chat server
+%% a distributed chat server
 %%
 %% usage:
 %% host 1:
 %%      $ erl -name a@hostip1 -setcookie chats1234
-%%      > cluster0:start().
-%%
-%%      > c(chat_server2).
 %%      > chat_server2:start(4000).
 %%
 %% host 2:
 %%      $ erl -name b@hostip2 -setcookie chats1234
-%%      > cluster0:start().
-%%      > cluster0:join('a@hostip1').
-%%
-%%      > c(chat_server2).
+%%      > cluster2:join('a@hostip1').
 %%      > chat_server2:start(4000).
 %%
 %% client 1:
