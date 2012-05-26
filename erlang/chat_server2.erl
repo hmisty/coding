@@ -98,13 +98,12 @@ handle(Bytes, PidWriter) ->
             case whereis(PidName) of
                 undefined ->
                     io:format("~p not found in local node~n", [PidName]),
-                    case cluster0:find(PidName) of
-                        notfound ->
+                    case cluster2:send(PidName, Bytes) of
+                        undefined ->
                             io:format("~p not found in the cluster~n", [PidName]),
                             {error, "sent failed, " ++ To ++ " is not online.\n"};
-                        [Node] ->
-                            io:format("found ~p in node ~p, send out ~p~n", [PidName, Node, Bytes]),
-                            cluster0:send(Node, PidName, Bytes),
+                        _ ->
+                            io:format("found ~p, send out ~p~n", [PidName, Bytes]),
                             {ok, "successfully sent your msg (via cluster): " ++ Msg ++ ".\n"}
                     end;
                 PidTo ->
