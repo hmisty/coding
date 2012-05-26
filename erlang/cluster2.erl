@@ -19,7 +19,7 @@
 %%      > cluster2:send(area, {circle, 3}).
 %%
 -module(cluster2).
--export([join/1, list/0, find/1, send/3,
+-export([join/1, list/0, find/1, send/2,
         rpc_nodes/0, rpc_lookup/1, rpc_send/2]).
 
 %% on the local node
