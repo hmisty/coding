@@ -35,9 +35,13 @@ listen(Port) ->
     accept(Listen).
 
 accept(Listen) ->
-    {ok, Socket} = gen_tcp:accept(Listen),
-    io:format("server opened socket:~p~n", [Socket]),
-    spawn(fun() -> loop(Socket) end),
+    case gen_tcp:accept(Listen) of
+        {ok, Socket} -> 
+            %io:format("server opened socket:~p~n", [Socket]),
+            spawn(fun() -> loop(Socket) end);
+        {error, Reason} ->
+            io:format("gen_tcp:accept error ~p~n", [Reason])
+    end,
     accept(Listen).
 
 loop(Socket) ->
@@ -57,7 +61,8 @@ loop(Socket) ->
             gen_tcp:send(Socket, StrBytes),
             loop(Socket);
         {error, closed} ->
-            io:format("socket closed. exit.~n")
+            %io:format("socket closed. exit.~n"),
+            exit
     end.
 
 loop_writer(Socket) ->
@@ -68,14 +73,14 @@ loop_writer(Socket) ->
     end.
 
 handle(Bytes, PidWriter) ->
-    %% Bytes is not marshalled term
-    %% string is just a list of int()
+    % Bytes is not marshalled term
+    % string is just a list of int()
     Str = binary_to_list(Bytes), 
     StrChomped = string:strip(string:strip(Str, both, $\n)),
     Parts = string:tokens(StrChomped, " "),
     Reply = case Parts of 
         ["id",Id|_] ->
-            io:format("got id:~p~n", [Id]),
+            %io:format("got id:~p~n", [Id]),
             PidName = list_to_atom(Id),
             case whereis(PidName) of
                 undefined ->
@@ -85,20 +90,20 @@ handle(Bytes, PidWriter) ->
                     register(PidName, PidWriter)
             end,
             {ok, "welcome, " ++ Id ++ ".\n"};
-        ["m",From,To|Msgs] ->
+        ["m",_From,To|Msgs] ->
             Msg = string:join(Msgs, " "),
-            io:format("got msg:~p from:~p to:~p~n", [Msg, From, To]),
+            %io:format("got msg:~p from:~p to:~p~n", [Msg, From, To]),
             PidName = list_to_atom(To),
             case cluster2:send(PidName, Bytes) of
                 undefined ->
-                    io:format("~p not found in the cluster~n", [PidName]),
+                    %io:format("~p not found in the cluster~n", [PidName]),
                     {error, "sent failed, " ++ To ++ " is not online.\n"};
                 _ ->
-                    io:format("found ~p, send out ~p~n", [PidName, Bytes]),
+                    %io:format("found ~p, send out ~p~n", [PidName, Bytes]),
                     {ok, "successfully sent your msg: " ++ Msg ++ ".\n"}
             end;
         _ ->
-            io:format("got unknown:~p~n", [Parts]),
+            %io:format("got unknown:~p~n", [Parts]),
             {error, "unknown command\n"}
     end,
     Reply.
