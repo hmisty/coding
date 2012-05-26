@@ -2,7 +2,7 @@
 -export([run/1, start/3, stop/1, counter/0]).
 
 run(N) ->
-    start(localhost, 4000, N),
+    start('192.168.0.1', 4000, N),
     wait(10, N),
     stop(N).
 
@@ -72,9 +72,13 @@ count({Nok, Nerror}) ->
     end.
 
 connect(Host, Port, N) ->
-    {ok,Socket} = gen_tcp:connect(Host, Port, [binary, {packet, 0}]),
-    ok = gen_tcp:send(Socket, "id " ++ integer_to_list(N) ++ "\n"),
-    receive_data(Socket).
+    case gen_tcp:connect(Host, Port, [binary, {packet, 0}]) of
+        {ok,Socket} ->
+            ok = gen_tcp:send(Socket, "id " ++ integer_to_list(N) ++ "\n"),
+            receive_data(Socket);
+        {error,Reason} ->
+            counter ! {text, "error cannot connect"}
+    end.
 
 receive_data(Socket) ->
     receive
