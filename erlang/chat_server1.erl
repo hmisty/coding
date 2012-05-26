@@ -2,8 +2,8 @@
 %% usage:
 %% term 1:
 %%      $ erl
-%%      > c(chat_server2).
-%%      > chat_server2:start(4000).
+%%      > c(chat_server1).
+%%      > chat_server1:start(4000).
 %% term 2:
 %%      $ nc localhost 4000
 %%      id a
