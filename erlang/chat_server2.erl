@@ -4,15 +4,19 @@
 %%
 %% usage:
 %% host 1:
-%%      $ erl -name s1@hostip1 -setcookie chats1234
-%%      > c(?MODULE).
-%%      > ?MODULE:start(4000).
+%%      $ erl -name a@hostip1 -setcookie chats1234
+%%      > cluster0:start().
+%%
+%%      > c(chat_server2).
+%%      > chat_server2:start(4000).
 %%
 %% host 2:
-%%      $ erl -name s1@hostip2 -setcookie chats1234
-%%      > c(?MODULE).
-%%      > ?MODULE:start(4000).
-%%      > ?MODULE:join_cluster(s1@hostip1).
+%%      $ erl -name b@hostip2 -setcookie chats1234
+%%      > cluster0:start().
+%%      > cluster0:join('a@hostip1').
+%%
+%%      > c(chat_server2).
+%%      > chat_server2:start(4000).
 %%
 %% client 1:
 %%      $ nc hostip1 4000
@@ -24,96 +28,10 @@
 %%      id b
 %%      m b a hi i am bob
 -module(chat_server2).
--export([start/1, start_cmgr/0, join_cluster/1, exit_cluster/0, cluster_whereis/1, cluster_send/3, join/1, exit/1, lookup/1, cluster/0, cluster/1, send/2]).
+-export([start/1]).
 
 start(Port) ->
-    spawn(fun() -> listen(Port) end),
-    start_cmgr().
-
-start_cmgr() ->
-    register(cmgr, spawn(fun() -> init_cluster_mgr() end)).
-
-%% the cluster client
-join_cluster(PeerNode) ->
-    {ok, Nodes} = rpc:call(PeerNode, ?MODULE, join, [node()]),
-    cluster(Nodes),
-    OtherNodes = lists:filter(fun(N)->(N/=PeerNode) and (N/=node()) end, Nodes),
-    lists:foreach(fun(N)->rpc:call(N, ?MODULE, join, [node()]) end, OtherNodes).
-
-exit_cluster() ->
-    Nodes = cluster(),
-    OtherNodes = lists:filter(fun(N)->N/=node() end, Nodes),
-    lists:foreach(fun(N)->rpc:call(N, ?MODULE, exit, [node()]) end, OtherNodes),
-    cluster([node()]).
-
-cluster_whereis(PidName) ->
-    Nodes = cluster(),
-    lists:filter(fun(N)-> found == rpc:call(N, ?MODULE, lookup, [PidName]) end, Nodes).
-
-cluster_send(Node, PidName, Message) ->
-    rpc:call(Node, ?MODULE, send, [PidName, Message]).
-
-%% the cluster mgr
-join(Node) ->
-    rpc(cmgr, {join, Node}).
-
-exit(Node) ->
-    rpc(cmgr, {exit, Node}).
-
-lookup(PidName) ->
-    rpc(cmgr, {lookup, PidName}).
-
-cluster(Nodes) ->
-    rpc(cmgr, {cluster, Nodes}).
-
-cluster() ->
-    rpc(cmgr, {cluster}).
-
-send(PidName, Message) ->
-    rpc(PidName, Message).
-
-rpc(PidName, Message) ->
-    PidName ! {self() , Message},
-    receive
-        Reply ->
-            Reply
-    end.
-
-init_cluster_mgr() ->
-    put(nodes, [node()]),
-    cluster_mgr().
-
-cluster_mgr() ->
-    receive
-        {From, {join, Node}} ->
-            io:format("cluster_mgr received join from ~p~n", [Node]),
-            Nodes = get(nodes),
-            NodesNew = lists:filter(fun(X)->X/=Node end, Nodes) ++ [Node],
-            put(nodes, NodesNew),
-            From ! {ok, NodesNew};
-        {From, {exit, Node}} ->
-            io:format("cluster_mgr received exit from ~p~n", [Node]),
-            Nodes = get(nodes),
-            NodesNew = lists:filter(fun(X)->X/=Node end, Nodes),
-            put(nodes, NodesNew),
-            From ! {ok, NodesNew};
-        {From, {lookup, PidName}} ->
-            io:format("cluster_mgr received lookup for ~p~n", [PidName]),
-            From ! case whereis(PidName) of
-                undefined ->
-                    notfound;
-                _ ->
-                    found
-            end;
-        {From, {cluster, Nodes}} ->
-            io:format("cluster_mgr received set cluster to ~p~n", [Nodes]),
-            put(nodes, Nodes),
-            From ! ok;
-        {From, {cluster}} ->
-            io:format("cluster_mgr received get cluster~n"),
-            From ! get(nodes)
-    end,
-    cluster_mgr().
+    spawn(fun() -> listen(Port) end).
 
 %% the chat server
 listen(Port) ->
@@ -179,8 +97,16 @@ handle(Bytes, PidWriter) ->
             PidName = list_to_atom(To),
             case whereis(PidName) of
                 undefined ->
-                    io:format("~p not found~n", [PidName]),
-                    {error, "sent failed, " ++ To ++ " is not online.\n"};
+                    io:format("~p not found in local node~n", [PidName]),
+                    case cluster0:find(PidName) of
+                        notfound ->
+                            io:format("~p not found in the cluster~n", [PidName]),
+                            {error, "sent failed, " ++ To ++ " is not online.\n"};
+                        [Node] ->
+                            io:format("found ~p in node ~p, send out ~p~n", [PidName, Node, Bytes]),
+                            cluster0:send(Node, PidName, Bytes),
+                            {ok, "successfully sent your msg (via cluster): " ++ Msg ++ ".\n"}
+                    end;
                 PidTo ->
                     io:format("found ~p, send out ~p~n", [PidName, Bytes]),
                     PidTo ! Bytes,
