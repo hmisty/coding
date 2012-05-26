@@ -2,3 +2,4 @@
 *.beam
 # vim backup
 *~
+*.swp
