@@ -37,8 +37,13 @@ list() ->
 find(PidName) ->
     case get(PidName) of
         undefined ->
-            [Node|_] = lists:filter(fun(N)-> found == rpc:call(N, ?MODULE, rpc_lookup, [PidName]) end, nodes()),
-            put(PidName, Node);
+            Nodes = lists:filter(fun(N)-> found == rpc:call(N, ?MODULE, rpc_lookup, [PidName]) end, nodes()),
+            case Nodes of
+                [Node|_] ->
+                    put(PidName, Node);
+                _ ->
+                    undefined
+            end;
         Node ->
             Node
     end.
