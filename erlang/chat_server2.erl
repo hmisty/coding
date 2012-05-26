@@ -68,8 +68,8 @@ loop(Socket) ->
 
 loop_writer(Socket) ->
     receive
-        Bytes ->
-            gen_tcp:send(Socket, Bytes),
+        {From, Bytes} ->
+            From ! gen_tcp:send(Socket, Bytes),
             loop_writer(Socket)
     end.
 
@@ -95,20 +95,12 @@ handle(Bytes, PidWriter) ->
             Msg = string:join(Msgs, " "),
             io:format("got msg:~p from:~p to:~p~n", [Msg, From, To]),
             PidName = list_to_atom(To),
-            case whereis(PidName) of
+            case cluster2:send(PidName, Bytes) of
                 undefined ->
-                    io:format("~p not found in local node~n", [PidName]),
-                    case cluster2:send(PidName, Bytes) of
-                        undefined ->
-                            io:format("~p not found in the cluster~n", [PidName]),
-                            {error, "sent failed, " ++ To ++ " is not online.\n"};
-                        _ ->
-                            io:format("found ~p, send out ~p~n", [PidName, Bytes]),
-                            {ok, "successfully sent your msg (via cluster): " ++ Msg ++ ".\n"}
-                    end;
-                PidTo ->
+                    io:format("~p not found in the cluster~n", [PidName]),
+                    {error, "sent failed, " ++ To ++ " is not online.\n"};
+                _ ->
                     io:format("found ~p, send out ~p~n", [PidName, Bytes]),
-                    PidTo ! Bytes,
                     {ok, "successfully sent your msg: " ++ Msg ++ ".\n"}
             end;
         _ ->
