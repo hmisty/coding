@@ -18,13 +18,8 @@
 %%      > cluster2:send('b@hostip2', area, {circle, 3}).
 %%
 -module(cluster2).
--export([join/1, 
-        list/0,
-        find/1, 
-        send/3,
-        rpc_nodes/0, 
-        rpc_lookup/1, 
-        rpc_send/2]).
+-export([join/1, list/0, find/1, send/3,
+        rpc_nodes/0, rpc_lookup/1, rpc_send/2]).
 
 %% on the local node
 join(PeerNode) ->
@@ -37,10 +32,11 @@ list() ->
 find(PidName) ->
     case get(PidName) of
         undefined ->
-            Nodes = lists:filter(fun(N)-> found == rpc:call(N, ?MODULE, rpc_lookup, [PidName]) end, nodes()),
+            Nodes = lists:filter(fun(N)-> found == rpc:call(N, ?MODULE, rpc_lookup, [PidName]) end, [node()] ++ nodes()),
             case Nodes of
                 [Node|_] ->
-                    put(PidName, Node);
+                    put(PidName, Node),
+                    Node;
                 _ ->
                     undefined
             end;
