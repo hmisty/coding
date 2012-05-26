@@ -15,7 +15,8 @@
 %%
 %% host 1:
 %%      > cluster2:find(area).
-%%      > cluster2:send('b@hostip2', area, {circle, 3}).
+%%      
+%%      > cluster2:send(area, {circle, 3}).
 %%
 -module(cluster2).
 -export([join/1, list/0, find/1, send/3,
@@ -44,7 +45,8 @@ find(PidName) ->
             Node
     end.
 
-send(Node, PidName, Message) ->
+send(PidName, Message) ->
+    Node = find(PidName),
     rpc:call(Node, ?MODULE, rpc_send, [PidName, Message]).
 
 %% on the remote node
