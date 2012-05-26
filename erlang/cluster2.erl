@@ -33,7 +33,7 @@ list() ->
 find(PidName) ->
     case get(PidName) of
         undefined ->
-            Nodes = lists:filter(fun(N)-> found == rpc:call(N, ?MODULE, rpc_lookup, [PidName]) end, [node()] ++ nodes()),
+            Nodes = lists:filter(fun(N)-> undefined /= rpc:call(N, ?MODULE, rpc_lookup, [PidName]) end, [node()] ++ nodes()),
             case Nodes of
                 [Node|_] ->
                     put(PidName, Node),
@@ -47,19 +47,19 @@ find(PidName) ->
 
 send(PidName, Message) ->
     Node = find(PidName),
-    rpc:call(Node, ?MODULE, rpc_send, [PidName, Message]).
+    case Node of
+        undefined ->
+            undefined;
+        _ ->
+            rpc:call(Node, ?MODULE, rpc_send, [PidName, Message])
+    end.
 
 %% on the remote node
 rpc_nodes() ->
     nodes().
 
 rpc_lookup(PidName) ->
-    case whereis(PidName) of
-        undefined ->
-            notfound;
-        _ ->
-            found
-    end.
+    whereis(PidName).
 
 rpc_send(PidName, Message) ->
     PidName ! {self() , Message},
