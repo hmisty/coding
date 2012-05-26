@@ -1,4 +1,5 @@
 # erlang compiled binary
+*.dump
 *.beam
 # vim backup
 *~
