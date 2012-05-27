@@ -3,7 +3,7 @@
 
 run(N) ->
     start('192.168.0.1', 4000, N),
-    wait(10, N),
+    wait(30, N),
     stop(N).
 
 wait(Max, N) ->
