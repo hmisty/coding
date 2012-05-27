@@ -23,10 +23,13 @@
 %%      id b
 %%      m b a hi i am bob
 -module(chat_server3).
--export([start/1]).
+-export([start/1, stop/0]).
 
 start(Port) ->
-    spawn(fun() -> listen(Port) end).
+    register(chat_server, spawn(fun() -> listen(Port) end)).
+
+stop() ->
+    chat_server ! stop.
 
 listen(Port) ->
     {ok, Listen} = gen_tcp:listen(Port,
@@ -42,7 +45,12 @@ accept(Listen) ->
         {error, Reason} ->
             io:format("gen_tcp:accept error ~p~n", [Reason])
     end,
-    accept(Listen).
+    receive
+        stop ->
+            gen_tcp:close(Listen)
+    after 0 ->
+            accept(Listen)
+    end.
 
 loop(Socket) ->
     PidWriter = spawn(fun() -> loop_writer(Socket) end),
@@ -61,12 +69,16 @@ loop(Socket) ->
             gen_tcp:send(Socket, StrBytes),
             loop(Socket);
         {error, closed} ->
-            io:format("socket closed. exit.~n")
+            %io:format("socket closed. exit.~n"),
+            PidWriter ! exit
     end.
 
 loop_writer(Socket) ->
     receive
-        Bytes ->
+        exit ->
+            %io:format("pid writer exits.~n"),
+            exit;
+        {send, Bytes} ->
             gen_tcp:send(Socket, Bytes),
             loop_writer(Socket)
     end.
@@ -98,7 +110,7 @@ handle(Bytes, PidWriter) ->
                     {error, "sent failed, " ++ To ++ " is not online.\n"};
                 PidTo ->
                     %io:format("found ~p, send out ~p~n", [PidName, Bytes]),
-                    PidTo ! Bytes,
+                    PidTo ! {send, Bytes},
                     {ok, "successfully sent your msg: " ++ Msg ++ ".\n"}
             end;
         _ ->
