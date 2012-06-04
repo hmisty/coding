@@ -4,12 +4,15 @@
 -define(TIMEOUT, 1000).
 -type nickname() :: atom().
 
--spec default_handler() -> any().
+-spec default_handler() -> pid().
 default_handler() ->
+    spawn(fun() -> default_handler_loop() end).
+
+default_handler_loop() ->
     receive
         X -> io:format("default_handler received ~p~n", [X])
     end,
-    default_handler().
+    default_handler_loop().
 
 -spec receive_any() -> any() | {error, timeout}.
 receive_any() ->
@@ -20,15 +23,11 @@ receive_any() ->
     end.
 
 %% login to the chat system
--spec login(nickname(), fun()) -> ok.
-login(Nickname, HandlerFunc) ->
+-spec login(nickname(), pid()) -> ok.
+login(Nickname, Handler) ->
     case global:whereis_name(Nickname) of
         undefined ->
-            Handler = spawn(HandlerFunc),
-            Pid = spawn(fun() -> 
-                        process_flag(trap_exit, true),
-                        link(Handler),
-                        chat_agent(Nickname, Handler) end),
+            Pid = spawn_link(fun() -> chat_agent(Nickname, Handler) end),
             global:register_name(Nickname, Pid);
         _ ->
             ok
@@ -42,17 +41,6 @@ logout(Nickname) ->
             ok;
         Pid ->
             Pid ! {self(), logout},
-            receive_any()
-    end.
-
-%% create a chatroom
--spec create(nickname(), any()) -> ok | {error, not_login} | {error, timeout}.
-create(Creator, RoomName) ->
-    case global:whereis_name(Creator) of
-        undefined ->
-            {error, not_login};
-        Pid ->
-            Pid ! {self(), create, RoomName},
             receive_any()
     end.
 
@@ -121,41 +109,44 @@ chat_agent(Nickname, Handler) ->
     receive
         {From, logout} ->
             From ! {self(), ok},
-            stop;
-        {From, create, RoomName} ->
-            pg2:create(RoomName),
-            self() ! {From, join, RoomName},
-            chat_agent(Nickname, Handler);
+            exit(logout);
         {From, join, RoomName} ->
-            case pg2:join(RoomName, self()) of
-                ok ->
-                    [ Pid ! {self(), ping, Nickname} || Pid <- pg2:get_members(RoomName) ],
-                    From ! {self(), ok};
+            Members = pg2:get_members(RoomName),
+            case Members of
                 {error, _} ->
-                    From ! {self(), {error, room_not_found}}
-            end,
-            chat_agent(Nickname, Handler);
+                    pg2:create(RoomName),
+                    pg2:join(RoomName, self()),
+                    self() ! {self(), ping, Nickname},
+                    From ! {self(), ok};
+                _ ->
+                    case lists:member(Nickname, Members) of
+                        true ->
+                            ok;
+                        false ->
+                            pg2:join(RoomName, self()),
+                            [ Pid ! {self(), ping, Nickname} || Pid <- pg2:get_members(RoomName) ]
+                    end,
+                    From ! {self(), ok}
+            end;
         {From, leave, RoomName} ->
             Members = pg2:get_members(RoomName),
             case Members of
                 {error, _} ->
                     From ! {self(), {error, room_not_found}};
                 _ ->
-                    [ Pid ! {self(), bye} || Pid <- Members ],
+                    [ Pid ! {self(), bye, Nickname} || Pid <- Members ],
                     pg2:leave(RoomName, self()),
                     From ! {self(), ok}
-            end,
-            chat_agent(Nickname, Handler);
+            end;
         {From, shout, RoomName, Message} ->
             Members = pg2:get_members(RoomName),
             case Members of
                 {error, _} ->
                     From ! {self(), {error, room_not_found}};
                 _ ->
-                    [ Pid ! {self(), message, Message} || Pid <- Members ],
+                    [ Pid ! {self(), message, Nickname, Message} || Pid <- Members ],
                     From ! {self(), ok}
-            end,
-            chat_agent(Nickname, Handler);
+            end;
         {From, get_roommates, RoomName} ->
             Members = pg2:get_members(RoomName),
             case Members of
@@ -163,29 +154,25 @@ chat_agent(Nickname, Handler) ->
                     From ! {self(), {error, room_not_found}};
                 _ ->
                     From ! {self(), [ get(Pid) || Pid <- Members ]}
-            end,
-            chat_agent(Nickname, Handler);
+            end;
         %% ask the handler to handle the messages
         {_From, whisper, Nick, Message} ->
-            Handler ! {whisper, Nick, Message},
-            chat_agent(Nickname, Handler);
-        {_From, message, Message} ->
-            Handler ! {message, Message},
-            chat_agent(Nickname, Handler);
+            Handler ! {whisper, Nick, Message};
+        {_From, message, Nick, Message} ->
+            Handler ! {message, Nick, Message};
         %% for internal only
         {From, ping, Nick} ->
+            Handler ! {join, Nick},
             put(From, Nick),
-            From ! {self(), pong, Nickname},
-            chat_agent(Nickname, Handler);
+            From ! {self(), pong, Nickname};
         {From, pong, Nick} ->
-            put(From, Nick),
-            chat_agent(Nickname, Handler);
-        {From, bye} ->
-            erase(From),
-            chat_agent(Nickname, Handler);
+            put(From, Nick);
+        {From, bye, Nick} ->
+            Handler ! {leave, Nick},
+            erase(From);
         %% for trapping exit
-        {'EXIT', Pid, Why} ->
-            io:format("handler ~p died for: ~p. stop.", [Pid, Why]),
-            stop
-    end.
+        {'EXIT', _Pid, _Why} ->
+            exit('EXIT')
+    end,
+    chat_agent(Nickname, Handler).
 

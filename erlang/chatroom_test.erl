@@ -3,34 +3,44 @@
 
 -define(ROOMNAME, room1).
 
-start(NickName) ->
-    spawn(fun() -> init(NickName) end).
+init() ->
+    spawn(fun() -> chat_client(alice) end),
+    spawn(fun() -> chat_client(bob) end),
+    spawn(fun() -> chat_client(tom) end).
 
-init(NickName) ->
-    chatroom:login(self(), NickName),
-    chatroom:create(NickName, ?ROOMNAME),
-    loop(NickName).
+stop() ->
+    chatroom:logout(bob),
+    chatroom:logout(alice),
+    chatroom:logout(tom).
 
-loop(NickName) ->
+post() ->
+    chatroom:create(alice, ?ROOMNAME),
+    chatroom:join(bob, ?ROOMNAME),
+    chatroom:shout(alice, ?ROOMNAME, hi),
+    chatroom:whisper(alice, bob, hi),
+    chatroom:whisper(alice, tom, hi),
+    chatroom:shout(bob, ?ROOMNAME, hi),
+    chatroom:join(tom, ?ROOMNAME),
+    chatroom:leave(alice, ?ROOMNAME),
+    chatroom:shout(tom, ?ROOMNAME, hi).
+
+chat_client(Nickname) ->
+    chatroom:login(Nickname, self()),
+    handle_msg(Nickname).
+
+handle_msg(Nickname) ->
     receive
-        exit ->
-            chatroom:logout(NickName);
-        {join, F} ->
-            global:send(F, {info, self(), process_info(self(), [registered_name])}),
-            loop(NickName);
-        {leave, _F} ->
-            loop(NickName);
-        {shout, _F, M} ->
-            io:format("shout received: ~p~n", [M]),
-            loop(NickName);
-        {whisper, _F, M} ->
-            io:format("whisper received: ~p~n", [M]),
-            loop(NickName);
-        {info, F, M} ->
-            io:format("info of ~p received: ~p~n", [F, M]),
-            loop(NickName);
-        M ->
-            io:format("msg received: ~p~n", [M]),
-            loop(NickName)
-    end.
+        {message, Message} ->
+            io:format("~p received message: ~p~n", [Nickname, Message]);
+        {whisper, Nick, Message} ->
+            io:format("~p received whisper from ~p : ~p~n", [Nickname, Nick, Message]);
+        stop ->
+            io:format("~p received stop~n", [Nickname]),
+            exit(stop);
+        Any ->
+            io:format("~p received unknown msg: ~p~n", [Nickname, Any])
+    after 10000 ->
+            io:format("~p is alive...~n", [Nickname])
+    end,
+    handle_msg(Nickname).
 
