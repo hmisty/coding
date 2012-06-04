@@ -27,9 +27,12 @@ receive_any() ->
 login(Nickname, Handler) ->
     case global:whereis_name(Nickname) of
         undefined ->
-            Pid = spawn_link(fun() -> chat_agent(Nickname, Handler) end),
+            pg2:create(Nickname),
+            pg2:join(Nickname, Handler),
+            Pid = spawn_link(fun() -> chat_agent(Nickname) end),
             global:register_name(Nickname, Pid);
         _ ->
+            pg2:join(Nickname, Handler),
             ok
     end.
 
@@ -104,8 +107,8 @@ get_rooms() ->
     pg2:which_groups().
 
 %% the agent
--spec chat_agent(nickname(), pid()) -> stop.
-chat_agent(Nickname, Handler) ->
+-spec chat_agent(nickname()) -> stop.
+chat_agent(Nickname) ->
     receive
         {From, logout} ->
             From ! {self(), ok},
@@ -116,15 +119,15 @@ chat_agent(Nickname, Handler) ->
                 {error, _} ->
                     pg2:create(RoomName),
                     pg2:join(RoomName, self()),
-                    self() ! {self(), ping, Nickname},
+                    self() ! {self(), ping, Nickname, RoomName},
                     From ! {self(), ok};
                 _ ->
-                    case lists:member(Nickname, Members) of
+                    case lists:member(self(), Members) of
                         true ->
                             ok;
                         false ->
                             pg2:join(RoomName, self()),
-                            [ Pid ! {self(), ping, Nickname} || Pid <- pg2:get_members(RoomName) ]
+                            [ Pid ! {self(), ping, Nickname, RoomName} || Pid <- pg2:get_members(RoomName) ]
                     end,
                     From ! {self(), ok}
             end;
@@ -134,7 +137,7 @@ chat_agent(Nickname, Handler) ->
                 {error, _} ->
                     From ! {self(), {error, room_not_found}};
                 _ ->
-                    [ Pid ! {self(), bye, Nickname} || Pid <- Members ],
+                    [ Pid ! {self(), bye, Nickname, RoomName} || Pid <- Members ],
                     pg2:leave(RoomName, self()),
                     From ! {self(), ok}
             end;
@@ -157,22 +160,42 @@ chat_agent(Nickname, Handler) ->
             end;
         %% ask the handler to handle the messages
         {_From, whisper, Nick, Message} ->
-            Handler ! {whisper, Nick, Message};
+            case pg2:get_members(Nickname) of
+                {error, _} ->
+                    no_receiver;
+                Handlers ->
+                    [ H ! {whisper, Nick, Message} || H <- Handlers ]
+            end;
         {_From, message, Nick, Message} ->
-            Handler ! {message, Nick, Message};
+            case pg2:get_members(Nickname) of
+                {error, _} ->
+                    no_receiver;
+                Handlers ->
+                    [ H ! {message, Nick, Message} || H <- Handlers ]
+            end;
         %% for internal only
-        {From, ping, Nick} ->
-            Handler ! {join, Nick},
+        {From, ping, Nick, Room} ->
+            case pg2:get_members(Nickname) of
+                {error, _} ->
+                    no_receiver;
+                Handlers ->
+                    [ H ! {join, Nick, Room} || H <- Handlers ]
+            end,
             put(From, Nick),
             From ! {self(), pong, Nickname};
         {From, pong, Nick} ->
             put(From, Nick);
-        {From, bye, Nick} ->
-            Handler ! {leave, Nick},
+        {From, bye, Nick, Room} ->
+            case pg2:get_members(Nickname) of
+                {error, _} ->
+                    no_receiver;
+                Handlers ->
+                    [ H ! {leave, Nick, Room} || H <- Handlers ]
+            end,
             erase(From);
         %% for trapping exit
         {'EXIT', _Pid, _Why} ->
             exit('EXIT')
     end,
-    chat_agent(Nickname, Handler).
+    chat_agent(Nickname).
 

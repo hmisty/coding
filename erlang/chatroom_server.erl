@@ -82,10 +82,10 @@ loop(Socket) ->
             io_lib:format("=> ~p: ~p\n", [Nick, Message]);
         {whisper, Nick, Message} ->
             io_lib:format("=> *~p*: ~p\n", [Nick, Message]);
-        {join, Nick} ->
-            io_lib:format("=> *~p joined the room*\n", [Nick]);
-        {leave, Nick} ->
-            io_lib:format("=> *~p left the room*\n", [Nick]);
+        {join, Nick, Room} ->
+            io_lib:format("=> *~p joined the ~p*\n", [Nick, Room]);
+        {leave, Nick, Room} ->
+            io_lib:format("=> *~p left the ~p*\n", [Nick, Room]);
 
         Any ->
             io_lib:format("unknown: ~p\n", [Any])
