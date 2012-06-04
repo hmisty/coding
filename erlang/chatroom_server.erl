@@ -14,6 +14,7 @@
 %% 
 %% client 1:
 %%      $ nc hostip1 4000
+%%      /help
 %%      /nick alice
 %%      /join room1
 %%      hi i am alice
@@ -46,7 +47,9 @@ start(Port) ->
 
 accept(Listen) ->
     receive
-        stop -> exit(stop)
+        stop ->
+            gen_tcp:close(Listen),
+            exit(stop)
     after 0 ->
             ok
     end,
@@ -58,8 +61,20 @@ accept(Listen) ->
 loop(Socket) ->
     Reply = receive
         {tcp, Socket, Bin} ->
-            Result = handle(Bin),
-            io_lib:format("-> ~p\n", [Result]);
+            case handle(Bin) of
+                help ->
+                    "***************************************\n" ++
+                    "/help                     -- the help\n" ++
+                    "/nick NICKNAME            -- login as NICKNAME\n" ++
+                    "/quit                     -- logout\n" ++
+                    "/join ROOMNAME            -- join/create ROOMNAME\n" ++
+                    "/leave                    -- leave the room\n" ++
+                    "/who                      -- check who is in the room\n" ++
+                    "/whisper NICKNAME MESSAGE -- send private message to someone\n" ++
+                    "***************************************\n";
+                Result ->
+                    io_lib:format("-> ~p\n", [Result])
+            end;
         {tcp_closed, Socket} ->
             exit(tcp_closed);
 
@@ -83,6 +98,8 @@ handle(Bin) ->
     StrChomped = string:strip(string:strip(Str, both, $\n)),
     Parts = string:tokens(StrChomped, " "),
     case Parts of 
+        ["/help"|_] ->
+            help;
         ["/nick",Nick|_] ->
             Nickname = list_to_atom(Nick),
             put(nick, Nickname),
