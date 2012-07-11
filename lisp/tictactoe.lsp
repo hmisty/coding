@@ -26,7 +26,7 @@
 ;;;; define draw
 ;; draw 0 = draw a circle; draw 1 = draw a cross
 (set 'what 0)
-(set 'chesses '())
+(set 'chesses '()) ;;; chesses already put. (row col)
 (define (handler ev n) nil)
 (define (draw row col)
 	(if (= (ref (list row col) chesses) nil)
