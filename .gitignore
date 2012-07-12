@@ -4,3 +4,5 @@
 # vim backup
 *~
 *.swp
+# windows exe
+*.exe
