@@ -1,6 +1,7 @@
 ;;;; tic-tac-toe
 ;;;; hmisty 2012/7/12
-;;;; 2 hrs quick hacking :)
+;;;; 2 hrs quick hacking (no winner & deuce judge) :)
+;;;; winner & deuce judge: another 3 hours...
 #!/usr/bin/newlisp
 
 ;;;; initialization
