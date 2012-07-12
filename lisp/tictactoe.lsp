@@ -32,7 +32,6 @@
 
 ;;;; get chess-triplets
 (define (chess-triplets newchess chess-pairs)
-  (println (string "chess-pairs: " chess-pairs))
   (map (lambda (x) (cons newchess x)) chess-pairs)
   )
 
@@ -47,13 +46,11 @@
 
 ;;;; if-win triplets lst
 (define (if-win chess-triplets)
-  (println (string "if-line-up: " chess-triplets))
   (ref 'true (map (lambda (c) (if-line-up (c 0) (c 1) (c 2))) chess-triplets))
   )
 
 ;;;; judge the winner
 (define (winner oldchesses newchess)
-  (println (string "newchess: " newchess " oldchesses: " oldchesses))
   (if-win (chess-triplets newchess (pairs oldchesses))))
 
 ;;;; define draw
@@ -63,8 +60,8 @@
 (set 'chessX '()) ;;; X chesses already put. (row col)
 (define (handler ev n) nil)
 
-(define (win name)
-    (gs:confirm-dialog 'TicTacToe 'handler "Win!" (string name " win!") "yes-no")
+(define (game-over msg)
+    (gs:confirm-dialog 'TicTacToe 'handler "Game Over" msg "yes-no")
     (gs:delete-tag 'X)
     (gs:delete-tag 'O)
     (set 'what 0)
@@ -83,24 +80,24 @@
 
 (define (draw-circle row col)
   (set 'x (+ (+ (* col step) (/ step 2)) min_) 'y (+ (+ (* row step) (/ step 2)) min_) 'r (/ step 2))
-  (println (string "draw circle: x:" x "y:" y))
   (gs:draw-circle 'O x y r gs:red)
   (gs:show-tag 'O)
   ;;;; side-effect
   (set 'newchess (list row col))
-  (if (winner chessO newchess) (win "O") (push newchess chessO))
+  (if (winner chessO newchess) (game-over "O wins!") (push newchess chessO))
+  (if (= (length (append chessX chessO)) 9) (game-over "Deuce!"))
   )
 
 (define (draw-cross row col)
   (set 'x0 (+ (* col step) min_) 'y0 (+ (* row step) min_)
        'x1 (+ (+ (* col step) step) min_) 'y1 (+ (+ (* row step) step) min_))
-  (println (string "draw line: x0:" x0 "y0:" y0 "x1:" x1 "y1:" y1))
   (gs:draw-line 'X x0 y0 x1 y1 gs:blue)
   (gs:draw-line 'X x0 y1 x1 y0 gs:blue)
   (gs:show-tag 'X)
   ;;;; side-effect
   (set 'newchess (list row col))
-  (if (winner chessX newchess) (win "X") (push newchess chessX))
+  (if (winner chessX newchess) (game-over "X wins!") (push newchess chessX))
+  (if (= (length (append chessX chessO)) 9) (game-over "Deuce!"))
   )
 
 ;;;; define actions
