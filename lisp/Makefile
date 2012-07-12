@@ -1,20 +1,24 @@
+all: square m
+
 clean: clean_square clean_m
 
 clean_square:
-	rm -f a.out square_.c square.c
+	rm -f square square_.c square.c
 
 square:
 	gsc -c square.scm
 	gsc -link square.c
-	gcc square.c square_.c -lgambc -lm -ldl -lutil
+	gcc -o square square.c square_.c -lgambc -lm -ldl -lutil
+	./square 30
 
 clean_m:
-	cd m
-	rm -f a.out m3_.c m3.c m2.c
+	rm -f m/a.out m/m3_.c m/m3.c m/m2.c
 
+.PHONY: m
 m:
-	cd m
-	gsc -c m2.scm
-	gsc -c m3.scm
-	gsc -link m2.c m3.c
-	gcc m1.c m2.c m3.c m3_.c -lgambc -lm -ldl -lutil
+	gsc -c m/m2.scm
+	gsc -c m/m3.scm
+	gsc -link m/m2.c m/m3.c
+	gcc -o m/a.out m/m1.c m/m2.c m/m3.c m/m3_.c -lgambc -lm -ldl -lutil
+	m/a.out
+
