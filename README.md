@@ -12,6 +12,14 @@ let's coding!
 
 it is a repository collects all the small piece of practising codes for reference.
 
+public coding
+---
+git@github.com:hmisty/coding.git
+
+private coding
+---
+git@git.hmisty.com:evancooks.git
+
 BASIC
 ---
 Learned 1996. First project (1996): A mine-sweeping game. (On paper! 6502 CPU)
