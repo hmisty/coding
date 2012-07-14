@@ -17,6 +17,7 @@
 (define sdl-init (c-lambda (unsigned-int32) int "SDL_Init"))
 (define sdl-set-video-mode (c-lambda (int int int unsigned-int32) (pointer "SDL_Surface") "SDL_SetVideoMode"))
 (define sdl-wm-set-caption (c-lambda (char-string char-string) void "SDL_WM_SetCaption"))
+(define sdl-update-rect (c-lambda ((pointer "SDL_Surface") int int unsigned-int32 unsigned-int32) void "SDL_UpdateRect"))
 
 ;;; SDL_draw Functions ;;;
 (define sdl-draw-line (c-lambda ((pointer "SDL_Surface") int int int int unsigned-int32) void "Draw_Line"))
@@ -30,6 +31,7 @@
 (define screen (sdl-set-video-mode 640 480 32 0))
 (sdl-wm-set-caption "Test" "Test Window!")
 (sdl-draw-line screen 100 100 30 0 c-white)
+(sdl-update-rect screen 0 0 0 0)
 (thread-sleep! 5)
 (sdl-quit)
 
