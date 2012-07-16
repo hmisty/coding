@@ -62,16 +62,10 @@ int sdl_event_loop()
     return(1);
 }
 
-/* SDL_Surface * screen => its SDL_PixelFormat */
-SDL_PixelFormat * sdl_surface_format(SDL_Surface * screen)
-{
-    return(screen->format);
-}
-
 EOL
 ) ;;; DONOT write EOL) !!!
 (define sdl-event-loop? (c-lambda () bool "sdl_event_loop"))
-(define sdl-surface->format (c-lambda (sdl-surface) sdl-pixel-format "sdl_surface_format"))
+(define sdl-surface->format (c-lambda (sdl-surface) sdl-pixel-format "___result = ___arg1->format;"))
 
 ;;; SDL_draw Functions ;;;
 (define sdl-draw-pixel (c-lambda (sdl-surface int int unsigned-int32) void "Draw_Pixel"))
