@@ -1,0 +1,51 @@
+(load "libsdldraw")
+;;; simple program to create a window and display it for five seconds ;;;
+(sdl-init sdl-init-everything)
+(define screen (sdl-set-video-mode 640 480 32 0))
+(define screen-format (sdl-surface->format screen))
+(sdl-wm-set-caption "Test" "Test Window!")
+;;; Colors ;;;
+(define c-white #x00FFFFFF) ;; ARGB
+(define c-gray  #x00C8C8C8)
+(define c-dgray #x00404040)
+(define c-cyan  #x0020FFFF)
+
+(sdl-draw-line screen 100 100 30 0 c-white)
+(sdl-draw-line screen 30 0 100 100 c-white)
+(sdl-draw-line screen 100 100 30 0 c-white)
+(sdl-draw-line screen 30 0 100 100 c-white)
+(sdl-draw-line screen 0 0 100 100 c-white)
+(sdl-draw-line screen 100 100 300 200 c-white)
+(sdl-draw-line screen 200 300 250 400 (sdl-map-rgb screen-format 128 128 255))
+(sdl-draw-line screen 500 50 600 70 (sdl-map-rgb screen-format 128 255 128))
+(sdl-draw-circle screen 150 150 5 c-white)
+(sdl-draw-circle screen 150 150 4 (sdl-map-rgb screen-format 64 64 64))
+(sdl-draw-circle screen 150 150 3 (sdl-map-rgb screen-format 255 0 0))
+(sdl-draw-circle screen 150 150 2 (sdl-map-rgb screen-format 0 255 0))
+(sdl-draw-fillcircle screen 150 150 1 (sdl-map-rgb screen-format 0 0 255))
+(sdl-draw-line screen 500 100 600 120 (sdl-map-rgb screen-format 128 255 128))
+;;; omit some more
+(sdl-draw-rect screen 398 298 4 4 c-cyan)
+(sdl-draw-fillrect screen 500 200 50 70 (sdl-map-rgb screen-format 64 200 64))
+;;; omit some
+(sdl-draw-hline screen 10 400 50 c-white)
+(sdl-draw-vline screen 60 400 360 c-white)
+(sdl-draw-rect screen 500 400 50 50 c-white)
+(sdl-draw-pixel screen 510 410 c-white)
+(sdl-draw-pixel screen 520 420 (sdl-map-rgb screen-format 255 0 0))
+(sdl-draw-pixel screen 530 430 (sdl-map-rgb screen-format  0 255 0))
+(sdl-draw-pixel screen 540 440 (sdl-map-rgb screen-format  0 0 255))
+(sdl-draw-ellipse screen 100 300 60 30 c-white)
+(sdl-draw-fillellipse screen 300 300 30 60 (sdl-map-rgb screen-format 64 64 200))
+;;; omit some
+(sdl-draw-round screen 200 20 70 50 10 c-white)
+(sdl-draw-fillround screen 390 20 70 50 20 c-cyan)
+(sdl-draw-rect screen 499 199 52 72 (sdl-map-rgb screen-format 255 255 0))
+(sdl-draw-fillrect screen 500 200 50 70 (sdl-map-rgb screen-format 64 200 64))
+(sdl-draw-fillcircle screen 500 330 30 c-cyan)
+
+(sdl-update-rect screen 0 0 0 0)
+(let loop () 
+  (if (sdl-event-loop?) (loop)))
+(sdl-quit)
+
