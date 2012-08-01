@@ -7,3 +7,5 @@ set tabstop=4
 set autoindent
 set smarttab
 set formatoptions=croql
+
+au BufNewFile,BufRead *.clj set filetype=lisp "for clojure
