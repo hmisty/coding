@@ -1,4 +1,4 @@
-" better not to use - in the ns, e.g. fastodo.views.upload-example "
+; better not to use - in the ns, e.g. fastodo.views.upload-example 
 (ns fastodo.views.uploadexample
   (:require [fastodo.views.common :as common]
             [noir.response :as res])
