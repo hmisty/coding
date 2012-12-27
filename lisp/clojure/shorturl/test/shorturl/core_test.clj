@@ -2,6 +2,15 @@
   (:use clojure.test
         shorturl.core))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(defn my-fixture [f]
+  ;; setup
+  (reset! counter 10000)
+  (reset! urls {})
+  (f )
+  ;; tear-down
+  )
+
+(use-fixtures :each my-fixture)
+
+(deftest test-shorten
+    (is ( = "7pt" ( shorten "http://www.google.com"))))

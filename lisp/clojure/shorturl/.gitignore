@@ -10,4 +10,5 @@ pom.xml
 .lein-plugins
 .project
 .classpath
+.settings
 /bin

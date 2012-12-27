@@ -4,7 +4,8 @@
   (:require [ring.adapter.jetty :as jetty]
             [ring.util.response :as resp]
             [net.cgrand.enlive-html :as en]
-            [compojure.route]))
+             [compojure.handler]
+             [compojure.route]))
 
 ;; the counter algorithm
 (defonce counter (atom 10000))
@@ -12,16 +13,17 @@
 (defonce urls (atom {}))
 
 (defn shorten [url]
-  (let [id ( swap! counter inc )
-        id (Long/toString id 36 )]
-    (swap! urls assoc id url)) )
+  (let [id (swap! counter inc)
+        id (Long/toString id 36)]
+    (swap! urls assoc id url)
+    id))
 
 ;; the handlers
 #_(defn homepage [request]
   (str @urls))
 
 (en/deftemplate homepage
-  (en/xml-resource "homepage.html" )
+  (en/xml-resource "homepage.html")
   [request]
   [:#listing :li] (en/clone-for [[id url] @urls]
                                 [:a] (comp
