@@ -5,7 +5,7 @@
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<servlet>
 		<servlet-name>shorturl</servlet-name>
-		<servlet-class>shorturl.servlet</servlet-class>
+		<servlet-class>shorturl.servletx</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>shorturl</servlet-name>

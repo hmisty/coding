@@ -1,3 +1,6 @@
+;; borrowed from https://github.com/alienscience/compojure-war-example
+;; nevertheless, it's still not an elegant way for handling the context path
+
 (ns shorturl.context
   "Functions to handle servlet context")
 
