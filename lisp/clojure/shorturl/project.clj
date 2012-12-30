@@ -7,5 +7,7 @@
                  [ring "1.0.1"]
                  [compojure "1.0.1"]
                  [enlive "1.0.0"]]
-  :aot [shorturl.server]
-  :main shorturl.server)
+;;  :aot [shorturl.server]
+  :main shorturl.server
+  :plugins [[lein-ring "0.7.5"]]
+  :ring {:handler shorturl.core/app})

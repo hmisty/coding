@@ -1,21 +1,39 @@
 # shorturl
 
-I'm an app. Or maybe I'm a library? I haven't decided yet. 
+An example [clojure][1] app supporting both lein and maven, jar and war. 
 
-The choice is up to you!
+[1]: http://clojure.org
 
 ## Usage
 
-FIXME
+### package a war
+
+By lein:
+
+```bash
+lein ring uberwar
+```
+
+By maven:
+```bash
+mvn package
+```
+
+### package a standalone jar
+
+By lein:
+
+	lein uberjar
+
 
 ## FAQ
 
 ### duplicate entry when lein uberjar?
-mvn clean
-then try again
+
+rm -rf target (mvn clean) and try again
 
 ## License
 
-Copyright © 2012 FIXME
+Copyright © 2012 Evan Liu (hmisty)
 
 Distributed under the Eclipse Public License, the same as Clojure.
