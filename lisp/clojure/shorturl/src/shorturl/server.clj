@@ -4,7 +4,7 @@
 (ns shorturl.server
   (:gen-class)
   (:use [shorturl.core :only (app)] 
-        [ring.middleware file-info file])
+        #_[ring.middleware file-info file])
   (:require [ring.adapter.jetty :as jetty]))
 
 #_(defn handler []
