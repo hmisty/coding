@@ -6,4 +6,6 @@
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [ring "1.0.1"]
                  [compojure "1.0.1"]
-                 [enlive "1.0.0"]])
+                 [enlive "1.0.0"]]
+  :aot [shorturl.server]
+  :main shorturl.server)

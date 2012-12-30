@@ -8,6 +8,12 @@ The choice is up to you!
 
 FIXME
 
+## FAQ
+
+### duplicate entry when lein uberjar?
+mvn clean
+then try again
+
 ## License
 
 Copyright © 2012 FIXME
