@@ -22,11 +22,11 @@ git@git.hmisty.com:evancooks.git
 
 BASIC
 ---
-Learned 1996. First project (1996): A mine-sweeping game. (On paper! 6502 CPU)
+Learned 1996. First project (1996): A mine-sweeping game. (On paper. 6502 CPU)
 
 C
 ---
-Learned 2001. First project (2001): A elevator simulator. (Shame! I started to use slackware linux in 2000, but didn't learn gcc. I wasted lots of time on flash and webpage design to earn money.)
+Learned 2001. First project (2001): A elevator simulator. (Shame. I started to use slackware linux in 2000, but didn't learn gcc that early. I wasted lots of time on flash and webpage design to earn money.)
 
 Java
 ---
