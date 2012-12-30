@@ -1,12 +1,7 @@
 (ns shorturl.core
-  (:import [javax.servlet.http HttpServletRequest HttpServletResponse])
-  (:gen-class :extends javax.servlet.http.HttpServlet)
   (:use [clojure.pprint]
-        [compojure.core :only (GET POST defroutes context)]
-        [ring.util.servlet :only (defservice servlet)]
-        #_[ring.middleware.params :only (wrap-params)])
-  (:require [ring.adapter.jetty :as jetty]
-            [ring.util.response :as resp]
+        [compojure.core :only (GET POST defroutes)])
+  (:require [ring.util.response :as resp]
             [net.cgrand.enlive-html :as en]
             [compojure.handler]
             [compojure.route]
@@ -30,10 +25,11 @@
 (en/deftemplate homepage
   (en/xml-resource "homepage.html")
   [request]
-  [:#listing :li] (en/clone-for [[id url] @urls]
-                                [:a] (comp
-                                        (en/content (format "%s : %s" id url))
-                                        (en/set-attr :href (ctx/link (str \/ id))))))
+  [:#listing :li]
+  (en/clone-for [[id url] @urls]
+                [:a] (comp
+                       (en/content (format "%s : %s" id url))
+                       (en/set-attr :href (ctx/link (str \/ id))))))
 
 (defn redirect [id]
   (resp/redirect (@urls id)))
@@ -61,10 +57,3 @@
   (-> handler
     (compojure.handler/site)
     (ctx/wrap-context)))
-
-;; the servlet
-(defservice app)
-
-;; the jetty server
-#_(defonce server (jetty/run-jetty #'app {:port 8081 :join? false}))
-;; (.stop server) to stop
