@@ -1,14 +1,13 @@
-source $VIMRUNTIME/vimrc_example.vim
-set nobackup
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
-"set expandtab
-set autoindent
-set smarttab
-set formatoptions=croql
+execute pathogen#infect()
 
-"install vimclojure to ~/.vim first
-syntax on
-filetype plugin indent on
 
+"source $VIMRUNTIME/vimrc_example.vim
+"set nobackup
+"set shiftwidth=4
+"set softtabstop=4
+"set tabstop=4
+""set expandtab
+"set autoindent
+"set smarttab
+"set formatoptions=croql
+"
