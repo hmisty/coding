@@ -48,12 +48,31 @@ repeat
 
 modeline
 
-	| Do             | Vim             | Emacs |
-	| in-file config | set modelines=1 | _     |
+	| Do             | Vim             |
+	| in-file config | set modelines=1 |
 
 tabular
 
-	| Do          | Vim          | Emacs |
-	| ascii table | :Tab /|      | _     |
+	| Do          | Vim          |
+	| ascii table | :Tab /|      |
+
+vim-foreplay
+	
+	lein new proj
+	cd proj
+	lein repl
+
+	vim src/proj/core.clj
+
+	K		Look up docs for keyword under cursor.
+	[d		Show source for keyword under cursor.
+	gf		Go to the file for the namespace under the cursor.
+	cp{motion}	Eval/print the code indicated by {motion}.
+	cpp		Eval/print the inner-most expr at the cursor.
+	cqp		Bring up a prompt for code to eval/print.
+	:A		In a test file, edit the implementation, and vice
+			versa.  Basically adds or removes -test from the end
+			of the current namespace and searches for it in the
+			class path.
 
 
