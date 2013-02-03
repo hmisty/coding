@@ -1,6 +1,5 @@
 execute pathogen#infect()
 
-
 "source $VIMRUNTIME/vimrc_example.vim
 "set nobackup
 "set shiftwidth=4

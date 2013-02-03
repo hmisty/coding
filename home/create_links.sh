@@ -8,5 +8,6 @@ ln -s ~/coding/home/vimrc ~/.vimrc
 mkdir -p ~/.vim/autoload ~/.vim/bundle
 ln -s ~/coding/home/vim/vim-pathogen/autoload/pathogen.vim ~/.vim/autoload/pathogen.vim
 ln -s ~/coding/home/vim/vim-sensible ~/.vim/bundle/vim-sensible
+mkdir -p ~/.local/share/vim/undo ~/.local/share/vim/backup ~/.local/share/vim/swap
 ln -s ~/coding/home/vim/VimClojure ~/.vim/bundle/VimClojure
 ln -s ~/coding/home/vim/tabular ~/.vim/bundle/tabular
