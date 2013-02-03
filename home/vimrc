@@ -10,3 +10,5 @@ execute pathogen#infect()
 "set smarttab
 "set formatoptions=croql
 "
+
+set modelines=1
