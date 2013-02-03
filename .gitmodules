@@ -1,0 +1,6 @@
+[submodule "home/vim/vim-sensible"]
+	path = home/vim/vim-sensible
+	url = https://github.com/tpope/vim-sensible.git
+[submodule "home/vim/vim-pathogen"]
+	path = home/vim/vim-pathogen
+	url = https://github.com/tpope/vim-pathogen.git
