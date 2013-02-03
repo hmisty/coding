@@ -4,6 +4,16 @@ CheatSheets
 ===
 ALL CHEATSHEETS I LOVE...
 
+Git
+---
+
+
+submodule
+
+	git submodule add https://github.com/tpope/vim-sensible.git home/vim/vim-sensible
+	git submodule init
+
+
 Vim vs Emacs
 ---
 move around
