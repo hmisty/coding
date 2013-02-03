@@ -1,4 +1,4 @@
-# vim:ft=markdown
+/* vim:ft=markdown */
 
 CheatSheets
 ===
