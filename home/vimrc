@@ -1,5 +1,10 @@
 execute pathogen#infect()
 
+let g:vimclojure#HighlightBuiltins = 1
+let g:vimclojure#ParenRainbow = 1
+
+set modelines=1
+
 "source $VIMRUNTIME/vimrc_example.vim
 "set nobackup
 "set shiftwidth=4
@@ -10,5 +15,3 @@ execute pathogen#infect()
 "set smarttab
 "set formatoptions=croql
 "
-
-set modelines=1

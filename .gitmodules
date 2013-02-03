@@ -10,3 +10,12 @@
 [submodule "home/vim/tabular"]
 	path = home/vim/tabular
 	url = https://github.com/godlygeek/tabular.git
+[submodule "home/vim/vim-foreplay"]
+	path = home/vim/vim-foreplay
+	url = https://github.com/tpope/vim-foreplay.git
+[submodule "home/vim/vim-classpath"]
+	path = home/vim/vim-classpath
+	url = https://github.com/tpope/vim-classpath.git
+[submodule "home/vim/vim-clojure-static"]
+	path = home/vim/vim-clojure-static
+	url = https://github.com/guns/vim-clojure-static.git
