@@ -21,6 +21,13 @@ checkout submodule
 
 Vim vs Emacs
 ---
+mode
+
+	| Do                     | Vim     | Emacs |
+	| switch to edit mode    | <ESC>   | n/a   |
+	| switch to insert mode  | i, a, o | n/a   |
+	| switch to command line | :, /    | n/a   |
+
 move around
 
 	| Do    | Vim | Emacs |
@@ -28,6 +35,16 @@ move around
 	| down  | j   | _     |
 	| up    | k   | _     |
 	| right | l   | _     |
+
+repeat
+
+	| Do                   | Vim          | Emacs |
+	| forward 3 words      | 3w           | _     |
+	| forward to the 3rd , | 3f,          | _     |
+	| insert 3 hello       | 3ihello<ESC> | _     |
+	| delete next 3 words  | d3w          | _     |
+
+* Notice: Emacs repeating is inconsistent. For example, <ESC>d is to delete to word end (like vim dw), however, <ESC>3d is to insert 3 'd's.
 
 modeline
 
