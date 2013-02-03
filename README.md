@@ -15,6 +15,7 @@ move around
 	| right | l   | _     |
 
 modeline
+
 	| Do             | Vim             | Emacs |
 	| in-file config | set modelines=1 | _     |
 
