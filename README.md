@@ -7,12 +7,17 @@ ALL CHEATSHEETS I LOVE...
 Git
 ---
 
-
-submodule
+register submodule
 
 	git submodule add https://github.com/tpope/vim-sensible.git home/vim/vim-sensible
 	git submodule init
+	git add .
+	git commit -m 'register submodule vim-sensible'
 
+checkout submodule
+
+	git submodule init
+	git submodule update
 
 Vim vs Emacs
 ---

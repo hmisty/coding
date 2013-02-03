@@ -1,3 +1,13 @@
+start
+===
+git clone git@github.com:hmisty/coding.git
+cd coding
+git submodule init
+git submodule update
+cd home
+./create_links.sh
+
+
 coding
 ===
 coding is fun.
