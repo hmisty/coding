@@ -3,6 +3,8 @@ execute pathogen#infect()
 let g:vimclojure#HighlightBuiltins = 1
 let g:vimclojure#ParenRainbow = 1
 
+set viminfo+=!
+
 set modelines=1
 
 "source $VIMRUNTIME/vimrc_example.vim
