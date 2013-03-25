@@ -1,12 +1,21 @@
+"-- vim-pathogen loader --"
 execute pathogen#infect()
 
-let g:vimclojure#HighlightBuiltins = 1
-let g:vimclojure#ParenRainbow = 1
+"-- VimClojure --"
+"let g:vimclojure#HighlightBuiltins = 1
+"let g:vimclojure#ParenRainbow = 1
 
+"-- rainbow_parentheses.vim --"
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+"-- manual config --"
 set viminfo+=!
-
 set modelines=1
 
+"-- old --"
 "source $VIMRUNTIME/vimrc_example.vim
 "set nobackup
 "set shiftwidth=4

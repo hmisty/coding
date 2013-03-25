@@ -12,5 +12,6 @@ mkdir -p ~/.local/share/vim/undo ~/.local/share/vim/backup ~/.local/share/vim/sw
 #ln -s ~/coding/home/vim/VimClojure ~/.vim/bundle/VimClojure
 ln -s ~/coding/home/vim/tabular ~/.vim/bundle/tabular
 ln -s ~/coding/home/vim/vim-foreplay ~/.vim/bundle/vim-foreplay
-#ln -s ~/coding/home/vim/vim-classpath ~/.vim/bundle/vim-classpath
+ln -s ~/coding/home/vim/vim-classpath ~/.vim/bundle/vim-classpath
 ln -s ~/coding/home/vim/vim-clojure-static ~/.vim/bundle/vim-clojure-static
+ln -s ~/coding/home/vim/rainbow_parentheses.vim ~/.vim/bundle/rainbow_parentheses.vim
