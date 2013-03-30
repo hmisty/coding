@@ -62,8 +62,12 @@
   `(fn
      ([x#] (if (coll? x#) (map ~f x#) (~f x#)))
      ([y# x#] (if (coll? x#)
-                (map ~f (if (coll? y#) y# (repeat y#)) x#)
-                (~f y# x#)))))
+                (if (coll? y#) 
+                  (map ~f y# x#)
+                  (map ~f (repeat y#) x#))
+                (if (coll? y#)
+                  (map ~f y# (repeat x#))
+                  (~f y# x#))))))
 
 (def +| (vectorize +))
 (def -| (vectorize -))
