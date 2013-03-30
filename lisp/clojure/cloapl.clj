@@ -1,4 +1,9 @@
+; lein repl
+; => (load "cloapl")
+; => (run-tests)
+;
 (ns cloapl
+  {:author hmisty}
   (:require [clojure.string :as string])
   (:use clojure.test))
 
