@@ -212,9 +212,12 @@
 
 (defn shape|
   ([x] (count x))
-  ([n x] (take| n 
+  ([n x]
+   (if (coll? n)
+     ()
+     (take| n 
                 (apply (if (string? x) str concat)
-                       (repeat (/ n (count x)) x)))))
+                       (repeat (/ n (count x)) x))))
 
 ; 4 shape NAME
 (is (= "APL4"
