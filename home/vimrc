@@ -16,8 +16,8 @@ set viminfo+=!
 set modelines=1
 
 "-- old --"
-"source $VIMRUNTIME/vimrc_example.vim
-"set nobackup
+source $VIMRUNTIME/vimrc_example.vim
+set nobackup
 "set shiftwidth=4
 "set softtabstop=4
 "set tabstop=4
