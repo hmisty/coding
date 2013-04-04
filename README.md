@@ -1,8 +1,7 @@
 <!-- vim:set ft=markdown: -->
 
-Motto
+Motto: KEEP CODING.
 ===
-KEEP CODING.
 
 CheatSheets
 ===
