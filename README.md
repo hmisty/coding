@@ -1,5 +1,9 @@
 <!-- vim:set ft=markdown: -->
 
+Motto
+===
+KEEP CODING.
+
 CheatSheets
 ===
 ALL CHEATSHEETS I LOVE...
