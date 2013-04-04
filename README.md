@@ -1,14 +1,12 @@
 <!-- vim:set ft=markdown: -->
 
-Motto: KEEP CODING.
-===
+# Motto: KEEP CODING.
 
-CheatSheets
-===
-ALL CHEATSHEETS I LOVE...
+----------------------------
 
-Git
----
+## CheatSheets
+
+### Git
 
 register submodule
 
@@ -22,8 +20,8 @@ checkout submodule
 	git submodule init
 	git submodule update
 
-Vim vs Emacs
----
+### Vim vs Emacs
+
 mode
 
 	| Do                     | Vim     | Emacs |
