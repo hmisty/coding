@@ -12,7 +12,7 @@ Original Java demo: http://underpop.online.fr/j/java/java-game-programming/LiB01
 
 * Start echo client
 
-	lein run -c
+	lein run
 
 ## License
 
