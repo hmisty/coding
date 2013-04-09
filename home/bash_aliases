@@ -1,4 +1,4 @@
 alias g=git
 
 # for mac
-alias ls='ls -G'
+alias ls='ls -G --color'
