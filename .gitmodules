@@ -22,3 +22,6 @@
 [submodule "home/vim/rainbow_parentheses.vim"]
 	path = home/vim/rainbow_parentheses.vim
 	url = https://github.com/kien/rainbow_parentheses.vim
+[submodule "home/vim/vim-fireplace"]
+	path = home/vim/vim-fireplace
+	url = https://github.com/tpope/vim-fireplace.git
