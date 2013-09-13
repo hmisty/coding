@@ -2,4 +2,6 @@ alias g=git
 alias vi=vim
 
 # for mac
-alias ls='ls -G --color'
+alias ls='ls -G'
+# for arch
+#alias ls='ls --color'
