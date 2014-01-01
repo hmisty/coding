@@ -4,24 +4,100 @@ filetype off	"required by vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+"-- let Vundle manage Vundle
+"-- required! 
 Bundle 'gmarik/vundle'
+
+"-- My Bundles here:
+"$ mvim +BundleInstall +qall
+"-- original repos on github
+Bundle "myhere/vim-nodejs-complete"
+"-- motion
+Bundle 'Lokaltog/vim-easymotion'
+:let mapleader=","
+"-- colorscheme
+Bundle 'nielsmadan/harlequin'
+:colorscheme harlequin
+"-- auto complete
+Bundle 'Valloric/YouCompleteMe'
 Bundle 'ervandew/supertab'
+"-- clojure
+Bundle 'guns/vim-clojure-static'
+Bundle 'kien/rainbow_parentheses.vim'
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+Bundle 'tpope/vim-sensible'
+Bundle 'tpope/vim-foreplay'
+Bundle 'tpope/vim-classpath'
+Bundle 'tpope/vim-fireplace'
+Bundle 'vim-scripts/paredit.vim'
+"-- dir tree
+Bundle 'scrooloose/nerdtree'
+"-- auto snippet
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
 Bundle "garbas/vim-snipmate"
 Bundle "honza/vim-snippets"
-Bundle "myhere/vim-nodejs-complete"  
 imap <C-J> <Plug>snipMateNextOrTrigger
 smap <C-J> <Plug>snipMateNextOrTrigger
+"-- other
+Bundle 'godlygeek/tabular'
+"-- vim-scripts repos
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+"-- non github repos
+"Bundle 'git://git.wincent.com/command-t.git'
+"-- git repos on your local machine (ie. when working on your own plugin)
+"Bundle 'file:///Users/gmarik/path/to/plugin'
+" ...
 
-source $VIMRUNTIME/vimrc_example.vim
- 
-set nobackup
+
+"-- vim-pathogen loader --"
+"execute pathogen#infect()
+
+"-- manual config --"
 set viminfo+=!
 set modelines=1
 set nu
-colo desert
 
+" highlight current line
 au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
 set cursorline cursorcolumn
+
+" for macvim
+if has("gui_running")
+    set go=aAce  " remove toolbar
+    set transparency=5
+    set guifont=Monaco:h13
+    set showtabline=2
+    set columns=100
+    set lines=40
+    "noremap <D-M-Left> :tabprevious<cr>
+    "noremap <D-M-Right> :tabnext<cr>
+    "map <D-1> 1gt
+    "map <D-2> 2gt
+    "map <D-3> 3gt
+    "map <D-4> 4gt
+    "map <D-5> 5gt
+    "map <D-6> 6gt
+    "map <D-7> 7gt
+    "map <D-8> 8gt
+    "map <D-9> 9gt
+    "map <D-0> :tablast<CR>
+endif
+
+"-- old --"
+source $VIMRUNTIME/vimrc_example.vim
+set nobackup
+"set shiftwidth=4
+"set softtabstop=4
+"set tabstop=4
+""set expandtab
+"set autoindent
+"set smarttab
+"set formatoptions=croql
+"
+"
