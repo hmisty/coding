@@ -92,12 +92,12 @@ endif
 "-- old --"
 source $VIMRUNTIME/vimrc_example.vim
 set nobackup
-"set shiftwidth=4
-"set softtabstop=4
-"set tabstop=4
-""set expandtab
-"set autoindent
-"set smarttab
-"set formatoptions=croql
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
+set expandtab
+set autoindent
+set smarttab
+set formatoptions=croql
 "
 "
