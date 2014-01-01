@@ -17,7 +17,8 @@ Bundle 'Lokaltog/vim-easymotion'
 :let mapleader=","
 "-- colorscheme
 Bundle 'nielsmadan/harlequin'
-:colorscheme harlequin
+":colorscheme harlequin
+:colorscheme desert
 "-- auto complete
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'ervandew/supertab'
