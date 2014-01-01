@@ -11,12 +11,22 @@ Bundle 'gmarik/vundle'
 "-- My Bundles here:
 "$ mvim +BundleInstall +qall
 "-- original repos on github
-Bundle 'godlygeek/tabular'
+"-- motion
+Bundle 'Lokaltog/vim-easymotion'
+:let mapleader=","
+"-- colorscheme
+Bundle 'nielsmadan/harlequin'
+:colorscheme harlequin
 "-- auto complete
 Bundle 'Valloric/YouCompleteMe'
+Bundle 'ervandew/supertab'
 "-- clojure
 Bundle 'guns/vim-clojure-static'
 Bundle 'kien/rainbow_parentheses.vim'
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 Bundle 'tpope/vim-sensible'
 Bundle 'tpope/vim-foreplay'
 Bundle 'tpope/vim-classpath'
@@ -31,6 +41,8 @@ Bundle "garbas/vim-snipmate"
 Bundle "honza/vim-snippets"
 imap <C-J> <Plug>snipMateNextOrTrigger
 smap <C-J> <Plug>snipMateNextOrTrigger
+"-- other
+Bundle 'godlygeek/tabular'
 "-- vim-scripts repos
 Bundle 'L9'
 Bundle 'FuzzyFinder'
@@ -44,15 +56,10 @@ Bundle 'FuzzyFinder'
 "-- vim-pathogen loader --"
 "execute pathogen#infect()
 
-"-- rainbow_parentheses.vim --"
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
-
 "-- manual config --"
 set viminfo+=!
 set modelines=1
+set nu
 
 " highlight current line
 au WinLeave * set nocursorline nocursorcolumn
@@ -65,7 +72,7 @@ if has("gui_running")
     set transparency=5
     set guifont=Monaco:h13
     set showtabline=2
-    set columns=140
+    set columns=100
     set lines=40
     "noremap <D-M-Left> :tabprevious<cr>
     "noremap <D-M-Right> :tabnext<cr>
