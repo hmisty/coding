@@ -1,11 +1,34 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<head>
+<title><%= title %></title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+<form action="/paipan" method="POST">
+	<p>时间：
+	<select name='niangan'><% gan.forEach(function(item) { %><% include option %><% }) %></select>
+	<select name='nianzhi'><% zhi.forEach(function(item) { %><% include option %><% }) %></select>
+	年
+	<select name='yuegan'><% gan.forEach(function(item) { %><% include option %><% }) %></select>
+	<select name='yuezhi'><% zhi.forEach(function(item) { %><% include option %><% }) %></select>
+	月
+	<select name='rigan'><% gan.forEach(function(item) { %><% include option %><% }) %></select>
+	<select name='rizhi'><% zhi.forEach(function(item) { %><% include option %><% }) %></select>
+	日
+	<select name='shigan'><% gan.forEach(function(item) { %><% include option %><% }) %></select>
+	<select name='shizhi'><% zhi.forEach(function(item) { %><% include option %><% }) %></select>
+	时 
+	</p>
+	<p>占得：
+	<select name='bengua'><% gua.forEach(function(item) { %><% include option %><% }) %></select>
+	之
+	<select name='biangua'><% gua.forEach(function(item) { %><% include option %><% }) %></select>
+	卦
+	</p>
+	<p><input type="submit" value="提交"></input></p>
+</form>
+</body>
 </html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= title %></title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1><%= title %></h1>
+<!-- inspect(info) -->
+<p><%= info.niangan %><%= info.nianzhi %>年
+<%= info.yuegan %><%= info.yuezhi %>月
+<%= info.rigan %><%= info.rizhi %>日
+<%= info.shigan %><%= info.shizhi %>时 占得
+<%= info.bengua %> 之 <%= info.biangua %> 卦</p>
+<table>
+  <tr><td></td><td></td><td align="center"><%= info.benGUA.gong %>宫：<%= info.bengua %></td><td></td><td align="center"><%= info.bianGUA.gong %>宫：<%= info.biangua %></td></tr>
+  <tr><th>六神</th><th>伏神</th><th>本卦</th><th></th><th>变卦</th></tr>
+  <% [0, 1, 2, 3, 4, 5].forEach(function(i){ %>
+  <tr><td>青龙</td><td>父母庚子水</td><td><%= info.benGUA.yao.liuqin[i] %><%= info.benGUA.yao.gan[i] %><%= info.benGUA.yao.zhi[i] %><%= info.benGUA.yao.wx[i] %><%= info.benGUA.yao.sym[i] %> 世</td><td><%= info.bian.sym[i] %></td><td><%= info.bianGUA.yao.liuqin[i] %><%= info.bianGUA.yao.gan[i] %><%= info.bianGUA.yao.zhi[i] %><%= info.bianGUA.yao.wx[i] %><%= info.bianGUA.yao.sym[i] %></td></tr>
+  <% }) %>
+</table>
+</body>
+</html>

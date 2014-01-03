@@ -8,6 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var util = require('util');
 
 var app = express();
 
@@ -22,6 +23,17 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+//app.herlpers
+app.locals({
+  inspect:function(obj){
+    return util.inspect(obj,true);
+  }
+});
+//app.dynamicHelpers
+app.use(function(req,res,next){
+  res.locals.headers = req.headers;
+  next();
+});
 
 // development only
 if ('development' == app.get('env')) {
@@ -29,7 +41,8 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.post('/paipan', routes.paipan);
+//app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
