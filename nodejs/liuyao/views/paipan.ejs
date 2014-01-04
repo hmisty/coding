@@ -13,10 +13,17 @@
 <%= info.shigan %><%= info.shizhi %>时 占得
 <%= info.bengua %> 之 <%= info.biangua %> 卦</p>
 <table>
-  <tr><td></td><td></td><td align="center"><%= info.benGUA.gong %>宫：<%= info.bengua %></td><td></td><td align="center"><%= info.bianGUA.gong %>宫：<%= info.biangua %></td></tr>
+  <tr><td></td><td></td><td align="center"><%= info.benGUA.gong %>宫：<%= info.benGUA.name %></td><td></td><td align="center"><%= info.bianGUA.gong %>宫：<%= info.bianGUA.name %></td></tr>
   <tr><th>六神</th><th>伏神</th><th>本卦</th><th></th><th>变卦</th></tr>
   <% [0, 1, 2, 3, 4, 5].forEach(function(i){ %>
-  <tr><td>青龙</td><td>父母庚子水</td><td><%= info.benGUA.yao.liuqin[i] %><%= info.benGUA.yao.gan[i] %><%= info.benGUA.yao.zhi[i] %><%= info.benGUA.yao.wx[i] %><%= info.benGUA.yao.sym[i] %> 世</td><td><%= info.bian.sym[i] %></td><td><%= info.bianGUA.yao.liuqin[i] %><%= info.bianGUA.yao.gan[i] %><%= info.bianGUA.yao.zhi[i] %><%= info.bianGUA.yao.wx[i] %><%= info.bianGUA.yao.sym[i] %></td></tr>
+  <tr><td>青龙</td>
+    <td><%= (info.benGUA.fu == null ? '' : info.benGUA.fu[i]) %></td>
+    <td><%= info.benGUA.sym[i] %><%= info.benGUA.na[i] %>
+      <%= (i == info.benGUA.shi ? '世' : (i == info.benGUA.ying ? '应' : '')) %></td>
+    <td><%= info.bian.sym[i] %></td>
+    <td><%= info.bianGUA.sym[i] %><%= info.bianGUA.na[i] %>
+      <%= (i == info.bianGUA.shi ? '世' : (i == info.bianGUA.ying ? '应' : '')) %></td>
+  </tr>
   <% }) %>
 </table>
 </body>
