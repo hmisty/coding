@@ -16,6 +16,7 @@
  * 六亲 QIN
  * 伏神 FU
  * 世应 SHI YING
+ * 六神 SHEN
  */
 
 //五行
@@ -377,40 +378,10 @@ var GUA64setup = {
     shi: 3, ying: 0 }
 };
 
+//六神（依日干定顺序）
+var SHEN = ['玄武', '白虎', '螣蛇', '勾陈', '朱雀', '青龙'];
 
-//浑天甲子
-//卦天干 分内、外卦
-//var GUA8gannei = ['甲', '戊', '丙', '庚', '辛', '巳', '乙', '丁'];
-//var GUA8ganwai = ['壬', '戊', '丙', '庚', '辛', '巳', '癸', '丁'];
-//卦地支 分内、外卦
-//var GUA8zhinei = [ ['辰','寅','子'], ['午','辰','寅'], ['申','午','辰'], ['辰','寅','子'], ['酉','亥','丑'], ['亥','丑','卯'], ['卯','巳','未'], ['丑','卯','巳'] ];
-//var GUA8zhiwai = [ ['戌','申','午'], ['子','戌','申'], ['寅','子','戌'], ['戌','申','午'], ['卯','巳','未'], ['巳','未','酉'], ['酉','亥','丑'], ['未','酉','亥'] ];
-//八宫
-/*
-var GUA8gong = [ ['乾', '姤', '遁', '否', '观', '剥', '晋', '大有'],
-    ['坎', '节', '屯', '既济', '革', '丰', '明夷', '师'],
-    ['艮', '贲', '大畜', '损', '睽', '履', '中孚', '渐'],
-    ['震', '豫', '解', '恒', '升', '井', '大过', '随'],
-    ['巽', '小畜', '家人', '益', '无妄', '噬嗑', '颐', '蛊'],
-    ['离', '旅', '鼎', '未济', '蒙', '涣', '讼', '同人'],
-    ['坤', '复', '临', '泰', '大壮', '夬', '需', '比'],
-    ['兑', '困', '萃', '咸', '蹇', '谦', '小过', '归妹'] ];
-
-var GUA64gong = new Array(64);
-for (var i = 0; i < 8; i++) { for (var j = 0; j < 8; j++) { GUA64gong[GUA64.indexOf(GUA8gong[i][j])] = GUA8[i] } };
-var GUA64gong = [ '乾', '坤', '坎', '离', '坤', '离', '坎', '坤',
-    '巽', '艮', '坤', '乾', '离', '乾', '兑', '震',
-    '震', '巽', '坤', '乾', '巽', '艮', '乾', '坤',
-    '巽', '艮', '巽', '震', '坎', '离', '兑', '震',
-    '乾', '坤', '乾', '坎', '巽', '艮', '兑', '震',
-    '艮', '巽', '坤', '乾', '兑', '震', '兑', '震',
-    '坎', '离', '震', '艮', '艮', '兑', '坎', '离',
-    '巽', '兑', '离', '坎', '艮', '兑', '坎', '离' ];
- */
-//六亲
-//var WX = ['木', '火', '土', '金', '水'];
-//var LIUQIN = ['兄弟', '子孙', '妻财', '官鬼', '父母']; //(5 + WX.indexOf(yao wx) - WX.indexOf(gua wx)) mod 5
-
+//装卦 参数：卦名
 var install = function(gua) {
   var yao64 = YAO64[GUA64.indexOf(gua)];
 
@@ -418,10 +389,21 @@ var install = function(gua) {
 
   GUA.sym = GUA.yao.slice(0); //deep copy
   GUA.sym.forEach(function(v,i,a){ a[i] = v ? '▅▅▅▅▅' : '▅▅　▅▅' });
-
+  
   return GUA;
 };
 
+//装六神 参数：日干
+var installSHEN = function(rigan) {
+  //var GAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+  var shift = [0, 0, 5, 5, 4, 3, 2, 2, 1, 1]; //(yao idx + shift[GAN.indexOf(rigan)]) % 6
+  var shen = [0, 1, 2, 3, 4, 5];
+  shen.forEach(function(v,i,a){ console.log(rigan);
+    a[i] = SHEN[(i + shift[GAN.indexOf(rigan)])%6] }); 
+  return shen;
+}
+
+//变爻
 var ifchange = function(benGUA, bianGUA) {
   var bian = {};
   bian.num = [0, 0, 0, 0, 0, 0];
@@ -440,6 +422,7 @@ exports.paipan = function(req, res){
   info.benGUA = install(info.bengua); //bengua只是卦名，benGUA是装卦之后
   info.bianGUA = install(info.biangua);
   info.bian = ifchange(info.benGUA, info.bianGUA);
+  info.shen = installSHEN(info.rigan);
 
   res.render('paipan', { title: '排盘结果', info: info });
 };

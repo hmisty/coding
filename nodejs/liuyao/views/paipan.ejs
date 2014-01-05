@@ -16,7 +16,7 @@
   <tr><td></td><td></td><td align="center"><%= info.benGUA.gong %>宫：<%= info.benGUA.name %></td><td></td><td align="center"><%= info.bianGUA.gong %>宫：<%= info.bianGUA.name %></td></tr>
   <tr><th>六神</th><th>伏神</th><th>本卦</th><th></th><th>变卦</th></tr>
   <% [0, 1, 2, 3, 4, 5].forEach(function(i){ %>
-  <tr><td>青龙</td>
+  <tr><td><%= info.shen[i] %></td>
     <td><%= (info.benGUA.fu == null ? '' : info.benGUA.fu[i]) %></td>
     <td><%= info.benGUA.sym[i] %><%= info.benGUA.na[i] %>
       <%= (i == info.benGUA.shi ? '世' : (i == info.benGUA.ying ? '应' : '')) %></td>
