@@ -6,3 +6,6 @@ alias m=mvim
 alias ls='ls -G'
 # for arch
 #alias ls='ls --color'
+
+# jupyter notebook
+alias nb='jupyter notebook'
