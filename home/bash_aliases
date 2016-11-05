@@ -1,5 +1,6 @@
 alias g=git
 alias vi=vim
+alias m=mvim
 
 # for mac
 alias ls='ls -G'

@@ -6,3 +6,5 @@
 *.swp
 # windows exe
 *.exe
+# lein
+.lein-repl-history

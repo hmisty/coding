@@ -31,6 +31,9 @@
                        (en/content (format "%s : %s" id url))
                        (en/set-attr :href (ctx/link (str \/ id))))))
 
+(defn perft []
+  "ok")
+
 (defn redirect [id]
   (resp/redirect (@urls id)))
 
@@ -43,6 +46,7 @@
 (defroutes handler
   (compojure.route/resources "/")
   (GET "/" request (homepage request))
+  (GET "/t" request (perft))
   (GET "/:id" [id] (redirect id))
   (POST "/shorten" request
         (let [id (shorten (-> request :params :url))]
