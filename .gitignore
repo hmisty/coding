@@ -8,3 +8,5 @@
 *.exe
 # lein
 .lein-repl-history
+# node modules
+node_modules
