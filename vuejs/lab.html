@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/vue"></script>
+  </head>
+  <body>
+    <p>tutorial: http://vuejs.org/v2/guide/#Declarative-Rendering</p>
+    <p>vue example 1:</p>
+    <div id="app">
+      {{ message }}
+    </div>
+    <p>vue example 7:</p>
+    <div id="app-7">
+      <ol>
+        <todo-item v-for='item in theList' v-bind:todo='item'></todo-item>
+      </ol>
+    </div>
+    <script src="lab.js"></script>
+  </body>
+</html>
