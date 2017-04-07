@@ -6,5 +6,7 @@
 *.swp
 # windows exe
 *.exe
+# java compiled files
+*.class
 # lein
 .lein-repl-history
