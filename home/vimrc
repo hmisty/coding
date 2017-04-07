@@ -20,8 +20,10 @@ Bundle 'nielsmadan/harlequin'
 ":colorscheme harlequin
 :colorscheme desert
 "-- auto complete
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 Bundle 'ervandew/supertab'
+"-- javascript
+Bundle 'pangloss/vim-javascript'
 "-- clojure
 Bundle 'guns/vim-clojure-static'
 Bundle 'kien/rainbow_parentheses.vim'
