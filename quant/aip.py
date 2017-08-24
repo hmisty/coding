@@ -3,7 +3,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def fixed_investment_plan(index_code, start_date, end_date):
+def automatic_investment_plan(index_code, start_date, end_date):
     index_data = pd.read_csv('all_trading_data/index data/' + str(index_code) + '.csv',
             parse_dates=['date'], index_col=['date'])
     index_data = index_data[['index_code', 'close']].sort_index()
@@ -36,8 +36,8 @@ def fixed_investment_plan(index_code, start_date, end_date):
     return daily_data
 
 #run
-#df = fixed_investment_plan('sh000001', '2007-10-01', '2009-07-31')
-df = fixed_investment_plan('sh000001', '2013-02-01', '2014-12-31')
+#df = automatic_investment_plan('sh000001', '2007-10-01', '2009-07-31')
+df = automatic_investment_plan('sh000001', '2013-02-01', '2014-12-31')
 print df[['TotalMoney', 'CurveFund', 'CurveZeroRisk']].iloc[[0, -1],]
 print
 
