@@ -6,7 +6,11 @@
 *.swp
 # windows exe
 *.exe
+# java compiled files
+*.class
 # lein
 .lein-repl-history
 # node modules
 node_modules
+# mac
+.DS_Store
