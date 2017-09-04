@@ -54,7 +54,9 @@ Bundle 'FuzzyFinder'
 "Bundle 'git://git.wincent.com/command-t.git'
 "-- git repos on your local machine (ie. when working on your own plugin)
 "Bundle 'file:///Users/gmarik/path/to/plugin'
-" ...
+"-- indent python
+Bundle "vim-scripts/indentpython.vim"
+Bundle "nvie/vim-flake8"
 
 
 "-- vim-pathogen loader --"
@@ -104,6 +106,7 @@ set smarttab
 set formatoptions=croql
 set encoding=utf-8
 "
+" for python, ref: https://segmentfault.com/a/1190000003962806
 " highlight unnecessary whitespaces
 highlight BadWhitespace ctermbg=red guibg=darkred
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
