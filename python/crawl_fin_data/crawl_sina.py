@@ -25,26 +25,26 @@ def parse_table(html):
 
     soup = BS(html)
     table = soup.find_all('table', id='FundHoldSharesTable')
-    soup2 = BS(str(table[0]))
-    rows = soup2.find_all('tr')
-    for row_index, row in enumerate(rows):
-        # skip row 0 and 1
-        if row_index > 1:
-            soup2 = BS(str(row))
-            columns = soup2.find_all('td')
-            data_row = []
-            for col_index, col in enumerate(columns):
-                soup3 = BS(str(col))
-                if col_index == 0:
-                    dt = soup3.find_all('a')[0].text.strip()
-                    data_row.append(dt)
-                else:
-                    val = soup3.find_all('div')[0].text.strip()
-                    data_row.append(val)
-            data_frame.append(data_row)
+    if len(table) > 0:
+        soup2 = BS(str(table[0]))
+        rows = soup2.find_all('tr')
+        for row_index, row in enumerate(rows):
+            # skip row 0 and 1
+            if row_index > 1:
+                soup2 = BS(str(row))
+                columns = soup2.find_all('td')
+                data_row = []
+                for col_index, col in enumerate(columns):
+                    soup3 = BS(str(col))
+                    if col_index == 0:
+                        dt = soup3.find_all('a')[0].text.strip()
+                        data_row.append(dt)
+                    else:
+                        val = soup3.find_all('div')[0].text.strip()
+                        data_row.append(val)
+                data_frame.append(data_row)
 
     return data_frame
-
 
 def parse_years(html):
     soup = BS(html)
@@ -81,6 +81,7 @@ def crawl(code):
     for year in years:
         for quarter in quarters:
             url = url_tmpl.format(year=year, quarter=quarter) 
+            print 'crawling ' + url
             html2 = get_html(url)
             data_frame = parse_table(html2)
             output_csv(data_frame, '002594')
