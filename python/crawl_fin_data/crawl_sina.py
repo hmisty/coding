@@ -82,9 +82,11 @@ def crawl(code):
             url = url_tmpl.format(year=year, quarter=quarter) 
             html2 = get_html(url)
             data_frame = parse_table(html2)
-            output_csv(data_frame, '002594')
+            output_csv(data_frame, code)
 
 if __name__ == '__main__':
     #reload(sys)
     #sys.setdefaultencoding('utf8')
-    crawl('002594')
+
+    #crawl('002594')
+    crawl('000001/type/S')
