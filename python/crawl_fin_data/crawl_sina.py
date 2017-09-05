@@ -4,6 +4,7 @@ import urllib
 from bs4 import BeautifulSoup
 
 #MOCK = True
+MOCK = False
 EXAMPLE_FILE = 'mock/002594.html'
 
 def BS(html):
