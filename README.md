@@ -4,18 +4,33 @@
 
 ## CheatSheets
 
-### Python
+### python
 
-virtual environments
+virtual environments and package management
 
 	mkdir ~/.env
 	virtualenv ~/.env/XXX
 	source ~/.env/XXX/bin/activate
+
 	pip install YYY
 	pip freeze > requirements.txt
+
+	pip install -r requirements.txt
 	deactivate
 
-### Git
+### nodejs
+
+each directory is a separate environment
+
+	mkdir PROJECT
+	npm init -y
+	cat package.json
+
+	npm install YYY --save
+
+* don't forget to use --save to add a dependency entry into the package.json
+
+### git
 
 register submodule
 
@@ -29,7 +44,7 @@ checkout submodule
 	git submodule init
 	git submodule update
 
-### Vim vs Emacs
+### vim vs emacs
 
 mode
 
