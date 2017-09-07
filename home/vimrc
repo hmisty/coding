@@ -100,11 +100,13 @@ set nobackup
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
-set expandtab
 set autoindent
 set smarttab
 set formatoptions=croql
 set encoding=utf-8
+" don't expandtab by default. e.g. github markdown use TAB for auto code block
+"set expandtab
+
 "
 " for python, ref: https://segmentfault.com/a/1190000003962806
 " highlight unnecessary whitespaces
