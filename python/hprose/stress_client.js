@@ -26,10 +26,7 @@ setTimeout(() => {
   console.log('Request per second: ' + Math.floor(success / elapsed * 1000));
 }, time_to_run); //stop after predefined seconds
 
-run();
-/*
-   var workers = 20;
-   for (var i = 0; i < workers; i++) {
-   run();
-   }
-   */
+var workers = 20;
+for (var i = 0; i < workers; i++) {
+	run();
+}

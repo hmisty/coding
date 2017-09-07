@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "hprose": "^2.0.45"
+  }
+}
