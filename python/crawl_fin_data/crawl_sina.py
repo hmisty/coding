@@ -66,7 +66,7 @@ def parse_quarters(html):
     return values
 
 def output_csv(data_frame, code):
-    fh = open('data/' + code + '.csv', 'a')
+    fh = open('data/' + code.replace('/', '_') + '.csv', 'a')
     for row in data_frame:
         fh.write(','.join(row) + '\n')
 
