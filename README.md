@@ -36,6 +36,29 @@ register submodule
 	git add .
 	git commit -m 'register submodule vim-sensible'
 
+branch
+	
+	# local create
+	git checkout -b dev
+
+	# local look up and switch
+	git branch
+	git branch -a
+	git checkout master
+	git checkout dev
+
+	# push to remote
+	git push origin dev
+	# remote look up
+	git remote -v
+
+	# local delete
+	git checkout master
+	git branch -d dev
+
+	# remote delete
+	git push origin :dev
+
 checkout submodule
 
 	git submodule init
