@@ -2,22 +2,18 @@
 
 # KEEP CODING...
 
-----------------------------
-
-CheatSheets
+## CheatSheets
 
 ### Python
 
 virtual environments
 
-  mkdir ~/.env
-  virtualenv ~/.env/XXX
-  source ~/.env/XXX/bin/activate
-  pip install YYY
-  pip freeze > requirements.txt
-  deactivate
-
-----------------------------
+	mkdir ~/.env
+	virtualenv ~/.env/XXX
+	source ~/.env/XXX/bin/activate
+	pip install YYY
+	pip freeze > requirements.txt
+	deactivate
 
 ### Git
 
