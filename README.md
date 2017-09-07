@@ -20,15 +20,12 @@ virtual environments and package management
 
 ### nodejs
 
-each directory is a separate environment
+each directory is a separate environment (node\_modules folder in current dir)
 
 	mkdir PROJECT
-	npm init -y
-	cat package.json
+	npm install --save YYY
 
-	npm install YYY --save
-
-* don't forget to use --save to add a dependency entry into the package.json
+* use --save to add a dependency entry into the package.json (auto create if not exists)
 
 ### git
 
