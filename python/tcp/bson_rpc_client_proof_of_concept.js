@@ -1,24 +1,14 @@
-var bson = require('bson');
-var net = require('net');
+var bson_rpc = require('bson_rpc');
 
-var Proxy = function () {};
-Proxy.prototype = {
-	host: '',
-	port: 0,
-	client: null,
-	fn: '',
-	connect: function (host, port) {
-	}
-	remote: function() {
-		var doc = {
-			fn: this.fn,
-			args: Array.prototype.splice.call(arguments, 0, arguments.length)
-		};
-	}
-};
+var host = '127.0.0.1';
+var port = 8181;
 
-var server = new Proxy();
-server.remote.call({fn:"add"}, 1, 2);
+var client = bson_rpc.create(host, port);
+
+var server = client.use_service(['hi', 'echo', 'add']);
+proxy.hi((data) => {
+	console.log('received: ' + JSON.stringify(data));
+});
 
 /*
 var obj = new bson();
