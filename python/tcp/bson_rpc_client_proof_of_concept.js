@@ -28,9 +28,6 @@ console.log('doc2: ', doc2);
 var host = '127.0.0.1';
 var port = 8181;
 var client = new net.Socket();
-client.connect(port, host, () => {
-	console.log('connected');
-});
 
 var keep_running = true;
 var success = 0;
@@ -54,20 +51,25 @@ client.on('data', (data) => {
 	}
 });
 
-var time_to_run = 5 * 1000; // 5 seconds
-var start = Date.now();
-setTimeout(() => {
-	keep_running = false;
+client.connect(port, host, () => {
+	console.log('connected');
 
-	var elapsed = Date.now() - start;
-	console.log('Time elapsed: ' + elapsed + ' ms');
-	console.log('Successful requests: ' + success);
-	console.log('Failed requests: ' + failure);
-	console.log('Request per second: ' + Math.floor(success / elapsed * 1000));
-}, time_to_run); //stop after predefined seconds
+	var time_to_run = 5 * 1000; // 5 seconds
+	var start = Date.now();
+	setTimeout(() => {
+		keep_running = false;
 
-var workers = 1; //20;
-for (var i = 0; i < workers; i++) {
-	client.write(rpc_data);
-}
+		var elapsed = Date.now() - start;
+		console.log('Time elapsed: ' + elapsed + ' ms');
+		console.log('Successful requests: ' + success);
+		console.log('Failed requests: ' + failure);
+		console.log('Request per second: ' + Math.floor(success / elapsed * 1000));
+	}, time_to_run); //stop after predefined seconds
+
+	var workers = 1; //20;
+	for (var i = 0; i < workers; i++) {
+		client.write(rpc_data);
+	}
+
+});
 

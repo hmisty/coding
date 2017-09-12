@@ -1,14 +1,15 @@
 var hprose = require("hprose");
 var client = hprose.Client.create("http://127.0.0.1:8181/");
-var proxy = client.useService(["hello"]);
+var proxy = client.useService(["hello", "add"]);
 
 var keep_running = true;
 var success = 0;
 var failure = 0;
 var run = () => {
-  proxy.hello("world", function(result) {
+  //proxy.hello("world", function(result) {
+  proxy.add(1, 2, function(result) {
     success += 1;
-    //console.log(result);
+    console.log(result);
     if (keep_running) 
       run();
   });
