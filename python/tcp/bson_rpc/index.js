@@ -1,47 +1,52 @@
+'use strict';
+
 var bson = require('bson');
 var net = require('net');
 
-var Proxy = function () {};
-Proxy.prototype = {
-	host: '',
-	port: 0,
-	client: null,
-	create: function (host, port) {
-		this.host = host;
-		this.port = port;
+var Proxy = function(host, port){
+	this.host = host;
+	this.port = port;
+	this.connection = new net.Socket();
+};
 
-		/*
-			 client.connect(port, host, () => {
-			 console.log('connected to ' + host + ':' + str(port));
-			 client.on('data', (data) => {
-			 var obj = new bson();
-			 var doc = obj.deserialize(data);
-			 callback_receive(doc);
-			 });
+Proxy.prototype.connect = function(callback) {
+	this.connection.connect(this.port, this.host, callback);
+};
 
-			 callback_send();
-			 */
-	},
-		use_service: function(names) {
-			for (var name in names) {
-				Proxy.prototype[name] = function() {
-					var doc = {
-						fn: name,
-						args: Array.prototype.splice.call(arguments, 1, arguments.length)
-					};
+Proxy.prototype.use_service = function(names) {
+	var conn = this.connection;
+	for (var i in names) {
+		var name = names[i];
+		Proxy.prototype[name] = function() {
+			var args = Array.prototype.splice.call(arguments, 0, arguments.length);
+			var doc = {
+				fn: name,
+				args: args,
+			};
+			var obj = new bson();
+			var rpc_data = obj.serialize(doc);
+			conn.write(rpc_data); //FIXME if conn is not connected
+		};
+	}
+};
 
-					console.log('call remote fn: ' + name + ' with doc: ' + JSON.stringify(doc));
+Proxy.prototype.on_result = function(callback) {
+	var conn = this.connection;
+	conn.on('data', (data) => {
+		var obj = new bson();
+		var doc = obj.deserialize(data);
+		if (doc.error_code == 0) {
+			callback(null, doc.result);
+		} else {
+			var err = JSON.stringify(doc);
+			callback(err);
+		}
+	});
+};
 
-					var obj = new bson();
-					var data = obj.serialize(doc);
-					client.write(data);
-				}
-			}
-		},
-		disconnect: function() {
-			client.destroy();
-			console.log('disconnected from ' + host + ':' + str(port));
-		},
-	};
+Proxy.prototype.disconnect = function() {
+	this.connection.destroy();
+};
 
-	module.exports = Proxy;
+
+module.exports = Proxy;
