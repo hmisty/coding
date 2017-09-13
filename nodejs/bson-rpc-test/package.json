@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "bson-rpc": "^0.5.3"
+  }
+}

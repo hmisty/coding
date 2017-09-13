@@ -64,6 +64,14 @@ checkout submodule
 	git submodule init
 	git submodule update
 
+tagging
+
+	g tag -a TAG -m DESCRIPTION
+	g push origin TAG
+
+	git tag -d TAG
+	git push origin :TAG
+
 ### vim vs emacs
 
 mode
