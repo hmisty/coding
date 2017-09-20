@@ -19,7 +19,7 @@ proxy.on_result((err, result) => {
 	}
 
 	if (keep_running) {
-		proxy.add(1, 2);
+				proxy.add(1, 2) 
 	} else {
 		proxy.disconnect();
 	}
@@ -28,7 +28,7 @@ proxy.on_result((err, result) => {
 proxy.connect(() => {
 	console.log('connected');
 
-	var time_to_run = 5 * 1000; // 5 seconds
+	var time_to_run = 10 * 1000; // 5 seconds
 	var start = Date.now();
 	setTimeout(() => {
 		keep_running = false;
