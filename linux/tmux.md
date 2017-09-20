@@ -44,6 +44,11 @@ Re-attach:
 
 ## 常用操作和快捷键 Frequent operations and shortcuts
 
+查看屏幕历史：
+
+	Ctrl-b 然后用PageUp/PageDown键上下翻屏就好啦！非常方便。
+	ESC 多按几次就退出了历史查看模式，回到交互模式。
+
 新建一个窗口：
 
 	Ctrl-b c （速记法：c = create）
