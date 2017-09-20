@@ -36,11 +36,13 @@ Detach（退出tmux，但是shell都还在运行）：
 
 查看有哪些detached sessions:
 
-	$ tmux list-sessions
+	$ tmux ls		# ls = list-sessions
 
 Re-attach:
 
-	$ tmux attach-session -t <session_id>
+	$ tmux a -t <session_id>   # a = attach-session
+	如果只有一个session，可以不加-t参数
+	$ tmux a
 
 ## 常用操作和快捷键 Frequent operations and shortcuts
 
