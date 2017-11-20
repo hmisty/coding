@@ -1,8 +1,27 @@
-# Deep Learning tutorials and collections
+# 深度学习入门资料收集
 
-## TensorFlow
+注：资料收集自网络。
 
-### linear\_regression.py
+## TensorFlow入门
+
+## 代码索引
+
+#### 1 - 简介
+- **Hello World** helloworld.py : TensorFlow版hello world，展示一下tensorflow的使用。
+- **Basic Operations** basic\_operations.py : 展示一些TensorFlow的操作。
+
+#### 2 - 基础的机器学习模型
+- **Linear Regression** linear\_regression.py : 线性回归。
+- **Logistic Regression** logistic\_regression.py : Logistic回归。
+- **Nearest Neighbor** nearest\_neighbor.py : 近邻算法。
+- **K-Means** kmeans.py : K-Means算法。
+- **Random Forest** random\_forest.py : 随机森林算法。
+
+
+
+### 坑
+
+#### linear\_regression.py
 
 issue:
 
