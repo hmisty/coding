@@ -57,7 +57,8 @@ Bundle 'FuzzyFinder'
 "-- indent python
 Bundle "vim-scripts/indentpython.vim"
 Bundle "nvie/vim-flake8"
-
+"-- drawIt
+Bundle "vim-scripts/DrawIt"
 
 "-- vim-pathogen loader --"
 "execute pathogen#infect()
