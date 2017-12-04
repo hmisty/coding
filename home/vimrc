@@ -57,7 +57,8 @@ Bundle 'FuzzyFinder'
 "-- indent python
 Bundle "vim-scripts/indentpython.vim"
 Bundle "nvie/vim-flake8"
-
+"-- drawIt
+Bundle "vim-scripts/DrawIt"
 
 "-- vim-pathogen loader --"
 "execute pathogen#infect()
@@ -122,3 +123,11 @@ au BufNewFile,BufRead *.py
       \ set autoindent |
       \ set fileformat=unix
 "
+" 让vim记忆上次编辑的位置  
+if has("autocmd")  
+autocmd BufReadPost *   
+    \if line("'\"")>0 && line("'\"")<=line("$") |  
+    \   exe "normal! g`\"" |  
+    \endif  
+endif
+

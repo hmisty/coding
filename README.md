@@ -57,6 +57,10 @@ branch
 	git push origin dev
 	# remote look up
 	git remote -v
+	
+	# pull from remote
+	git checkout -b dev
+	git pull origin dev
 
 	# local delete
 	git checkout master

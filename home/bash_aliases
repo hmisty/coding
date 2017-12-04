@@ -3,7 +3,7 @@ alias vi=vim
 alias m=mvim
 
 # for mac
-#alias ls='ls -G'
+alias ls='ls -G'
 # for arch
 #alias ls='ls --color'
 
