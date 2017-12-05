@@ -1,6 +1,7 @@
 #encoding:utf-8
 import pika
 import time
+import pickle
 
 # 建立实例
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -21,6 +22,16 @@ def callback(ch, method, properties, body):
     print(" Work done!")
     ch.basic_ack(delivery_tag = method.delivery_tag)  # 告诉生成者，消息处理完成
 
+def callback_echo(ch, method, properties, body):
+    # 四个参数为标准格式
+    print(ch, method, properties)  # 打印看一下是什么
+    # 管道内存对象  内容相关信息  后面讲
+    print(" [x] Received %r" % pickle.loads(body))
+    print(" Working for %s seconds..." % 1)
+    time.sleep(1)
+    print(" Work done!")
+    ch.basic_ack(delivery_tag = method.delivery_tag)  # 告诉生成者，消息处理完成
+
 channel.basic_consume( 
     # 消费消息
     callback,  # 如果收到消息，就调用callback函数来处理消息
@@ -31,7 +42,7 @@ channel.basic_consume(
 
 channel.queue_declare(queue='echo')
 channel.basic_consume( 
-    callback,
+    callback_echo,
     queue='echo',
 )
 
