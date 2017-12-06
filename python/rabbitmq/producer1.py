@@ -1,6 +1,7 @@
 #encoding:utf-8
 import os
 import pika
+import pickle
 
 # 建立一个实例
 connection = pika.BlockingConnection(
@@ -29,5 +30,5 @@ else:
     channel.queue_declare(queue='echo')
     channel.basic_publish(exchange='',
                           routing_key='echo',  # queue名字
-                          body='Echo!')  # 消息内容
+                          body=pickle.dumps({'cmd':'echo', 'text':'Echo!'}))  # 消息内容
     print(" [x] Sent 'Echo!'")
