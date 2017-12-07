@@ -19,7 +19,8 @@ from django.contrib import admin
 from index import views as index_views
 
 urlpatterns = [
-    url(r'^$', index_views.home, name = 'home'),
+    #url(r'^$', index_views.home, name = 'home'),
+    url(r'^$', index_views.index, name = 'index'),
     url(r'^add/$', index_views.add, name='add'),
     url(r'^add/(\d+)/(\d+)/$', index_views.add2, name='add2'),
     url(r'^admin/', admin.site.urls),
