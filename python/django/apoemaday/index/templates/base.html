@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}A Poem A Day{% endblock %} | 每日一诗</title>
+	</head>
+	<body>
+		{% include 'nav.html' %}
+
+		{% block content %}
+		<p>今日</p>
+		<p>露从今夜白，月是故乡明</p>
+		{% endblock %}
+
+		{% include 'bottom.html' %}
+	</body>
+</html>
