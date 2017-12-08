@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 import pinyin
@@ -13,9 +14,9 @@ def enum(**enums):
 
 ERA = enum(UNKNOWN='UNKNOWN', TANG='TANG', SONG='SONG')
 ERA_CHOICES = (
-    (ERA.UNKNOWN, '未知'),
-    (ERA.TANG, '唐'),
-    (ERA.SONG, '宋'),
+    (ERA.UNKNOWN, _('Unknown Era')),
+    (ERA.TANG, _('Dynasty Tang')),
+    (ERA.SONG, _('Dynasty Song')),
 )
 
 # author of a poem
@@ -32,7 +33,7 @@ class Author(models.Model):
     def to_pinyin(self):
         return pinyin.get(self.name)
 
-    to_pinyin.short_description = 'Pinyin name of the author'
+    to_pinyin.short_description = _('Pinyin name of the author')
 
     pinyin = property(to_pinyin)
 
