@@ -12,4 +12,9 @@
     lg = log -p
     ps = push
     pl = pull
+    d = difftool
 
+[diff]
+    tool = vimdiff
+[difftool]
+    prompt = false
