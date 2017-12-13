@@ -79,8 +79,11 @@ tagging
 	g tag -a TAG -m DESCRIPTION
 	g push origin TAG
 
+	g show TAG #查看TAG对应的commit信息
+
 	git tag -d TAG
 	git push origin :TAG
+
 
 ### vim vs emacs
 
