@@ -75,4 +75,19 @@ Re-attach:
 
 	$ man tmux
 
+## 坑 Pitfalls
+
+Ctrl-s 是冻结output。此时你的输入操作仍然被tmux接收并传入，但是输出却不会回显到屏幕上，不知道的还以为死机了。Ctrl-q 恢复。
+
+Ctrl-b 占用了vim的上翻页键，所以我决定把默认的Ctrl-b 改为Ctrl-s 。
+
+编辑 ~/.tmux.conf
+
+	# 设置前缀为Ctrl-s
+	set -g prefix C-s
+	# 解除Ctrl-b
+	unbind C-b
+	# <prefix> r 重新加载配置
+	bind r source-file ~/.tmux.conf \; display "config reloaded!"
+
 ## 完 END
