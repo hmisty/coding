@@ -16,3 +16,5 @@ node_modules
 .DS_Store
 # ipython notebook tempdir
 .ipynb_checkpoints
+# python pyc
+*.pyc
