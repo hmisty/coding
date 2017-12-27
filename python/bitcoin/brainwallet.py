@@ -1,8 +1,10 @@
 #coding:utf-8
 import sys
+from getpass import getpass
 from bitcoin import *
-myBrainWalletPassword = sys.argv[1]
+
+myBrainWalletPassword = getpass('password: ')
 mySecretKey = encode_privkey(sha256(myBrainWalletPassword), "wif")
 myAddress = pubtoaddr(privtopub(mySecretKey))
-print 'secretKey:', mySecretKey
+print 'secretKey:', '\033[37;47m' + mySecretKey + '\033[0m'
 print '  address:', myAddress
