@@ -51,9 +51,7 @@ KinaCharString3500 = u'一乙\
 assert len(KinaCharString3500) == 3500, 'Chinese char set size is NOT 3500.'
 
 def kina_encode(s):
-    r = re.compile('[0-9A-Za-z]+')
-    m = r.match(s)
-    assert m.start() == 0 and m.end() == len(s), 'String to be encoded contains char outside of [0-9A-Za-z].'
+    assert re.match('^[0-9A-Za-z]+$', s), 'String to be encoded contains char outside of [0-9A-Za-z].'
 
     bit_str = ''.join(format(ord(x), 'b') for x in s)
 
