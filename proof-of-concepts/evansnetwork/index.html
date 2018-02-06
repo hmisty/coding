@@ -39,243 +39,30 @@
 	<script>
 		var config = {
 			"types" : {
-				"view" : {
-					"long" : "Database view",
-					"short" : "View"
+				"R": {
+					"short": "R - 根",
+					"long": "R - 根节点"
 				},
-				"query" : {
-					"short" : "Query",
-					"long" : "Database query"
+				"C": {
+					"short": "C - 打工",
+					"long": "C - 打工序列"
 				},
-				"database" : {
-					"long" : "Access database",
-					"short" : "Access database"
+				"B": {
+					"short": "B - 创业",
+					"long": "B - 创业序列"
 				},
-				"report" : {
-					"long" : "Report",
-					"short" : "Report"
+				"A": {
+					"short": "A - 成功",
+					"long": "A - 成功序列"
 				},
-				"sas" : {
-					"short" : "SAS project",
-					"long" : "SAS project"
-				},
-				"extract" : {
-					"long" : "Extract-transform-load process",
-					"short" : "ETL process"
-				},
-				"table" : {
-					"short" : "Table",
-					"long" : "Database table"
-				}
 			},
 			"constraints" : [
-				{
-					"x" : 0.15,
-					"type" : "position",
-					"has" : {
-						"name" : "SASProject.egp"
-					},
-					"weight" : 0.7
-				},
-				{
-					"weight" : 0.7,
-					"has" : {
-						"name" : "ETL process 1"
-					},
-					"type" : "position",
-					"x" : 0.3
-				},
-				{
-					"type" : "position",
-					"x" : 0.45,
-					"has" : {
-						"name" : "ETL process 2"
-					},
-					"weight" : 0.7
-				},
-				{
-					"has" : {
-						"name" : "ETL process 4"
-					},
-					"x" : 0.6,
-					"type" : "position",
-					"weight" : 0.7
-				},
-				{
-					"weight" : 0.7,
-					"has" : {
-						"name" : "ETL process 3"
-					},
-					"type" : "position",
-					"x" : 0.75
-				},
-				{
-					"weight" : 0.7,
-					"type" : "position",
-					"x" : 0.9,
-					"has" : {
-						"name" : "ETL process 5"
-					}
-				},
-				{
-					"weight" : 0.8,
-					"y" : "0",
-					"has" : {
-						"type" : "extract"
-					},
-					"type" : "position"
-				},
-				{
-					"type" : "position",
-					"has" : {
-						"type" : "sas"
-					},
-					"weight" : 0.8,
-					"y" : "0"
-				},
-				{
-					"has" : {
-						"type" : "table"
-					},
-					"type" : "position",
-					"weight" : 0.8,
-					"y" : 0.1
-				},
-				{
-					"y" : 0.2,
-					"weight" : 0.8,
-					"type" : "position",
-					"has" : {
-						"type" : "view"
-					}
-				},
-				{
-					"type" : "position",
-					"has" : {
-						"type" : "query"
-					},
-					"y" : 0.5,
-					"weight" : 0.5
-				},
-				{
-					"y" : 0.8,
-					"weight" : 0.8,
-					"has" : {
-						"type" : "database"
-					},
-					"type" : "position"
-				},
-				{
-					"y" : 1,
-					"weight" : 0.8,
-					"type" : "position",
-					"has" : {
-						"type" : "report"
-					}
-				},
-				{
-					"has" : {
-						"group" : "Intermediate",
-						"type" : "report"
-					},
-					"type" : "position",
-					"y" : 0.8,
-					"weight" : 0.8
-				},
-				{
-					"weight" : 0.8,
-					"x" : 0.9,
-					"type" : "position",
-					"has" : {
-						"type" : "report",
-						"group" : "Reporting"
-					}
-				},
-				{
-					"has" : {
-						"type" : "query",
-						"group" : "Data1"
-					},
-					"type" : "position",
-					"x" : 0.15,
-					"weight" : 0.7
-				},
-				{
-					"weight" : 0.7,
-					"type" : "position",
-					"x" : 0.2,
-					"has" : {
-						"type" : "query",
-						"group" : "Data3"
-					}
-				},
-				{
-					"weight" : 0.7,
-					"type" : "position",
-					"x" : 0.2,
-					"has" : {
-						"group" : "Data4",
-						"type" : "query"
-					}
-				},
-				{
-					"weight" : 0.4,
-					"x" : 0.5,
-					"type" : "position",
-					"has" : {
-						"group" : "Data2",
-						"type" : "query"
-					}
-				},
-				{
-					"y" : 0.7,
-					"weight" : 0.7,
-					"has" : {
-						"group" : "Validation",
-						"type" : "query"
-					},
-					"x" : 0.8,
-					"type" : "position"
-				},
-				{
-					"type" : "position",
-					"x" : 0.9,
-					"has" : {
-						"type" : "query",
-						"group" : "Miscellaneous"
-					},
-					"y" : 0.5,
-					"weight" : 0.7
-				},
-				{
-					"weight" : 0.7,
-					"x" : 0.95,
-					"type" : "position",
-					"has" : {
-						"type" : "query",
-						"group" : "Management"
-					}
-				},
-				{
-					"has" : {
-						"type" : "query"
-					},
-					"type" : "linkStrength",
-					"strength" : 0.25
-				},
-				{
-					"strength" : 0.5,
-					"has" : {
-						"type" : "database"
-					},
-					"type" : "linkStrength"
-				}
 			],
 			"jsonUrl" : "data.json",
 			"title" : "Database process documentation",
 			"graph" : {
 				"numColors" : 12,
-				"height" : 1500,
+				"height" : 800,
 				"linkDistance" : 100,
 				"labelMargin" : {
 					"bottom" : 2,

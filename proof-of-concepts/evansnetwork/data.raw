@@ -1,15 +1,53 @@
 id|name|type|knownBy|docs
-classmate|同学|CATEGORY||<h2>同学<em>classmate</em></h2>
-friend|朋友|CATEGORY||<h2>朋友<em>friend</em></h2>
-colleague|同事|CATEGORY||<h2>同事<em>colleague</em></h2>
-community|社群|CATEGORY||<h2>社群<em>community</em></h2>
-阿牛|阿牛|C|friend|<h2>阿牛<em>创业者</em></h2>
-阿稳|阿稳|C||<h2>阿稳<em>创业者</em></h2>
-Adam|Adam Wang|A||<h2>Adam Wang<em>CEO of Optmed</em></h2>
-Bruce|Bruce|table|B|<h2>Bruce<em>A+社</em></h2>
-Brian|Brian Lee|A||<h2>Brian Lee<em>CEO of Juliye Care</em></h2>
-佳姐|佳姐|B||<h2>佳姐<em>誉衡</em></h2>
-老叶|老叶|A||<h2>老叶<em>爱运动CEO</em></h2>
-朱总|朱总|AAA|Brian,老叶,佳姐|<h2>朱总<em>誉衡</em></h2>
-老谭|老谭|B|colleague,阿牛|<h2>老谭<em>币世界创始人</em></h2>
-老宫|老宫|A|colleague,阿牛|<h2>老宫<em>优思行CEO</em></h2>
+tsinghua|清华|R||<h2>清华校友<em>tsinghua schoolmate</em></h2>
+beihang|北航|R||<h2>北航师生<em>beihang</em></h2>
+IT高管会|IT高管会|R||<h2>IT高管会<em></em></h2>
+alibaba|阿里|R||<h2>阿里同事<em>alibaba colleague</em></h2>
+zly|朱李叶|R||<h2>朱李叶同事<em>zly colleague</em></h2>
+ericsson|Ericsson|R||<h2>Ericsson同事<em>Ericsson colleague</em></h2>
+investor|投资人|R||<h2>投资人<em>investor</em></h2>
+community|社群|R||<h2>社群<em>community</em></h2>
+
+阿牛|阿牛|B||<h2>阿牛<em>创业者</em></h2>
+阿稳|阿稳|B||<h2>阿稳<em>创业者</em></h2>
+王昀|Adam王昀|BB|李俊凌|<h2>Adam Wang<em>欧视博CEO</em></h2>
+艾可忠|艾可忠|BB|李俊凌|<h2>艾可忠<em>农金宝CEO</em></h2>
+Andrew Sun|Andrew Sun|C|李昫|<h2>Andrew Sun<em>奥林巴斯BD</em></h2>
+
+白莉惠|白莉惠|AA|朱吉满|<h2>白莉惠<em>朱吉满夫人</em></h2>
+
+柴讷|柴讷|B|叶一火|<h2>柴讷<em>前亿玛CFO</em></h2>
+陈华|陈华|A|陈志华|<h2>陈华<em>唱吧创始人</em></h2>
+陈志华|陈志华|B|叶一火|<h2>陈志华<em>悟空保创始人</em></h2>
+陈亮|陈亮|CC|谭晨辉|<h2>陈亮<em>美团VP</em></h2>
+曹重英|曹重英|B|IT高管会|<h2>曹重英<em>IT高管会会长</em></h2>
+陈斌|Chuck陈斌|CC|唐彬|<h2>陈斌<em>易宝支付CTO</em></h2>
+蔡滢|蔡滢|C|beihang|<h2>蔡滢<em>北航</em></h2>
+
+董佳|董佳|CC|zly|<h2>董佳<em>誉衡VP</em></h2>
+
+郭莎|Avien郭莎|B|investor,李俊凌,叶一火|<h2>Avien郭莎<em>赛伯乐投资总监</em></h2>
+宫怀兵|宫怀兵|A|谭晨辉|<h2>宫怀兵<em>优思行创始人</em></h2>
+高凡|Frank高凡|AA|吴玉峰|<h2>高凡<em>高视医疗创始人</em></h2>
+高晶|Brian高晶|CC|刘彤|<h2>高晶<em>医药网PR VP</em></h2>
+
+李俊凌|Brian Li|BB|alibaba,唐彬|<h2>Brian Li<em>朱李叶CEO</em></h2>
+李昫|李昫|C|zly,张京凰|<h2>李昫<em>创业者</em></h2>
+柳根|柳根|B|宫怀兵|<h2>柳根<em>艺术家，本来艺术网联合创始人</em></h2>
+刘鑫|刘鑫|C|beihang,zly|<h2>刘鑫<em></em></h2>
+刘家齐|刘家齐|C|beihang,zly|<h2>刘家齐<em></em></h2>
+刘勇|刘勇|C|beihang,zly|<h2>刘勇<em></em></h2>
+易翔|易翔|C|beihang,zly|<h2>易翔<em></em></h2>
+刘彤|刘彤|CC|张京凰|<h2>刘彤<em>医药网VP</em></h2>
+
+谭晨辉|谭晨辉|B|alibaba,阿牛|<h2>谭晨辉<em>币世界创始人</em></h2>
+唐彬|唐彬|A|曹重英|<h2>唐彬<em>易宝支付CEO</em></h2>
+唐韧|唐韧|C|beihang,zly|<h2>唐韧<em></em></h2>
+
+吴志力|Vincent吴志力|B|ericsson,刘鑫|<h2>Vincent吴志力<em>宜远智能创始人</em></h2>
+吴玉峰|吴玉峰|CC|朱吉满|<h2>吴玉峰<em>原誉衡VP</em></h2>
+
+叶一火|叶一火|BB|alibaba,李俊凌,董佳|<h2>叶一火<em>爱云动CEO</em></h2>
+
+朱吉满|朱吉满|AAA|李俊凌,叶一火,董佳|<h2>朱吉满<em>誉衡药业董事长</em></h2>
+张京凰|张京凰|C|zly|<h2>张京凰<em>朱李叶</em></h2>
