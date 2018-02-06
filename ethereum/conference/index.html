@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Smart Contract Demo: Conference Ticketing</title>
+		<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="page-header">
+				<h1>A Conference Ticketing Demo by Ethereum Smart Contract</h1>
+			</div>
+
+			<div id="app">
+				<div v-if="web3injected" class="lead">
+					<p class="alert alert-danger">WARNING: Use Ropsten Test Net. DO NOT USE MAIN-NET, OTHERWISE YOU WILL LOSE YOUR MONEY!</p>
+					<p>Smart Contract <contract-address></contract-address> successfully loaded!</p>
+
+					<p>Total ticket revenue: <strong>{{revenue}}</strong> ETH</p>
+					<p>Total tickets for sale: <strong>{{quota}}</strong></p>
+
+					<p>Your address: <span>{{attendee}}</span></p>
+
+					<p>You have <strong>{{myTicket}}</strong> ticket (price: {{myTicketPrice}} ETH).</p>
+
+					<p>Ticket price: <input v-model="ticketPrice"></input> ETH.
+					<button v-on:click="buyTicket" class="btn btn-lg btn-info">Buy</button></p>
+
+					<p><strong>For Organizer Only:</strong></p>
+					<p>Address to refund to: <input v-model="refundTo" placeholder="0x..." size="60"></input>
+					<button v-on:click="refundTicket" class="btn btn-lg btn-danger">Refund</button></p>
+				</div>
+				<div v-else class="lead">
+					<p class="alert alert-warning">Please install MetaMask for Chrome first!</p>
+				</div>
+			</div>
+			<div id="footer">
+				<hr>
+				<footer>(c)2018 Evan QY Liu. Powered by Ethereum, Vuejs, Bootstrap.</footer>
+			</div>
+
+			<script>
+var ropstenAddressURL = "https://ropsten.etherscan.io/address/";
+var abi = [{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"registrantsPaid","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"organizer","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"destroy","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getMyTicketPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newquota","type":"uint256"}],"name":"changeQuota","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"quota","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"recipient","type":"address"}],"name":"refundTicket","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"numRegistrants","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"buyTicket","outputs":[{"name":"success","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_from","type":"address"},{"indexed":false,"name":"_amount","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_to","type":"address"},{"indexed":false,"name":"_amount","type":"uint256"}],"name":"Refund","type":"event"}];
+
+var contractAddress = "0x9E2C0022Fa03AF3A708cB383081446E2E52c806A";
+//var contract = null; //the instance
+var web3injected = (web3 != null);
+
+Vue.component('contract-address', {
+	template: '<a href="' + ropstenAddressURL + contractAddress + '">' + contractAddress + '</a>'
+});
+
+var app = new Vue({
+	el: '#app',
+	data: {
+		web3injected: web3injected,
+		revenue: 0, //ETH
+		quota: 0,
+		attendee: null,
+		ticketPrice: 0.01, //ETH
+		myTicket: 0,
+		myTicketPrice: 0.0, //ETH
+		refundTo: null,
+	},
+	methods: {
+		buyTicket: function (ev) {
+			attendee = this.attendee;
+			price = this.ticketPrice;
+			if (contract != null && attendee != null && price > 0) {
+				contract.buyTicket({from:attendee, value:web3.toWei(price)},
+						(e,r) => {
+							if (e) console.log(e);
+							else {
+								console.log(r); //this is the txn number...
+								//FIXME: how to check buyTicket's return bool?
+							}
+						});
+			}
+		},
+		refundTicket: function (ev) {
+			attendee = this.attendee;
+			refundTo = this.refundTo;
+			if (contract != null && attendee != null && refundTo != null) {
+				contract.refundTicket(refundTo, {from:attendee},
+						(e,r) => {
+							//FIXME: contract refundTicket return nothing so we cannot know if it's ok
+							if (e) console.log(e);
+							else console.log(r);
+						});
+			}
+		}
+	}
+});
+
+/////////////////////////// update data async! ////////////////////////////////
+(function(){
+	if (web3injected) {
+		//load the contract
+		contract = web3.eth.contract(abi).at(contractAddress);
+
+		contract.getBalance((e,r) => {
+			if (e) console.log(e);
+			else {
+				app.revenue = web3.fromWei(r.toNumber());
+			}
+		});
+
+		contract.quota((e,r) => {
+			if (e) console.log(e);
+			else {
+				app.quota = r.toNumber();
+			}
+		});
+
+		//web3.eth.coinbase => null //sync
+		web3.eth.getAccounts((e,r) => { 
+			if (e) console.log(e);
+			else {
+				attendee = app.attendee = r[0];
+
+				//need to know attendee first
+				contract.getMyTicketPrice({from:attendee}, (e, r) => {
+					if (e) console.log(e);
+					else {
+						price = r.toNumber();
+						app.myTicketPrice = web3.fromWei(price);
+						if (price > 0) {
+							app.myTicket = 1;
+						} else {
+							app.myTicket = 0;
+						}
+					}
+				});
+
+			}
+		});
+
+	}
+
+})();
+			</script>
+
+		</div>
+	</body>
+</html>
