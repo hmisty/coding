@@ -1,0 +1,15 @@
+id|name|type|knownBy|docs
+classmate|同学|CATEGORY||<h2>同学<em>classmate</em></h2>
+friend|朋友|CATEGORY||<h2>朋友<em>friend</em></h2>
+colleague|同事|CATEGORY||<h2>同事<em>colleague</em></h2>
+community|社群|CATEGORY||<h2>社群<em>community</em></h2>
+阿牛|阿牛|C|friend|<h2>阿牛<em>创业者</em></h2>
+阿稳|阿稳|C||<h2>阿稳<em>创业者</em></h2>
+Adam|Adam Wang|A||<h2>Adam Wang<em>CEO of Optmed</em></h2>
+Bruce|Bruce|table|B|<h2>Bruce<em>A+社</em></h2>
+Brian|Brian Lee|A||<h2>Brian Lee<em>CEO of Juliye Care</em></h2>
+佳姐|佳姐|B||<h2>佳姐<em>誉衡</em></h2>
+老叶|老叶|A||<h2>老叶<em>爱运动CEO</em></h2>
+朱总|朱总|AAA|Brian,老叶,佳姐|<h2>朱总<em>誉衡</em></h2>
+老谭|老谭|B|colleague,阿牛|<h2>老谭<em>币世界创始人</em></h2>
+老宫|老宫|A|colleague,阿牛|<h2>老宫<em>优思行CEO</em></h2>
