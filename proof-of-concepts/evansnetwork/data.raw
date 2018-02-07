@@ -6,7 +6,7 @@ alibaba|阿里|R||<h2>阿里同事<em>alibaba colleague</em></h2>
 zly|朱李叶|R||<h2>朱李叶同事<em>zly colleague</em></h2>
 ericsson|Ericsson|R||<h2>Ericsson同事<em>Ericsson colleague</em></h2>
 investor|投资人|R||<h2>投资人<em>investor</em></h2>
-community|社群|R||<h2>社群<em>community</em></h2>
+healthcare|医疗健康投资|R|investor|<h2>医疗健康方向投资人<em></em></h2>
 
 王昀|Adam王昀-欧视博CEO|BB|李俊凌|<h2>Adam Wang<em>欧视博CEO</em></h2>
 艾可忠|艾可忠-农信宝CEO|BB|李俊凌|<h2>艾可忠<em>农金宝CEO</em></h2>
@@ -25,59 +25,82 @@ Andrew Sun|Andrew Sun-奥林巴斯BD|C|李昫|<h2>Andrew Sun<em>奥林巴斯BD</
 
 董佳|董佳-誉衡VP|CC|zly|<h2>董佳<em>誉衡VP</em></h2>
 
-樊星|樊星-中国人寿|B|investor|
+樊星|樊星-中国人寿|G|healthcare|
+封雪|封雪-富士康HCM投资|G|healthcare|
 
-郭莎|Avien郭莎-赛伯乐投资总监|B|investor,李俊凌,叶一火|<h2>Avien郭莎<em>赛伯乐投资总监</em></h2>
+郭莎|Avien郭莎-赛伯乐投资总监|G|investor,李俊凌,叶一火|<h2>Avien郭莎<em>赛伯乐投资总监</em></h2>
 宫怀兵|宫怀兵-优思行CEO|A|谭晨辉|<h2>宫怀兵<em>优思行创始人</em></h2>
 高凡|Frank高凡-高视医疗CEO|AA|吴玉峰|<h2>高凡<em>高视医疗创始人</em></h2>
 高晶|Brian高晶-医药网PR总监|CC|刘彤|<h2>高晶<em>医药网PR VP</em></h2>
 
 胡杨|胡杨-远元健康总经理|B||
 
+Leo Li|Leo Li-千骥创投|G|healthcare|
+李仁杰|Jack李仁杰-富士康HCM投资|GG|healthcare,李俊凌,封雪|
 李俊凌|Brian Li-朱李叶CEO|BB|alibaba,唐彬|<h2>Brian Li<em>朱李叶CEO</em></h2>
 李昫|李昫|C|zly,张京凰|<h2>李昫<em>创业者</em></h2>
-李厚明|李厚明-以太资本FA|B|investor|
-李宁|李宁-AC资本|B|investor|
-林新正|林新正-华福投资|B|investor|
+李厚明|李厚明-以太资本FA|G|investor|
+李宁|李宁-AC资本|G|investor|
+林新正|林新正-华福投资|GG|healthcare,李俊凌|
 柳根|柳根-艺术家|B|宫怀兵|<h2>柳根<em>艺术家，本来艺术网联合创始人</em></h2>
 刘鑫|刘鑫|C|beihang,zly|<h2>刘鑫<em></em></h2>
 刘彤|刘彤-医药网VP|CC|张京凰|<h2>刘彤<em>医药网VP</em></h2>
-刘纹君|刘纹君-中高投资|B|investor|
-楼民|楼民-东资资本|B|investor|
-林岳桦|Warren林岳桦-东博资本|B|investor|
+刘纹君|刘纹君-中高投资|G|investor|
+楼民|楼民-东资资本|G|investor|
+楼军|楼军-IDG资本|GGG|investor|
+林岳桦|Warren林岳桦-东博资本|G|healthcare|
+李晓敏|李晓敏-德福投资|G|healthcare|
 
-毛远|毛远-以太资本|B|investor|
-马西军|马西军-中金汇财|B|investor|
+毛远|毛远-以太资本|G|investor|
+马西军|马西军-中金汇财|G|healthcare|
 
-倪志刚|倪志刚-腾投|B|investor|
+倪志刚|倪志刚-腾投|G|investor|
 
-齐洁|齐洁-极客邦创投|B|investor,吴志力|
-曲富城|曲富城-前海人寿|B|investor|
+齐洁|齐洁-极客邦创投|G|investor,吴志力|
+曲富城|曲富城-前海人寿|G|healthcare|
 
-石宏|Henry石宏-红石创投|B|investor|
-宋玲|宋玲-雷锋资本|B|investor|
+任彬|任彬-中高投资|G|investor|
 
-汤旭东|汤旭东-创势资本|B|investor|
-田源|田源-元明资本|B|investor|
-Tina|Tina-SIG|B|investor|
+孙巍|孙巍-厚生投资|G|investor,郭莎|
+石宏|Henry石宏-红石创投|GG|healthcare|
+宋玲|宋玲-雷锋资本|G|investor|
+
+汤旭东|汤旭东-创势资本|G|investor|
+田源|田源-元明资本|G|investor|
+Tina|Tina-SIG|G|healthcare|
 谭晨辉|谭晨辉-币世界CEO|B|alibaba|<h2>谭晨辉<em>币世界创始人</em></h2>
 唐彬|唐彬-易宝支付CEO|A|曹重英|<h2>唐彬<em>易宝支付CEO</em></h2>
 唐韧|唐韧|C|beihang,zly,胡杨|<h2>唐韧<em></em></h2>
-淘枫|陶枫-缘创派FA|B|investor|
+淘枫|陶枫-缘创派FA|G|investor|
 
-吴映辉|吴映辉-东资资本|B|investor|
+Vic|Vic-溪林投资|G|investor|
+
+王飞|王飞-清华启迪控股|G|investor,tsinghua|
+王超|王超-第一投资集团|G|investor|
+王攀|王攀-河南投资集团|G|investor|
+吴映辉|吴映辉-东资资本|G|healthcare|
 吴志力|Vincent吴志力-宜远智能CEO|B|ericsson,刘鑫|<h2>Vincent吴志力<em>宜远智能创始人</em></h2>
 吴玉峰|吴玉峰-原誉衡VP|CC|朱吉满|<h2>吴玉峰<em>原誉衡VP</em></h2>
 王静|王静-医疗扶贫主任|C|柳根,张倩玉|
 万进|万进-矿机|B|吴志力|
+吴载午|Allen吴载午-天使投资|G|investor,李俊凌|
+王利杰|王利杰-PreAngel|GG|investor|
 
-辛艳|辛艳|B|investor,李俊凌|
+辛艳|辛艳|G|investor,李俊凌|
+谢民君|谢民君-金商祺投资|G|investor|
+许谦|许谦-复星集团战投部|G|healthcare|
 
+于红|于红-GGV纪源资本|GG|healthcare|
 叶一火|叶一火-爱云动CEO|BB|alibaba,李俊凌,董佳|<h2>叶一火<em>爱云动CEO</em></h2>
-杨轩|杨轩-曲速资本|B|investor,陈志华|
+杨轩|杨轩-曲速资本|GG|investor,陈志华|
+游浩|游浩-科技部投资|G|investor,IT高管会|
 
+赵岩|赵岩-京园投资|G|investor|
 朱吉满|朱吉满-誉衡董事长|AAA|李俊凌,叶一火,董佳|<h2>朱吉满<em>誉衡药业董事长</em></h2>
 郑远元|郑远元-远元集团董事长|AA|胡杨|<h2>郑远元<em>远元集团董事长</em></h2>
 张京凰|张京凰|C|zly|<h2>张京凰<em>朱李叶</em></h2>
 张倩玉|张倩玉-中华慈善总会副会长|A|柳根|<h2>张倩玉<em>中华慈善总会副会长，金宝莱集团总裁</em></h2>
+张蕾娣|张蕾娣-中国人寿直投部|G|healthcare|
 郑彦|郑彦-时尚行业创业者|B|李昫|
+翟芳|Judith翟芳-复兴投资|G|healthcare|
+
