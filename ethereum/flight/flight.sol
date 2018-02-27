@@ -2,12 +2,13 @@ pragma solidity ^0.4.19;
 
 // author: QY@startupmost, 2018-02-24
 contract FlightAccidentInsurance {
-    // who is voted to report the accident
-    // it can be changed by changeAccidentReporter() with > 2/3 votes
+    // who is delegated to report the accident
+    // it can be changed with assignAccidentReporter() by current reporter
+    // or with voteAccidentReporter() not yet implemented
     address public accidentReporter;
     
     // accident info
-    mapping(string => bool) accident; // string datedFlight == date + flightno
+    //mapping(string => bool) accident; // string datedFlight == date + flightno
     
     // insured people
     struct InsuredPassengers {
@@ -24,9 +25,16 @@ contract FlightAccidentInsurance {
     // maybe it could allow to be changed with > 2/3 votes also?
     uint256 rate = 3000000;
 
+    // constructor
+    function FlightAccidentInsurance() public {
+        accidentReporter = msg.sender;
+    }
+
     // insure
     // leaving datedFlight string concatenated by the front-end
     function insure(string datedFlight) public payable {
+        require(msg.value > 0);
+        
         uint count = datedFlights[datedFlight].count;
         datedFlights[datedFlight].person[count] = msg.sender;
         datedFlights[datedFlight].fee[count] = msg.value;
@@ -43,8 +51,8 @@ contract FlightAccidentInsurance {
         for (uint i = 0; i < datedFlights[datedFlight].count; i++) {
             sumFee += datedFlights[datedFlight].fee[i];
         }
-        
-        if (sumFee < this.balance) {
+
+        if (sumFee * rate < this.balance) {
             // auto pay out
             for (i = 0; i < datedFlights[datedFlight].count; i++) {
                address person = datedFlights[datedFlight].person[i];
@@ -53,15 +61,24 @@ contract FlightAccidentInsurance {
             }
         } else {
             // no enough balance, we pay out all pro rata
-            uint adjustedRate = rate * this.balance / sumFee;
             for (i = 0; i < datedFlights[datedFlight].count; i++) {
                person = datedFlights[datedFlight].person[i];
-               amount = datedFlights[datedFlight].fee[i] * adjustedRate;
+               amount = datedFlights[datedFlight].fee[i] * this.balance / sumFee;
                person.transfer(amount);
-            }            
+            }
         }
     }
     
-    // changeAccidentReporter, require > 2/3 votes
+    // assign a new accident reporter
+    // only current reporter can do this
+    function assignAccidentReporter(address newReporter) public {
+        require(msg.sender == accidentReporter);
+        require(newReporter != address(0x0));
+        
+        accidentReporter = newReporter;
+    }
+    
+    // vote a new accident reporter
+    // not yet implemented
     
 }
