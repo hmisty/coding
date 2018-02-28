@@ -15,10 +15,21 @@ contract FlightAccidentInsurance {
         uint count;
         mapping(uint => address) person; // i => person
         mapping(uint => uint) fee; // i => fee == premium, in ETH. insured amount will be fee * rate
+        mapping(uint => bool) paid; // paid or not
     }
     
     // all insured people indexed by datedFlight
     mapping(string => InsuredPassengers) datedFlights; // string datedFlight == date + flightno
+    
+    // save redundant data for quick lookup
+    // a person's insurances
+    struct InsuredTrips {
+        uint count;
+        mapping(uint => string) datedFlight;
+        mapping(uint => uint) fee;
+    }
+    
+    mapping(address => InsuredTrips) policies;
     
     // rate = 1 / chance of accident * fee rate
     // referring to Ping'An 2 RMB => 6M RMB, we set rate to 300M
@@ -38,7 +49,14 @@ contract FlightAccidentInsurance {
         uint count = datedFlights[datedFlight].count;
         datedFlights[datedFlight].person[count] = msg.sender;
         datedFlights[datedFlight].fee[count] = msg.value;
-        datedFlights[datedFlight].count = count + 1;
+        datedFlights[datedFlight].count += 1;
+        
+        // redundant save
+        address person = msg.sender;
+        count = policies[person].count;
+        policies[person].datedFlight[count] = datedFlight;
+        policies[person].fee[count] = msg.value;
+        policies[person].count += 1;
     }
     
     // reportAccident, only valid accidentReporter
@@ -57,6 +75,7 @@ contract FlightAccidentInsurance {
             for (i = 0; i < datedFlights[datedFlight].count; i++) {
                address person = datedFlights[datedFlight].person[i];
                uint amount = datedFlights[datedFlight].fee[i] * rate;
+               datedFlights[datedFlight].paid[i] = true; // Important! avoid double claim
                person.transfer(amount);
             }
         } else {
@@ -64,6 +83,7 @@ contract FlightAccidentInsurance {
             for (i = 0; i < datedFlights[datedFlight].count; i++) {
                person = datedFlights[datedFlight].person[i];
                amount = datedFlights[datedFlight].fee[i] * this.balance / sumFee;
+               datedFlights[datedFlight].paid[i] = true; // Important! avoid double claim
                person.transfer(amount);
             }
         }
@@ -80,5 +100,24 @@ contract FlightAccidentInsurance {
     
     // vote a new accident reporter
     // not yet implemented
+    function voteAccidentReporter(address newReporter) public {
+        require(false);
+    }
     
+    // check balance
+    function getBalance() public view returns (uint) {
+        return this.balance;
+    }
+    
+    // get one's insured trip count
+    function getMyTripCount() public view returns (uint) {
+        address person = msg.sender;
+        return policies[person].count;
+    }
+    
+    // get one's insured trip count
+    function getMyTripPolicy(uint n) public view returns (string, uint) {
+        address person = msg.sender;
+        return (policies[person].datedFlight[n], policies[person].fee[n]);
+    }
 }
