@@ -7,29 +7,43 @@ contract FlightAccidentInsurance {
     // or with voteAccidentReporter() not yet implemented
     address public accidentReporter;
     
-    // accident info
-    //mapping(string => bool) accident; // string datedFlight == date + flightno
-    
-    // insured people
-    struct InsuredPassengers {
-        uint count;
-        mapping(uint => address) person; // i => person
-        mapping(uint => uint) fee; // i => fee == premium, in ETH. insured amount will be fee * rate
-        mapping(uint => bool) paid; // paid or not
+    // a policy, an insurance slip
+    struct Policy {
+        address person; //policy holder
+        string flight; //date+flightno
+        mapping(string => bool) isFlight;
+        uint premium; //insurance fee
+        uint amount; //insured amount
+        uint actualAmount; //acutalAmount <= amount
+        bool paid; //claimed and paid
     }
     
-    // all insured people indexed by datedFlight
-    mapping(string => InsuredPassengers) datedFlights; // string datedFlight == date + flightno
-    
-    // save redundant data for quick lookup
-    // a person's insurances
-    struct InsuredTrips {
-        uint count;
-        mapping(uint => string) datedFlight;
-        mapping(uint => uint) fee;
+    // accident datedFlight => true
+    struct Accident {
+        bool confirmed;
+        uint count; // number of slips to be paid
+        uint sumAmount; // total amount to pay out
+        mapping(uint => Policy) affectedPolicies;
     }
     
-    mapping(address => InsuredTrips) policies;
+    mapping(string => Accident) accidents; // indexed by date+flightno
+
+    // a person's all insurance policies
+    struct PersonPolicies {
+        uint count;
+        mapping(uint => Policy) policies;
+    }
+    
+    mapping(address => PersonPolicies) personPolicies; //indexed by person
+    
+    // all passengers of a date+flightno
+    struct FlightPassengers {
+        uint count;
+        mapping(uint => address) person; //for iterating
+        mapping(address => bool) isPassenger; //for checking
+    }
+    
+    mapping(string => FlightPassengers) flightPassengers; //indexed by flight
     
     // rate = 1 / chance of accident * fee rate
     // referring to Ping'An 2 RMB => 6M RMB, we set rate to 300M
@@ -42,51 +56,80 @@ contract FlightAccidentInsurance {
     }
 
     // insure
-    // leaving datedFlight string concatenated by the front-end
-    function insure(string datedFlight) public payable {
+    // leaving date+flightno string concatenated by the front-end
+    function insure(string flight) public payable {
         require(msg.value > 0);
-        
-        uint count = datedFlights[datedFlight].count;
-        datedFlights[datedFlight].person[count] = msg.sender;
-        datedFlights[datedFlight].fee[count] = msg.value;
-        datedFlights[datedFlight].count += 1;
-        
-        // redundant save
+
         address person = msg.sender;
-        count = policies[person].count;
-        policies[person].datedFlight[count] = datedFlight;
-        policies[person].fee[count] = msg.value;
-        policies[person].count += 1;
+
+        // not allow to insure one trip twice or more
+        require(flightPassengers[flight].isPassenger[person] == false);
+        
+        // on board
+        flightPassengers[flight].isPassenger[person] = true;
+        uint c = flightPassengers[flight].count;
+        flightPassengers[flight].person[c] = person;
+        flightPassengers[flight].count += 1;
+            
+        // insure a trip
+        uint count = personPolicies[person].count;
+        personPolicies[person].policies[count].person = person;
+        personPolicies[person].policies[count].flight = flight;
+        personPolicies[person].policies[count].isFlight[flight] = true;
+        personPolicies[person].policies[count].premium = msg.value;
+        personPolicies[person].policies[count].amount
+            = personPolicies[person].policies[count].actualAmount
+            = msg.value * rate;
+        personPolicies[person].count += 1;
     }
     
-    // reportAccident, only valid accidentReporter
-    // auto pay out
-    // if not enough balance, split pro rata
-    function reportAccident(string datedFlight) public {
+    // reportAccident, only by the valid accidentReporter
+    function reportAccident(string flight) public {
         require(msg.sender == accidentReporter);
         
-        uint sumFee = 0;
-        for (uint i = 0; i < datedFlights[datedFlight].count; i++) {
-            sumFee += datedFlights[datedFlight].fee[i];
-        }
-
-        if (sumFee * rate < this.balance) {
-            // auto pay out
-            for (i = 0; i < datedFlights[datedFlight].count; i++) {
-               address person = datedFlights[datedFlight].person[i];
-               uint amount = datedFlights[datedFlight].fee[i] * rate;
-               datedFlights[datedFlight].paid[i] = true; // Important! avoid double claim
-               person.transfer(amount);
+        // avoid double reporting
+        if (accidents[flight].confirmed == false) {
+            accidents[flight].confirmed = true;
+            
+            // calculate the premium sum of this flight for later claim use
+            for (uint i = 0; i < flightPassengers[flight].count; i++) {
+                address person = flightPassengers[flight].person[i];
+    
+                for (uint j = 0; j < personPolicies[person].count; j++) {
+                    if (personPolicies[person].policies[j].isFlight[flight]) {
+                        uint count = accidents[flight].count;
+                        accidents[flight].affectedPolicies[count] = personPolicies[person].policies[j];
+                        accidents[flight].count += 1;
+                        accidents[flight].sumAmount += personPolicies[person].policies[j].amount;
+                    }
+                }
             }
-        } else {
-            // no enough balance, we pay out all pro rata
-            for (i = 0; i < datedFlights[datedFlight].count; i++) {
-               person = datedFlights[datedFlight].person[i];
-               amount = datedFlights[datedFlight].fee[i] * this.balance / sumFee;
-               datedFlights[datedFlight].paid[i] = true; // Important! avoid double claim
-               person.transfer(amount);
+            
+            // cannot fully pay out
+            if (accidents[flight].sumAmount > this.balance) {
+                // split pro rata
+                for (uint k = 0; k < accidents[flight].count; k++) {
+                    accidents[flight].affectedPolicies[k].actualAmount
+                        = accidents[flight].affectedPolicies[k].amount * this.balance / accidents[flight].sumAmount;
+                }
             }
         }
+    }
+    
+    // claim
+    function claim(string flight) public {
+        address person = msg.sender;
+        
+        if (accidents[flight].confirmed) {
+            for (uint i = 0; i < accidents[flight].count; i++) {
+                if (accidents[flight].affectedPolicies[i].person == person
+                    && accidents[flight].affectedPolicies[i].paid == false) {
+                    uint actualAmount = accidents[flight].affectedPolicies[i].actualAmount;
+                    person.transfer(actualAmount);
+                }
+            }
+        }
+        
     }
     
     // assign a new accident reporter
@@ -100,9 +143,9 @@ contract FlightAccidentInsurance {
     
     // vote a new accident reporter
     // not yet implemented
-    function voteAccidentReporter(address newReporter) public {
+    /*function voteAccidentReporter(address newReporter) public {
         require(false);
-    }
+    }*/
     
     // check balance
     function getBalance() public view returns (uint) {
@@ -112,12 +155,17 @@ contract FlightAccidentInsurance {
     // get one's insured trip count
     function getMyTripCount() public view returns (uint) {
         address person = msg.sender;
-        return policies[person].count;
+        return personPolicies[person].count;
     }
     
     // get one's insured trip count
-    function getMyTripPolicy(uint n) public view returns (string, uint) {
+    function getMyTripPolicy(uint i) public view returns (string, uint, uint, uint, bool) {
         address person = msg.sender;
-        return (policies[person].datedFlight[n], policies[person].fee[n]);
+        return (personPolicies[person].policies[i].flight,
+            personPolicies[person].policies[i].premium,
+            personPolicies[person].policies[i].amount,
+            personPolicies[person].policies[i].actualAmount,
+            personPolicies[person].policies[i].paid);
     }
+    
 }
