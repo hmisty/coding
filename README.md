@@ -77,6 +77,9 @@ checkout submodule
 tagging
 
 	g tag -a TAG -m DESCRIPTION
+	g tag -a TAG COMMIT_id_first7 -m DESCRIPTION
+
+	g push --tags
 	g push origin TAG
 
 	g show TAG #查看TAG对应的commit信息
