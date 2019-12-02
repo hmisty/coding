@@ -1,27 +1,30 @@
 #!/bin/env python3
 import math
 import random
+import matplotlib.pyplot as plt
 
 # price step
-PRICE_STEP = 0.01
-PRICE_START = 10
+PRICE_CHANGE = 0.001 # .1%
+PRICE_START = 100
+CHANGE_DIRECTION = [-1, 0, 1]
 
 # max order amount
 MAX_AMOUNT = 10000
 
 # marker makers [(price, amount)]
-buys = [(PRICE_START - PRICE_STEP, MAX_AMOUNT)]
-sells = [(PRICE_START + PRICE_STEP, MAX_AMOUNT)]
+buys = []
+sells = []
 deals = []
 
 def place_order_buy(price, amount):
+    print("match/place buy order (%f, %f)" % (price, amount))
     i = 0
     # match first
-    while i < len(sells):
-        print("matching buy order with sells[%d]" % i)
+    while i < len(sells) and amount > 0:
         if price < sells[i][0]:
             break
         else: # deal
+            print("matched buy order (%f, %f) with sells[%d](%f, %f)" % (price, amount, i, sells[i][0], sells[i][1]))
             if amount < sells[i][1]:
                 deal_price = sells[i][0]
                 deal_amount = amount
@@ -59,21 +62,25 @@ def place_order_buy(price, amount):
         if price >= buys[i][0]:
             break
 
-    if len(buys) > 0 and price == buys[i][0]:
-        buys[i] = (buys[i][0], buys[i][1] + amount)
-    elif len(buys) > 0 and price > buys[i][0]:
-        buys.insert(0, (price, amount))
+    if len(buys) == 0:
+        buys.append((price, amount))
     else:
-        buys.insert(i+1, (price, amount))
+        if price == buys[i][0]:
+            buys[i] = (buys[i][0], buys[i][1] + amount)
+        elif price > buys[i][0]:
+            buys.insert(i, (price, amount))
+        else:
+            buys.insert(i+1, (price, amount))
 
 def place_order_sell(price, amount):
+    print("match/place sell order (%f, %f)" % (price, amount))
     i = 0
     # match first
-    while i < len(buys):
-        print("matching sell order with buys[%d]" % i)
+    while i < len(buys) and amount > 0:
         if price > buys[i][0]:
             break
         else: # deal
+            print("matched sell order (%f, %f) with buys[%d](%f, %f)" % (price, amount, i, buys[i][0], buys[i][1]))
             if amount < buys[i][1]:
                 deal_price = buys[i][0]
                 deal_amount = amount
@@ -111,63 +118,67 @@ def place_order_sell(price, amount):
         if price <= sells[i][0]:
             break
 
-    if len(sells) > 0 and price == sells[i][0]:
-        sells[i] = (sells[i][0], sells[i][1] + amount)
-    elif len(sells) > 0 and price < sells[i][0]:
-        sells.insert(i, (price, amount))
-    else:
+    if len(sells) == 0:
         sells.append((price, amount))
+    else:
+        if price == sells[i][0]:
+            sells[i] = (sells[i][0], sells[i][1] + amount)
+        elif price < sells[i][0]:
+            sells.insert(i, (price, amount))
+        else:
+            sells.append((price, amount))
 
 
 if __name__ == '__main__':
+    # init
+    sell_price = PRICE_START
+    buy_price = PRICE_START
+
     # ticks
     for i in range(1000):
         # round #i
         print("round %d" % i)
 
-        # place one buy order
-        buy1_price = buys[0][0] if len(buys) else 0
+        change_direction = random.choice(CHANGE_DIRECTION)
 
-        if random.choice([True, False]):
-            price = buy1_price + PRICE_STEP # up 1 step
-        else:
-            price = max(1, buy1_price - PRICE_STEP)
-#            price_high = buy1_price # down 0
-#            price_low = max(0, buy1_price - 50 * PRICE_STEP) # down 50 step
-#            price = random.random() * (price_high - price_low) + price_low
-
-        amount = (1 - random.random()) * MAX_AMOUNT
+        ################################################## 
+        # prepare buy order
+        buy_amount = (1 - random.random()) * MAX_AMOUNT
+        buy_price *= 1 + PRICE_CHANGE * change_direction
 
         # set precision 0.01
-        price = math.floor(price * 100) / 100
-        amount = math.floor(amount)
+        buy_price = math.floor(buy_price * 100) / 100
+        buy_amount = math.floor(buy_amount)
 
-        print("place buy order at price %f with amount %d" % (price, amount))
-        place_order_buy(price, amount)
+        # place orders
+        place_order_buy(buy_price, buy_amount)
 
-        # place one sell order
-        sell1_price = sells[0][0] if len(sells) else 0
-
-        if random.choice([True, False]):
-            price = max(0, sell1_price - PRICE_STEP) # down 1 step
-        else:
-            price = sell1_price + PRICE_STEP
-#            price_high = sell1_price + 50 * PRICE_STEP # up 50 step
-#            price_low = max(0, sell1_price) # up 0
-#            price = random.random() * (price_high - price_low) + price_low
-
-        amount = (1 - random.random()) * MAX_AMOUNT
+        ################################################## 
+        # prepare sell order
+        sell_amount = (1 - random.random()) * MAX_AMOUNT
+        sell_price *= 1 + PRICE_CHANGE * change_direction
 
         # set precision 0.01
-        price = math.floor(price * 100) / 100
-        amount = math.floor(amount)
+        sell_price = math.floor(sell_price * 100) / 100
+        sell_amount = math.floor(sell_amount)
 
-        print("place sell order at price %f with amount %d" % (price, amount))
-        place_order_sell(price, amount)
+        # place orders
+        place_order_sell(sell_price, sell_amount)
 
+        ################################################## 
+        # inspect makers
+        print(buys)
+        print(sells)
 
-    # inspect makers
-    print(buys)
-    print(sells)
-    print(deals)
+        # save momentum
+        momentum = change_direction
+
+    ################################################## 
+    # plot the price history
+    price_history = []
+    for (price, amount) in deals:
+        price_history.append(price)
+
+    plt.plot(price_history, '.-')
+    plt.show()
 
