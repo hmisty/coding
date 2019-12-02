@@ -7,6 +7,12 @@
 * [5分钟掌握Linux多终端管理器tmux tmux](linux/tmux.md) - a terminal multiplexer on Linux
 
 
+## Tips & Tricks
+
+```
+Q: MacOSX, command line, how to convert webp to jpg in batch?
+A: $ for x in ls *.webp; do  ffmpeg -i $x $x.jpg; done
+```
 
 ## CheatSheets
 
@@ -77,6 +83,9 @@ checkout submodule
 tagging
 
 	g tag -a TAG -m DESCRIPTION
+	g tag -a TAG COMMIT_id_first7 -m DESCRIPTION
+
+	g push --tags
 	g push origin TAG
 
 	g show TAG #查看TAG对应的commit信息
