@@ -21,7 +21,7 @@ hide zip file within an image.
 $ cat image.jpg filename.7z > filename.jpg
 ```
 
-the image can be viewed as ususual.
+the image can be viewed as usual.
 and it can be directly unzipped.
 ```
 $ 7z e -o/path/to/directory filename.jpg
