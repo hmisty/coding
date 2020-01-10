@@ -17,6 +17,7 @@ Structure of folders:
 - blockchain: technologies in blockchain domain.
 - ml: technologies in machine learning incl. deep learning domain.
 - bigdata: technologies in big data & database domain, such as pgsql, hadoop, etc.
+- misc: other fun, including proof-of-concepts, etc.
 
 ## 学习在终端下工作 Learning how to work with terminals 
 
