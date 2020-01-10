@@ -105,6 +105,7 @@ tagging
 	g push --tags
 	g push origin TAG
 
+	g tag -l #查看所有tag
 	g show TAG #查看TAG对应的commit信息
 
 	git tag -d TAG
