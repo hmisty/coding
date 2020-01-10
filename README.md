@@ -2,6 +2,22 @@
 
 # 坚持编码。。。 KEEP CODING...
 
+Structure of folders:
+- home: quick configuration for getting a working environment ready, with a simple toolset: bash, tmux, git, vim
+- lang: quick, short and clean references of various languages (as well as its libs, frameworks, samples, etc) helping to jump into it asap.
+	- python
+	- java
+	- c
+	- js
+	- go
+	- perl
+	- erlang
+	- lisp
+	- swift
+- blockchain: technologies in blockchain domain.
+- ml: technologies in machine learning incl. deep learning domain.
+- bigdata: technologies in big data & database domain, such as pgsql, hadoop, etc.
+
 ## 学习在终端下工作 Learning how to work with terminals 
 
 * [5分钟掌握Linux多终端管理器tmux tmux](linux/tmux.md) - a terminal multiplexer on Linux

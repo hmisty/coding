@@ -14,7 +14,8 @@ alias nb='jupyter notebook'
 alias cmsenv='source ~/.env/cms/bin/activate'
 
 # logins
-alias cms1='ssh 10.174.89.71'
-alias api1='ssh 10.80.236.161'
-alias api2='ssh 10.30.49.170'
+#source ~/.bash_aliases_local
+#alias cms1='ssh 10.174.89.71'
+#alias api1='ssh 10.80.236.161'
+#alias api2='ssh 10.30.49.170'
 
