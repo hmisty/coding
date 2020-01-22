@@ -21,7 +21,7 @@ Structure of folders:
 
 ## 学习在终端下工作 Learning how to work with terminals 
 
-* [5分钟掌握Linux多终端管理器tmux tmux](linux/tmux.md) - a terminal multiplexer on Linux
+* [5分钟掌握Linux多终端管理器tmux tmux](home/tmux.md) - a terminal multiplexer on Linux
 
 
 ## Tips & Tricks
