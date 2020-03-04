@@ -1,0 +1,102 @@
+# Bitcoin Full Node @Ubuntu
+
+Here is a quick note on running a full node on ubuntu linux.
+
+## Preparation
+
+Ubuntu 18.04.3 LTS
+
+4TB harddisk at /var/data
+
+## Checkout Bitcoin Source Code
+
+```
+git clone https://github.com/bitcoin/bitcoin.git
+cd bitcoin
+```
+
+## Learn How To Build
+
+checkout the how-to document at doc/build-unix.md
+
+## Pre-install Necessary Libs
+
+```
+sudo apt-get install build-essential libtool autotools-dev automake pkg-config bsdmainutils python3
+sudo apt-get install libevent-dev libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev
+
+sudo apt-get install libminiupnpc-dev #Optional
+sudo apt-get install libzmq3-dev
+
+sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools
+sudo apt-get install libqrencode-dev
+```
+
+## Install BDB4
+
+Ensure you are in bitcoin source directory.
+```
+./contrib/install_db4.sh `pwd`
+
+```
+
+## Compile
+
+```
+./autogen.sh
+
+export BDB_PREFIX='/home/evan/git/bitcoin/db4'
+./configure BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" BDB_CFLAGS="-I${BDB_PREFIX}/include"
+
+make check #make with unit tests
+```
+
+## Run the Full Node
+
+Start the node
+```
+mkdir /var/data/bitcoin
+./src/bitcoind -datadir=/var/data/bitcoin
+
+```
+
+/var/data/bitcoin/bitcoin.conf is not a must.
+RPC authentication cookie /var/data/bitcoin/.cookie will be used for connections.
+
+## Try to Connect to the Full Node
+
+```
+src/bitcoin-cli -datadir=/var/data/bitcoin -getinfo
+```
+Note: use - instead of --, and = is a must.
+
+You will get:
+```
+{
+  "version": 199900,
+  "blocks": 612745,
+  "headers": 612745,
+  "verificationprogress": 0.9999968194352569,
+  "timeoffset": 0,
+  "connections": 10,
+  "proxy": "",
+  "difficulty": 13798783827516.42,
+  "chain": "main",
+  "balance": 0.00000000,
+  "keypoolsize": 1000,
+  "paytxfee": 0.00000000,
+  "relayfee": 0.00001000,
+  "warnings": "This is a pre-release test build - use at your own risk - do not use for mining or merchant applications"
+}
+```
+
+Well done. It works!
+
+## Run Full Node GUI
+
+Stop bitcoind first. You cannot have both running at the same time.
+Then start bitcoin-qt:
+```
+src/qt/bitcoin-qt -datadir=/var/data/bitcoin
+```
+
