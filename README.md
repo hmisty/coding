@@ -1,19 +1,28 @@
-<!-- vim:set ft=markdown: -->
+# CODING HACKS
 
-# 坚持编码。。。 KEEP CODING...
+Coding Hacks哲学：简单，优雅，快，少 
 
-Structure of folders:
-- home: quick configuration for getting a working environment ready, with a simple toolset: bash, tmux, git, vim
-- lang: quick, short and clean references of various languages (as well as its libs, frameworks, samples, etc) helping to jump into it asap.
-	- python
-	- java
-	- c
-	- js
-	- go
-	- perl
-	- erlang
-	- lisp
-	- swift
+主要内容：coding相关的极速上手教程或快速解决方案（类似cookbook的知识库），以及一些prototype和proof-of-concept代码
+
+## 目录结构
+
+- /home: 我的工作环境配置（超快速配置新机器），如下：
+	- 操作系统：MacOSX 或 Linux (Ubuntu/CentOS)
+	- Shell: bash
+	- 终端管理：tmux | 教程：[5分钟掌握Linux多终端管理器tmux - a terminal multiplexer on Linux](home/tmux.md)
+	- 代码管理：git
+	- 编辑器：vim
+- /lang: 5-10分钟熟悉一种编程语言，掌握开发方法，包括：
+	- /clojure | 教程：[1小时掌握clojure交互式开发方法](lang/clojure/README.md)
+	- /python
+	- /java
+	- /c
+	- /js
+	- /go
+	- /perl
+	- /erlang
+	- /lisp
+	- /swift
 - blockchain: technologies in blockchain domain.
 - ml: technologies in machine learning incl. deep learning domain.
 - bigdata: technologies in big data & database domain, such as pgsql, hadoop, etc.
@@ -21,7 +30,6 @@ Structure of folders:
 
 ## 学习在终端下工作 Learning how to work with terminals 
 
-* [5分钟掌握Linux多终端管理器tmux tmux](home/tmux.md) - a terminal multiplexer on Linux
 
 
 ## Tips & Tricks

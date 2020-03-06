@@ -32,10 +32,17 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 Bundle 'tpope/vim-sensible'
-Bundle 'tpope/vim-foreplay'
-Bundle 'tpope/vim-classpath'
-Bundle 'tpope/vim-fireplace'
 Bundle 'vim-scripts/paredit.vim'
+
+" for clojure REPL support
+"Bundle 'tpope/vim-salve'
+"Bundle 'tpope/vim-projectionist'
+"Bundle 'tpope/vim-dispatch'
+Bundle 'tpope/vim-fireplace'
+
+"-- java cp
+Bundle 'tpope/vim-classpath'
+
 "-- dir tree
 Bundle 'scrooloose/nerdtree'
 "-- auto snippet
@@ -69,9 +76,10 @@ set modelines=1
 set nu
 
 " highlight current line
-au WinLeave * set nocursorline nocursorcolumn
-au WinEnter * set cursorline cursorcolumn
-set cursorline cursorcolumn
+"TEMPORARY XXX
+"au WinLeave * set nocursorline nocursorcolumn
+"au WinEnter * set cursorline cursorcolumn
+"set cursorline cursorcolumn
 
 " for macvim
 if has("gui_running")
