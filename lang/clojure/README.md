@@ -189,3 +189,7 @@ cqq handler, create-server, stop-server 把这三个函数发送到REPL。然后
 - 增加其他括号（成对）：Normal Mode选中文本后连击 ,w[ 或者 ,w{  当然也可以 ,w( ，前后成对增加方括号、花括号或者圆括号（w = wrap包裹）
 - 删除括号（成对）：Normal Mode cursor放在括号内任意文本处，连击 ,S ，将把cursor所在最内层括号成对删除（圆括号、中括号、花括号均可删除）
 - 移动括号：,< 右边最近的闭括号左移一个单词；,> 左边最近一个开括号右移一个单词
+
+### clojure课程
+
+- [W3Cschool上面有非常好的clojure教程，推荐学习](https://www.w3cschool.cn/clojure/)
