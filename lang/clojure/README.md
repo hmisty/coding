@@ -174,6 +174,18 @@ cqq handler, create-server, stop-server 把这三个函数发送到REPL。然后
 回到REPL，停止服务器：
 ![repl-stop-server](images/repl-stop-server.png)
 
+Tips: 使用REPL特殊变量 *1 让上述操作更简单：
+```clojure
+myweb.core=> (create-server)
+#object[clojure.lang.AFunction$1 0x7a777fe2 "clojure.lang.AFunction$1@7a777fe2"]
+
+myweb.core=> *1
+#object[clojure.lang.AFunction$1 0x7a777fe2 "clojure.lang.AFunction$1@7a777fe2"]
+
+myweb.core=> (stop-server *1)
+nil
+```
+
 ### vim编码技巧：使用omni completion智能补全
 
 类似于Java IDE的智能提示，在vim Insert Mode（插入模式），输入 s/之后，连击 Ctrl+x Ctrl+o（Ctrl不松开，依次按x和o），效果如下：
