@@ -174,7 +174,7 @@ cqq handler, create-server, stop-server 把这三个函数发送到REPL。然后
 回到REPL，停止服务器：
 ![repl-stop-server](images/repl-stop-server.png)
 
-Tips: 使用REPL特殊变量 *1 让上述操作更简单：
+Tips: 使用REPL特殊变量 \*1 让上述操作更简单：
 ```clojure
 myweb.core=> (create-server)
 #object[clojure.lang.AFunction$1 0x7a777fe2 "clojure.lang.AFunction$1@7a777fe2"]
@@ -198,10 +198,12 @@ nil
 我在.vimrc中定义的<Leader>按键是逗号键（，），下面讲连击的时候直接用逗号。
 
 - 增加圆括号（成对）：Normal Mode选中文本后连击 ,W ，前后成对增加圆括号
-- 增加其他括号（成对）：Normal Mode选中文本后连击 ,w[ 或者 ,w{  当然也可以 ,w( ，前后成对增加方括号、花括号或者圆括号（w = wrap包裹）
+- 增加其他括号（成对）：Normal Mode选中文本后连击 ,w\[ 或者 ,w\{  当然也可以 ,w\( ，前后成对增加方括号、花括号或者圆括号（w = wrap-with 用...包裹）
 - 删除括号（成对）：Normal Mode cursor放在括号内任意文本处，连击 ,S ，将把cursor所在最内层括号成对删除（圆括号、中括号、花括号均可删除）
 - 移动括号：,< 右边最近的闭括号左移一个单词；,> 左边最近一个开括号右移一个单词
 
 ### clojure课程
 
 - [W3Cschool上面有非常好的clojure教程，推荐学习](https://www.w3cschool.cn/clojure/)
+- [结构清晰的快速参考文档 - clojure core](http://clojuredocs.org/quickref)
+
