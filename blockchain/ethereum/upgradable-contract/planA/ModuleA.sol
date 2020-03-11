@@ -13,7 +13,7 @@ contract ModuleA is upgradable {
     using SafeMath for uint256;
     
     // the version meta data.
-    uint256 public version = 0x03;
+    uint256 constant public version = 0x03;
     
     /**
      * Step 1. Deploy the newest version of the module, with an owner of either:
@@ -30,27 +30,33 @@ contract ModuleA is upgradable {
     ///////////////////////////////////////////////////
     //        free to implement anything below       //
     ///////////////////////////////////////////////////
+    
+    /**
+     * all the encoded keys used in the K-V storage.
+     */
+    bytes32 constant public KEY_ENABLED = keccak256(abi.encodePacked("enabled"));
+    bytes32 constant public KEY_NUM_MEMBERS = keccak256(abi.encodePacked("number-of-memebers"));
 
     /**
      * Only owner can enable it.
      */
     function enableModuleA() isRunning payable public onlyOwner {
         require (msg.value >= 100000);
-        _storage.setBool("moduleA-enabled", true);
+        _storage.setBool(KEY_ENABLED, true);
     }
 
     /**
      * bla bla
      */ 
     function setNumberOfMembers(uint256 num) isRunning public {
-        _storage.setUint("number-of-members", num);
+        _storage.setUint(KEY_NUM_MEMBERS, num);
     }
     
     /**
      * bla bla
      */    
     function getNumberOfMembers() view public returns (uint256) {
-        return _storage.getUint("number-of-members");
+        return _storage.getUint(KEY_NUM_MEMBERS);
     }
     
 }

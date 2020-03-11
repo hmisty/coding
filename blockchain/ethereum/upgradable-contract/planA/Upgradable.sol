@@ -7,7 +7,10 @@ import "KeyValueStorage.sol";
  * Allow contracts to be upgradable.
  */
 contract upgradable is managed {
-        
+    
+    // the encoded bytes of the special key "owner"
+    bytes32 constant public KEY_OWNER = keccak256(abi.encodePacked("owner"));
+    
     // the external key-value storage for this module.
     KeyValueStorage public _storage;
 
@@ -26,14 +29,14 @@ contract upgradable is managed {
     
     function getOwner() view public returns (address) {
         require(address(_storage) != 0x0, "storage not initialized.");
-        return _storage.getAddress("owner");
+        return _storage.getAddress(KEY_OWNER);
     }
     
     function changeOwner(address _newOwner) public onlyOwner {
         require(address(_storage) != 0x0, "storage not initialized.");
 
         address _oldOwner = getOwner();
-        _storage.setAddress("owner", _newOwner);
+        _storage.setAddress(KEY_OWNER, _newOwner);
         emit OwnerChanged(_oldOwner, _newOwner);
     }
     
@@ -42,7 +45,7 @@ contract upgradable is managed {
         require(address(_storage) != 0x0, "storage not initialized.");
 
         address _oldOwner = getOwner();
-        _storage.setAddress("owner", _newOwner);
+        _storage.setAddress(KEY_OWNER, _newOwner);
         emit OwnerChanged(_oldOwner, _newOwner);
     }
 

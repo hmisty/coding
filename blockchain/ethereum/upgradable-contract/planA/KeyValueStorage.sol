@@ -3,45 +3,49 @@ pragma solidity >=0.4.22 <0.6.0;
 import "Managed.sol";
 
 contract KeyValueStorage is managed {
-  
-  /** the general storage data structures **/
-  
-  mapping(string => address) _addressStorage;
-  mapping(string => uint256) _uintStorage;
-  mapping(string => bool) _boolStorage;
 
-  /**** Storage Writer Setup **/
-  // called by the Module
-  constructor () public {
-      manager = msg.sender; // manager should be the module address
-  }
+	/** 
+	 * the general storage data structures
+	 * 
+	 * bytes32 <= keccak256(abi.encodePacked(A,B,C,....))
+	 * which is just a raw hex
+	 */
+	mapping(bytes32 => address) _addressStorage;
+	mapping(bytes32 => uint256) _uintStorage;
+	mapping(bytes32 => bool) _boolStorage;
 
-  /**** Get Methods ***********/
+	/**** Storage Writer Setup **/
+	// called by the Module
+	constructor () public {
+		manager = msg.sender; // manager should be the module address
+	}
 
-  function getAddress(string key) public view returns (address) {
-      return _addressStorage[key];
-  }
+	/**** Get Methods ***********/
 
-  function getUint(string key) public view returns (uint) {
-      return _uintStorage[key];
-  }
+	function getAddress(bytes32 key) public view returns (address) {
+		return _addressStorage[key];
+	}
 
-  function getBool(string key) public view returns (bool) {
-      return _boolStorage[key];
-  }
+	function getUint(bytes32 key) public view returns (uint) {
+		return _uintStorage[key];
+	}
 
-  /**** Set Methods ***********/
+	function getBool(bytes32 key) public view returns (bool) {
+		return _boolStorage[key];
+	}
 
-  function setAddress(string key, address value) isRunning onlyManager public {
-    _addressStorage[key] = value;
-  }
+	/**** Set Methods ***********/
 
-  function setUint(string key, uint value) isRunning onlyManager public {
-      _uintStorage[key] = value;
-  }
+	function setAddress(bytes32 key, address value) isRunning onlyManager public {
+		_addressStorage[key] = value;
+	}
 
-  function setBool(string key, bool value) isRunning onlyManager public {
-      _boolStorage[key] = value;
-  }
+	function setUint(bytes32 key, uint value) isRunning onlyManager public {
+		_uintStorage[key] = value;
+	}
+
+	function setBool(bytes32 key, bool value) isRunning onlyManager public {
+		_boolStorage[key] = value;
+	}
 
 }

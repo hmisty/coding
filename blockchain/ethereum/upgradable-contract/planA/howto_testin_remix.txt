@@ -1,0 +1,57 @@
+# 在remix中验证
+
+## 文件
+
+共6个solidity源码文件。
+
+ModuleAFactory.sol 工厂
+ModuleA.sol 业务逻辑
+
+Upgradable.sol 升级功能
+Managed.sol 管理功能
+
+KeyValueStorage.sol KV存储
+
+SafeMath.sol 安全计算（辅助）
+
+## 类图
+
+见 UpgradableContracts.jpg
+
+## remix验证方法
+
+一、部署（系统管理员）和 创建（任何用户）
+
+1. 打开http://remix.ethereum.org/
+2. 把上述sol文件内容导入remix
+
+3. Deploy ModuleAFactory得到ModuleAFactory实例1
+4. 从Account中选择一个地址作为Owner地址，填写到ModuleAFactory实例1的create方法的参数中
+点击create按钮，创建一个ModuleA实例1
+在右下角的debug信息中找到create方法的返回数据，找到ModuleA实例1的地址0xA1
+
+5. 把0xA1填入左侧的At Address，上方选择ModuleA，点击At Address按钮，让remix呈现ModuleA实例1的操作界面
+6. 点击ModuleA实例1的getStorage查看storage地址，以及getBalance查看余额（应该是0）
+
+7. 在上方输入Value处输入100000以上的付款值，点击ModuleA实例1的enableModuleA，向合约打钱
+8. 再次点击getBalance，此时应看到余额100000
+
+注意：
+(1) ModuleAFactory必须由系统管理员部署，以便限制他人任意访问的权限。
+(2) ModuleAFactory实例的create方法则开放供任何人调用和创建ModuleA实例。
+
+
+二、升级（系统管理员）
+
+1. 再次Deploy ModuleAFactory，得到另外一个新实例2
+2. 用ModuleA实例1的地址0xA1 调用 ModuleAFactory实例2 的createFrom方法，创建升级版ModuleA实例2，地址0xA2
+
+3. 让remix显示出ModuleA实例2At Address 0xA2
+查看其存储地址，应该指向与实例1相同的存储地址
+查看其余额，应该是0
+
+4. 用0xA1,0xA2作为参数 调用 ModuleAFactory实例1 的upgrade方法，完成Module A实例1到实例2的升级
+
+5. 检查Module A实例1的余额变成0，存储地址变成0x0，状态变成stopped=true
+检查Module A实例2的余额变成100000
+升级成功。

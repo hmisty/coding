@@ -20,7 +20,11 @@ contract ModuleAFactory is managed {
      * Only manager can create a new module, just like
      * to register a new company at the government.
      */
-    function create(address owner) public returns (address) {
+    function create() public returns (address) {
+        return createFor(msg.sender);
+    }
+    
+    function createFor(address owner) public returns (address) {
         ModuleA _newModule = new ModuleA(); // its msg.sender will be the factory
         _newModule.setupStorage(0x0);
         _newModule.setupOwner(owner);
@@ -61,6 +65,12 @@ contract ModuleAFactory is managed {
         ModuleA(_module).setupOwner(_newOwner);
     }
     
+    /**
+     * Only manager can upgrade legacyModule to new one.
+     * NOTICE: this function cannot be combined with createFrom
+     * createFrom is called by the old factory.
+     * upgrade will be called by the new factory.
+     */
     function upgrade(address _legacyModule, address _newModule) onlyManager public {
         ModuleA(_legacyModule).upgradeTo(_newModule);
     }
