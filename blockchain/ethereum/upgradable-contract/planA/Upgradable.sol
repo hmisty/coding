@@ -19,7 +19,7 @@ contract upgradable is managed {
     }
     
     // owner
-    event OwnerChanged(address indexed _from, address indexed _to);
+    event OwnerChanged(address _from, address _to);
 
     modifier onlyOwner {
         require(address(_storage) != 0x0, "storage not initialized.");
@@ -97,7 +97,7 @@ contract upgradable is managed {
     /**
      * for receiving upgrading fund transfer.
      */
-    event FundReceived(address, uint256);
+    event FundReceived(address _sender, uint256 _amount);
     
     function receiveFund() external payable returns (bool) {
         emit FundReceived(msg.sender, msg.value);
