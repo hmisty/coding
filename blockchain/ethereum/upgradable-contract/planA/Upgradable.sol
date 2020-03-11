@@ -73,8 +73,10 @@ contract upgradable is managed {
      */
     function upgradeTo(address _newModule) isRunning onlyManager public {
         // transfer total fund to new module
-        _newModule.transfer(getBalance());
-
+        //_newModule.transfer(getBalance());
+        bool success = upgradable(_newModule).receiveFund.value(getBalance())();
+        require(success, "fund transfer failed.");
+        
         // transfer storage access
         _storage.changeManager(_newModule);
         
@@ -97,7 +99,8 @@ contract upgradable is managed {
      */
     event FundReceived(address, uint256);
     
-    function () external payable {
+    function receiveFund() external payable returns (bool) {
         emit FundReceived(msg.sender, msg.value);
+        return true;
     }
 }
