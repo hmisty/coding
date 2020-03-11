@@ -57,7 +57,7 @@ contract ModuleAFactory is managed {
         ModuleA(_module).stop();
     }
     
-    function setupOwnerFor(address _module, address _newOwner) public onlyManager {
+    function setupOwner(address _module, address _newOwner) public onlyManager {
         ModuleA(_module).setupOwner(_newOwner);
     }
     
