@@ -1,0 +1,50 @@
+说明
+
+
+
+以下三个部分是组合关系（Composite模式）：
+
+一、业务合约ModuleA（文件：ModuleA3.sol。不同的功能模块拆分成不同的合约，比如ModuleB, C, …）。业务合约里实现了：所有的业务逻辑。
+
+ModuleA继承upgradable（来自Upgradeable.sol）。upgradable定义了：
+（1）外部存储KeyValueStorage。这个存储是永续的。
+（2）外部存储中的一个特殊key = “owner”，记录了业务合约的owner的地址。并提供了onlyOwner修饰符、changeOwner（onlyOwner）以及setupOwner（onlyManager）。
+（3）业务合约升级需要的两个方法，一个是setupStorage（onlyManager），让升级后的新合约可以使用旧存储legacy storage，另一个是upgradeTo（onlyManager），把旧合约的资金转入新合约，并停止旧合约使之不可用。
+
+upgradable又继承了managed（来自Managed.sol）。managed定义了：
+（1）manager：系统管理地址。其控制权是掌控在系统运营方手中的。
+（2）onlyManager修饰符。
+（3）停止合约，启动合约（onlyManager）。
+（4）changeManager（onlyManager）。
+
+二、存储合约KeyValueStorage
+提供k:v存储功能。让存储和业务逻辑分离。
+
+三、工厂合约ModuleAFactory（Factory模式）
+提供创建ModuleA的功能。
+
+
+
+
+使用方法：
+
+第零步，manager部署最新版本的工厂合约得到工厂实例factory（0x1000）。
+
+第一步，用户user操作App发起创建ModuleA，manager调用工厂合约的create方法创建合约ModuleA的实例a（0x2000），并把a的owner（在a的k/v storage里）设为user。
+
+第二步，用户user操作App访问a。
+
+
+
+
+系统升级方法：
+
+第零步，准备好新版ModuleA合约代码，更新工厂合约，然后由manager部署最新版本的工厂合约得到新工厂实例factory’（0x1001）。
+
+第二步，对于一个待升级的旧合约实例a，manager调用工厂合约的createFrom方法部署合约ModuleA（旧版本实例a为参数），得到新版本实例a’（0x2001）。a’的owner和storage会自动设为a的owner和storage。
+
+第三步，manager调用旧合约实例a的upgradeTo方法（新版本实例a’为参数），将旧合约中的资金全部转入新合约。
+
+第四步，用户user操作App访问新合约a’。
+
+
