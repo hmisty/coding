@@ -49,7 +49,7 @@
 	- getBalance() => 0
 	- 付款100000调用enableModuleA()，然后再getBalance() => 100000
 
-### 验证软升级
+### 验证软升级（只需1步）
 
 软升级 soft upgrade = 只升级业务逻辑，不升级主合约，不升级KV存储
 
@@ -68,7 +68,7 @@
 	- getVersionTag() => 0.0.2
 	- getBalance() => 100000
 
-### 验证硬升级
+### 验证硬升级（只需2步）
 
 硬升级 hard upgrade = 升级主合约，不升级KV存储，不变更业务逻辑
 
