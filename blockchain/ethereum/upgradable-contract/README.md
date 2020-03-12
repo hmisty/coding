@@ -61,6 +61,9 @@
 实施软升级：
 
 1. 【主合约Owner】调用0xfactory.updateImplementation(0xmodule)更新主合约的业务逻辑至最新版本的V2版业务逻辑
+
+验证新业务逻辑：
+
 1. 【任意用户】使用之前的调用入口进行验证：
 	- getVersionTag() => 0.0.2
 	- getBalance() => 100000
