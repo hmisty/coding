@@ -12,7 +12,7 @@ contract ModuleAImpl is upgradable {
     
     // reveal the version tag.
     function getVersionTag() pure public returns (string) {
-        return "0.0.7";
+        return "0.0.1";
     }
     
     ///////////////////////////////////////////////////
