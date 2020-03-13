@@ -17,7 +17,7 @@ contract DAOImpl is upgradable {
 
     // reveal the version tag. this is not mandatory either.
     function getVersionTag() pure public returns (string memory) {
-        return "0.0.2";
+        return "0.0.1";
     }
 
     /**
