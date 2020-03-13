@@ -28,6 +28,9 @@ contract ModuleFactory is managed {
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function newModule() public returns (address);
 
+    // Event
+    event ModuleCreated(address module, address stor, address owner);
+
     /**
      * Anyone can create a new module, just like
      * to register a new company at the government.
@@ -48,6 +51,9 @@ contract ModuleFactory is managed {
 
         // automatically associate the current implementation for the module just created.
         _newModule.changeImplementation(_implementation);
+
+        // emit EventCreated
+        emit ModuleCreated(_newModuleAddr, _newModule.getStorage(), _newModule.getOwner());
 
         return address(_newModule);
     }
