@@ -4,10 +4,10 @@ import "./SafeMath.sol";
 import "./upgradable/Upgradable.sol";
 
 /**
- * The DAOImpl contract soft upgradable that contains only the business logic.
+ * The AppImpl contract soft upgradable that contains only the business logic.
  * It can be painlessly changed without upgrading the main contract ModuleA.
  */
-contract DAOImpl is upgradable {
+contract AppImpl is upgradable {
     using SafeMath for uint256;
 
     ///////////////////////////////////////////////////

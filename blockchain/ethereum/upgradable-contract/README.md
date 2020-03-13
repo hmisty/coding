@@ -1,28 +1,30 @@
-# Upgradable Contract
+# Upgradable Contract Framework Proof-of-Concept
 
-可升级合约设计模式proof-of-concept参考实现
+可升级合约框架proof-of-concept
 
 以及在remix中验证的方法
 
 ## 文件
 
-共7个solidity源码文件。
+框架共6个solidity源码文件，位于./contracts/upgradable/：
+1. ModuleFactory.sol 工厂（父合约）
+1. Module.sol 主合约（父合约）
+1. KeyValueStorage.sol KV存储
+1. Upgradable.sol 升级功能
+1. Managed.sol 管理功能
 
-* ModuleAFactory.sol 工厂
-* ModuleA.sol 主合约
+应用示例共3个solidity源码文件，位于./contracts/：
+1. AppFactory.sol 工厂
+1. App.sol 主合约
+1. AppImpl.sol 业务逻辑
 
-* ModuleAImpl.sol 业务逻辑
-* KeyValueStorage.sol KV存储
-
-* Upgradable.sol 升级功能
-* Managed.sol 管理功能
-
+辅助功能1个文件：
 * SafeMath.sol 安全计算（辅助）
 
 ## 类图
 
 见 UpgradableContracts\*.jpg
-![](UpgradableContracts2.jpg)
+![](UpgradableContracts3.jpg)
 
 ## remix验证方法
 

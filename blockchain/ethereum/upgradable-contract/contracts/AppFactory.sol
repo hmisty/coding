@@ -1,12 +1,12 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 import "./ModuleFactory.sol";
-import "./DAO.sol";
+import "./App.sol";
 
 /**
  * Maintains the registries of contracts for verification use.
  */
-contract DAOFactory is ModuleFactory {
+contract AppFactory is ModuleFactory {
 
     /**
      * NOTICE: Let only the system manager deploy!
@@ -19,7 +19,7 @@ contract DAOFactory is ModuleFactory {
      */ 
     // FIXME 0.4.24 compatible, use address payable for 0.5.0 
     function newModule() public returns (address) {
-        return address(new DAO());
+        return address(new App());
     }
 
 }
