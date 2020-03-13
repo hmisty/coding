@@ -12,7 +12,7 @@ contract DAOFactory is ModuleFactory {
      * NOTICE: Let only the system manager deploy!
      *
      */
-     
+
     /**
      * Implement the abstract function.
      * returns a new instance of Module.
