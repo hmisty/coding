@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "Upgradable.sol";
+import "./Upgradable.sol";
 
 /**
  * The ModuleA contract that is upgradable (i.e. relocated to a new contract).
@@ -61,7 +61,7 @@ contract ModuleA is upgradable {
     event ImplementationChanged(address _oldImpl, address _newImpl);
     
     // the implementation instance
-    address public _implementation = 0x0;
+    address public _implementation = address(0x0);
     
     function implementation() view public returns (address) {
         return _implementation;
@@ -81,7 +81,7 @@ contract ModuleA is upgradable {
     /**
      * the assembly trick to delegate any function call.
      */
-    function () isRunning payable public {
+    function () isRunning payable external {
         address _impl = implementation();
         require(_impl != address(0));
 

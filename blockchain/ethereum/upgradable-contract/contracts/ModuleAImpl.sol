@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "SafeMath.sol";
-import "Upgradable.sol";
+import "./SafeMath.sol";
+import "./Upgradable.sol";
 
 /**
  * The ModuleAImpl contract that contains only the business logic.
@@ -11,7 +11,7 @@ contract ModuleAImpl is upgradable {
     using SafeMath for uint256;
     
     // reveal the version tag.
-    function getVersionTag() pure public returns (string) {
+    function getVersionTag() pure public returns (string memory) {
         return "0.0.1";
     }
     

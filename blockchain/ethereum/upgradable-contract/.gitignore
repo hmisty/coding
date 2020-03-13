@@ -1,0 +1,7 @@
+# vim backup
+*~
+*.swp
+# mac
+.DS_Store
+# truffle
+build

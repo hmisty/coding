@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "Managed.sol";
-import "KeyValueStorage.sol";
+import "./Managed.sol";
+import "./KeyValueStorage.sol";
 
 /**
  * Allow contracts to be upgradable.
@@ -15,25 +15,25 @@ contract upgradable is managed {
     KeyValueStorage public _storage;
 
     function getStorage() view public returns (address) {
-        return _storage;
+        return address(_storage);
     }
     
     // owner
     event OwnerChanged(address _from, address _to);
 
     modifier onlyOwner {
-        require(address(_storage) != 0x0, "storage not initialized.");
+        require(address(_storage) != address(0x0), "storage not initialized.");
         require(getOwner() == msg.sender, "only owner can do this.");
         _;
     }
     
     function getOwner() view public returns (address) {
-        require(address(_storage) != 0x0, "storage not initialized.");
+        require(address(_storage) != address(0x0), "storage not initialized.");
         return _storage.getAddress(KEY_OWNER);
     }
     
     function changeOwner(address _newOwner) public onlyOwner {
-        require(address(_storage) != 0x0, "storage not initialized.");
+        require(address(_storage) != address(0x0), "storage not initialized.");
 
         address _oldOwner = getOwner();
         _storage.setAddress(KEY_OWNER, _newOwner);
@@ -42,7 +42,7 @@ contract upgradable is managed {
     
     // Manager can change owner too
     function setupOwner(address _newOwner) public onlyManager {
-        require(address(_storage) != 0x0, "storage not initialized.");
+        require(address(_storage) != address(0x0), "storage not initialized.");
 
         address _oldOwner = getOwner();
         _storage.setAddress(KEY_OWNER, _newOwner);
@@ -56,11 +56,11 @@ contract upgradable is managed {
      */
     function setupStorage(address _legacyStorage) isRunning onlyManager public {
         // initialize storage
-        if (_legacyStorage != 0x0) {
+        if (_legacyStorage != address(0x0)) {
             // use legacy storage if having one
             _storage = KeyValueStorage(_legacyStorage);
             // still no access, need to wait for _legacyStorage.upgradeTo() done.
-        } else if (address(_storage) == 0x0) {
+        } else if (address(_storage) == address(0x0)) {
             // otherwise create a new storage
             _storage = new KeyValueStorage(); // manager of the storage is ModuleA
         }
@@ -81,7 +81,7 @@ contract upgradable is managed {
         _storage.changeManager(_newModule);
         
         // deprecate the storage of the old module for avoiding misuse.
-        _storage = KeyValueStorage(0x0);
+        _storage = KeyValueStorage(address(0x0));
         
         // stop running
         halt();

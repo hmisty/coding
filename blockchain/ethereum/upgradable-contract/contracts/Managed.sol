@@ -4,7 +4,7 @@ pragma solidity >=0.4.22 <0.6.0;
  * Allow contracts to be managable to upgrade contracts as well as doing other admin actions, etc.
  */
 contract managed {
-    address public manager = 0x0; // who have the permission to maintain the system
+    address public manager = address(0x0); // who have the permission to maintain the system
     
     event ManagerChanged(address indexed _from, address indexed _to);
 
