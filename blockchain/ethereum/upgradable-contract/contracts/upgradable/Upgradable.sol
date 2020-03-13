@@ -62,7 +62,7 @@ contract upgradable is managed {
             // still no access, need to wait for _legacyStorage.upgradeTo() done.
         } else if (address(_storage) == address(0x0)) {
             // otherwise create a new storage
-            _storage = new KeyValueStorage(); // manager of the storage is ModuleA
+            _storage = new KeyValueStorage(); // manager of the storage is Module
         }
     }
     
