@@ -1,7 +1,7 @@
-var ModuleAFactory = artifacts.require("ModuleAFactory");
-var ModuleAImpl = artifacts.require("ModuleAImpl");
+var AppFactory = artifacts.require("AppFactory");
+var AppImpl = artifacts.require("AppImpl");
 
 module.exports = function(deployer) {
-	deployer.deploy(ModuleAFactory);
-	deployer.deploy(ModuleAImpl);
+	deployer.deploy(AppFactory);
+	deployer.deploy(AppImpl);
 }
