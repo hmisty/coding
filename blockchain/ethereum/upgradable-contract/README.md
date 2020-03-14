@@ -130,5 +130,11 @@ $ truffle test
 	- getStorage() => 0x0
 	- 状态halted => true
 
+## References
+
+1. [solidity官方文档](https://solidity.readthedocs.io/)
+1. [web3js官方文档](https://web3js.readthedocs.io/)
+2. [truffle官方文档](https://www.trufflesuite.com/docs/truffle/overview)
+
 ## License
 (c)2020 Evan Liu. MIT License.
