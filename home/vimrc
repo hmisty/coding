@@ -11,6 +11,10 @@ Bundle 'gmarik/vundle'
 "-- My Bundles here:
 "$ mvim +BundleInstall +qall
 "-- original repos on github
+
+"-- Ethereum solidity
+Plugin 'tomlion/vim-solidity'
+"-- nodejs
 Bundle "myhere/vim-nodejs-complete"
 "-- motion
 Bundle 'Lokaltog/vim-easymotion'
@@ -121,8 +125,8 @@ set encoding=utf-8
 " highlight unnecessary whitespaces
 highlight BadWhitespace ctermbg=red guibg=darkred
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
-" PEP8 compliant
-au BufNewFile,BufRead *.py 
+" PEP8 compliant; also applied to solidity src
+au BufNewFile,BufRead *.py,*.sol
       \ set tabstop=4 |
       \ set softtabstop=4 |
       \ set shiftwidth=4 |
