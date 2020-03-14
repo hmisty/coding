@@ -12,10 +12,12 @@ contract AppImpl2 is upgradable {
 
     ///////////////////////////////////////////////////
     //   feel free to implement anything below       //
-		//   all are able to be soft-upgraded            //
+    //   all are able to be soft-upgraded            //
     ///////////////////////////////////////////////////
 
-    // reveal the version tag. this is not mandatory either.
+    /**
+     * reveals the version tag. this is not mandatory either.
+     */
     function getVersionTag() pure public returns (string memory) {
         return "0.0.2";
     }

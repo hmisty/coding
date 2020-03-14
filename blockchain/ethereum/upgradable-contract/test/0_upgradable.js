@@ -1,5 +1,5 @@
 /**
- * test cases for verifying the upgradability of the app including:
+ * test cases for verifying the upgradability of the App, including:
  * 1. deployment
  * 2. soft upgrade
  * 3. hard upgrade
@@ -20,7 +20,7 @@ contract("AppFactory", accounts => {
 		//console.log(factory);
 
 		// use impl
-		var tx = await factory.setCurrentImplementation(impl.address)
+		var tx = await factory.setCurrentImplementation(impl.address);
 		//console.log(tx);
 
 		// create an App
@@ -30,6 +30,9 @@ contract("AppFactory", accounts => {
 
 		tx = await m.sendTransaction();
 		//console.log(tx);
+		
+		// save the app_address for later testcase use.
+		artifacts["app_address"] = app_address;
 
 		// verify the App's impl
 		var app = new web3.eth.Contract(AppImpl.abi, app_address);
@@ -47,7 +50,7 @@ contract("AppFactory", accounts => {
 		//console.log(factory);
 
 		// verify the current implementation == impl.address
-		var impl_addr = await factory.getCurrentImplementation()
+		var impl_addr = await factory.getCurrentImplementation();
 		//console.log(impl_addr);
 		assert.equal(impl_addr, impl.address);
 
@@ -55,12 +58,23 @@ contract("AppFactory", accounts => {
 		var tx = await factory.setCurrentImplementation(impl2.address);
 		//console.log(tx);
 
+		/* the contexts in artifacts is remained
+		 * so we won't need to create the app again!
+		 */
+		/*
 		// create an App
 		var m = factory.methods["create()"];
 		var app_address = await m.call();
 		//console.log(app_address);
 
 		tx = await m.sendTransaction();
+		//console.log(tx);
+		*/
+
+		// retrieve the app_address from artifacts contexts
+		var app_address = artifacts["app_address"];
+		// update the app's implementation to the latest version :)
+		tx = await factory.updateImplementation(app_address);
 		//console.log(tx);
 
 		// verify the App's impl

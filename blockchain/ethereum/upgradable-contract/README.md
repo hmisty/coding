@@ -42,6 +42,22 @@ $ npm install -g truffle
 $ truffle test
 ```
 
+共5个用例，测试通过：
+
+```
+  Contract: AppFactory
+    ✓ should create an App that has the AppImpl (354ms)
+    ✓ should soft upgrade from AppImpl to AppImpl2 (197ms)
+
+  Contract: App
+    ✓ should have the version tag 0.0.1 (301ms)
+    ✓ should enable an App (86ms)
+    ✓ should set/get number of members (84ms)
+
+
+  5 passing (2s)
+```
+
 ## remix验证方法
 
 ### 准备工作
