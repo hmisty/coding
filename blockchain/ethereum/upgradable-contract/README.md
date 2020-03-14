@@ -2,7 +2,7 @@
 
 可升级合约框架proof-of-concept
 
-以及在remix中验证的方法
+以及用truffle和remix验证的方法
 
 ## 文件
 
@@ -25,6 +25,22 @@
 
 见 UpgradableContracts\*.jpg
 ![](UpgradableContracts3.jpg)
+
+## truffle验证方法
+
+### 准备工作
+
+安装truffle: 
+
+```
+$ npm install -g truffle
+```
+
+### 运行测试用例
+
+```
+$ truffle test
+```
 
 ## remix验证方法
 
