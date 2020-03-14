@@ -9,7 +9,7 @@ import "./Module.sol";
 contract ModuleFactory is managed {
 
     // the current implementation
-    address public _implementation = address(0x0);
+    address _implementation = address(0x0);
     // all available implementations
     mapping(address => bool) _availableImplementations;
 
@@ -117,6 +117,13 @@ contract ModuleFactory is managed {
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function upgrade(address _legacyModule, address _newModule) onlyManager public {
         Module(_legacyModule).upgradeTo(_newModule);
+    }
+
+    /**
+     * returns the current implementation address.
+     */
+    function getCurrentImplementation() view public returns (address) {
+        return _implementation;
     }
 
     /**
