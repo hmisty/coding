@@ -13,9 +13,12 @@ Bundle 'gmarik/vundle'
 "-- original repos on github
 
 "-- Ethereum solidity
-Plugin 'tomlion/vim-solidity'
+Bundle 'tomlion/vim-solidity'
 "-- nodejs
 Bundle "myhere/vim-nodejs-complete"
+"-- markdown instant preview
+" also requires: $ npm install -g install instant-markdown-d
+Bundle "suan/vim-instant-markdown"
 "-- motion
 Bundle 'Lokaltog/vim-easymotion'
 :let mapleader=","
