@@ -12,7 +12,7 @@ contract AppImpl is upgradable {
 
     ///////////////////////////////////////////////////
     //   feel free to implement anything below       //
-		//   all are able to be soft-upgraded            //
+	//   all are able to be soft-upgraded            //
     ///////////////////////////////////////////////////
 
     /**

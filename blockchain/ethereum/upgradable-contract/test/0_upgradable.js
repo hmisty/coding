@@ -46,7 +46,9 @@ contract("AppFactory", accounts => {
 	it("should soft upgrade from AppImpl to AppImpl2", async () => {
 		var factory = await AppFactory.deployed();
 		var impl = await AppImpl.deployed();
-		var impl2 = await AppImpl2.deployed();
+		//var impl2 = await AppImpl2.deployed();
+		// deploy on demand, so we won't need it in migration
+		var impl2 = await AppImpl2.new(); 
 		//console.log(factory);
 
 		// verify the current implementation == impl.address
