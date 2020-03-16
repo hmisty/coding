@@ -11,6 +11,9 @@ const AppImpl2 = artifacts.require("AppImpl2");
 
 contract("AppFactory", accounts => {
 
+	// shared variable by all cases.
+	var _app_address;
+
 	/**
 	 * test the Factory to create an new App
 	 */
@@ -32,7 +35,7 @@ contract("AppFactory", accounts => {
 		//console.log(tx);
 		
 		// save the app_address for later testcase use.
-		artifacts["app_address"] = app_address;
+		this._app_address = app_address;
 
 		// verify the App's impl
 		var app = new web3.eth.Contract(AppImpl.abi, app_address);
@@ -74,7 +77,7 @@ contract("AppFactory", accounts => {
 		*/
 
 		// retrieve the app_address from artifacts contexts
-		var app_address = artifacts["app_address"];
+		var app_address = this._app_address;
 		// update the app's implementation to the latest version :)
 		tx = await factory.updateImplementation(app_address);
 		//console.log(tx);

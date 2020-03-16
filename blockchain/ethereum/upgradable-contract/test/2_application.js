@@ -10,6 +10,9 @@ const AppImpl = artifacts.require("AppImpl");
 
 contract("App", accounts => {
 
+	// shared variable by all cases.
+	var _app_address;
+
 	/**
 	 * 1. test get version tag of the app (the newly created)
 	 */
@@ -31,7 +34,7 @@ contract("App", accounts => {
 		//console.log(tx);
 
 		// save the app_address for later testcase use.
-		artifacts["app_address"] = app_address;
+		this._app_address = app_address;
 		//console.log(app_address);
 
 		// verify the App's impl version tag
@@ -51,7 +54,7 @@ contract("App", accounts => {
 		 *
 		 */
 		// retrieve the app_address from artifacts contexts
-		var app_address = artifacts["app_address"];
+		var app_address = this._app_address;
 		//console.log(app_address);
 
 		// test enable()
@@ -74,7 +77,7 @@ contract("App", accounts => {
 		 *
 		 */
 		// retrieve the app_address from artifacts contexts
-		var app_address = artifacts["app_address"];
+		var app_address = this._app_address;
 		//console.log(app_address);
 
 		// test set/get number of members
