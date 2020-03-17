@@ -1,13 +1,13 @@
 pragma solidity >=0.4.22 <0.5.0;
 
 import "./SafeMath.sol";
-import "./upgradable/Upgradable.sol";
+import "./upgradable/Owned.sol";
 
 /**
  * The AppImpl contract soft upgradable that contains only the business logic.
  * It can be painlessly changed without upgrading the main contract ModuleA.
  */
-contract AppImpl2 is upgradable {
+contract AppImpl2 is owned {
     using SafeMath for uint256;
 
     ///////////////////////////////////////////////////
@@ -30,8 +30,9 @@ contract AppImpl2 is upgradable {
 
     /**
      * Only owner can enable it.
+     * TODO: check if caller is owner.
      */
-    function enable() isRunning payable public onlyOwner {
+    function enable() payable public {
         require (msg.value >= 100000);
         _storage.setBool(KEY_ENABLED, true);
     }
@@ -39,7 +40,7 @@ contract AppImpl2 is upgradable {
     /**
      * bla bla
      */
-    function setNumberOfMembers(uint256 num) isRunning public {
+    function setNumberOfMembers(uint256 num) public {
         _storage.setUint(KEY_NUM_MEMBERS, num);
     }
 
