@@ -8,10 +8,10 @@
 
 框架共6个solidity源码文件，位于./contracts/upgradable/：
 1. ModuleFactory.sol 工厂（父合约）
-1. Module.sol 主合约（父合约）
+1. Module.sol 主合约（父合约） & (硬)升级功能
+1. Managed.sol 合约管理者manager
+1. Owned.sol 存储\_storage & 存储所有者owner
 1. KeyValueStorage.sol KV存储
-1. Upgradable.sol 升级功能
-1. Managed.sol 管理功能
 
 应用示例共3个solidity源码文件，位于./contracts/：
 1. AppFactory.sol 工厂
@@ -21,10 +21,74 @@
 辅助功能1个文件，位于./contracts/：
 * SafeMath.sol 安全计算（辅助）
 
+## 使用方法
+
+1. 初始化项目目录
+```
+$ truffle init
+```
+
+2. 把upgradable/下的框架源码放到contracts/目录下
+```
+truffle project
+ |
+ +- contracts
+ |   |
+ |   +- upgradable/*.sol
+ |
+ +- XXXFactory.sol
+ +- XXX.sol
+ +- XXXImpl.sol
+```
+
+3. 在contracts/目录下创建新应用模块（假设叫Todo）的主合约XXX.sol、工厂XXXFactory.sol以及业务逻辑实现XXXImpl.sol
+```solidity
+// Todo.sol
+
+pragma solidity = 0.4.24;
+import "./upgradable/Module.sol";
+
+contract Todo is Module {
+}
+```
+
+```solidity
+// TodoFactory.sol
+
+pragma solidity = 0.4.24;
+import "./upgradable/ModuleFactory.sol";
+import "./Todo.sol";
+
+contract TodoFactory is ModuleFactory {
+	function newModule() public returns (address) {
+		return address(new Todo());
+		}
+}
+```
+
+```solidity
+// TodoImpl.sol
+
+pragma solidity = 0.4.24;
+import "./SafeMath.sol";
+import "./upgradable/Owned.sol";
+
+contract TodoImpl is owned {
+	
+	// feel free to implement something
+
+}
+
+```
+
+注意：
+1. 尽量把所有的业务相关定义和数据都写在XXXImpl.sol里，以便于软升级
+2. XXXImpl.sol只能定义constant和function，变量以及Event无效(待确认)
+
+
 ## 类图
 
-见 UpgradableContracts\*.jpg
-![](UpgradableContracts3.jpg)
+![](UpgradableContracts4.jpg)
 
 ## truffle验证方法
 
@@ -42,7 +106,7 @@ $ npm install -g truffle
 $ truffle test
 ```
 
-共5个用例，测试通过：
+共12个用例，测试通过：
 
 ```
   Contract: AppFactory
@@ -54,8 +118,14 @@ $ truffle test
     ✓ should enable an App (86ms)
     ✓ should set/get number of members (84ms)
 
-
-  5 passing (2s)
+  Contract: KeyValueStorage
+    ✓ should the storage deployed()
+    ✓ should get/set address (97ms)
+    ✓ should get/set uint (92ms)
+    ✓ should get/set bool (85ms)
+    ✓ should get/set string (88ms)
+    ✓ should get/set bytes32 (82ms)
+    ✓ should get/set int (84ms)
 ```
 
 ## remix验证方法
