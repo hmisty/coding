@@ -86,6 +86,9 @@ contract TodoImpl is owned {
 2. XXXImpl.sol只能定义constant和function，变量以及Event无效(待确认)
 
 
+4. 针对不同模块编写测试用例，放在test/目录下，叫做test/1\_YYY.js
+
+
 ## 类图
 
 ![](UpgradableContracts4.jpg)
