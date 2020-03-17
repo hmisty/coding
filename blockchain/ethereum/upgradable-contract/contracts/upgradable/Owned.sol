@@ -7,15 +7,16 @@ import "./KeyValueStorage.sol";
  * owned = own an eternal shared storage.
  *
  * The owner is stored in the key value storage with a special key:
- * FIXME
+ * KEY_OWNER = 0x00000000000000000000000000000000000000000000000000000000000000ff
+ *
  */
 contract owned is managed {
     
     // the encoded bytes of the special key "owner"
-    bytes32 constant public KEY_OWNER = keccak256(abi.encodePacked("owner"));
+    bytes32 constant KEY_OWNER = 0x00000000000000000000000000000000000000000000000000000000000000ff;
     
     // the external key-value storage for this module.
-    KeyValueStorage public _storage;
+    KeyValueStorage _storage;
 
     /**
      * returns the external storage address
