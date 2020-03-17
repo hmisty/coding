@@ -96,12 +96,14 @@ contract ModuleFactory is managed {
     // changeManager, setupStorage
 
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
-    function start(address _module) onlyManager public {
-        Module(_module).start();
+    // start
+    function unpause(address _module) onlyManager public {
+        Module(_module).unpause();
     }
 
-    function halt(address _module) onlyManager public {
-        Module(_module).halt();
+    // stop
+    function pause(address _module) onlyManager public {
+        Module(_module).pause();
     }
 
     function setupOwner(address _module, address _newOwner) public onlyManager {

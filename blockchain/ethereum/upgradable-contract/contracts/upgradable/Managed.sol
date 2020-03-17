@@ -28,20 +28,22 @@ contract managed {
      * Stoppable.
      * only manager can halt/start the contract
      */
-    bool public halted = false;
+    bool public paused = false;
 
     modifier isRunning {
-        require(!halted);
+        require(!paused);
         _;
     }
     
-    // "stop" conflicts with the assembly. use "halt".
-    function halt() onlyManager public {
-        halted = true;
+    // "stop" conflicts with the assembly. use "pause".
+    // Warning: Variable is shadowed in inline assembly by an instruction of the same name
+    function pause() onlyManager public {
+        paused = true;
     }
 
-    function start() onlyManager public {
-        halted = false;
+    // start
+    function unpause() onlyManager public {
+        paused = false;
     }
     
     // 4

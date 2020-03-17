@@ -57,7 +57,7 @@ contract Module is owned {
         _storage = KeyValueStorage(address(0x0));
         
         // stop running
-        halt();
+        pause();
     }
     
     /**
