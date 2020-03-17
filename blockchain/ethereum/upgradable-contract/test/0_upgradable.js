@@ -88,4 +88,42 @@ contract("AppFactory", accounts => {
 		assert.equal(ver, "0.0.2");
 	});
 
+	/**
+	 * test a specific bug reported on 3/18:
+	 * set an impl => create => success
+	 * set another impl => create => nothing?
+	 */
+	it("should create then create gain succeeds", async() => {
+		var factory = await AppFactory.deployed();
+
+		// new impl
+		var impl1 = await AppImpl.new(); 
+		var tx = await factory.setCurrentImplementation(impl1.address);
+
+		// create an App
+		var m = factory.methods["create()"];
+		var app_address = await m.call();
+		//console.log(app_address);
+
+		tx = await m.sendTransaction();
+		//console.log(tx);
+
+		// new another impl
+		var impl2 = await AppImpl2.new();
+		tx = await factory.setCurrentImplementation(impl2.address);
+
+		// create another App
+		var m = factory.methods["create()"];
+		app_address = await m.call();
+		//console.log(app_address);
+
+		tx = await m.sendTransaction();
+		//console.log(tx);
+
+		// verify the App's impl
+		var app = new web3.eth.Contract(AppImpl2.abi, app_address);
+		var ver = await app.methods.getVersionTag().call();
+		assert.equal(ver, "0.0.2");
+	});
+
 });
