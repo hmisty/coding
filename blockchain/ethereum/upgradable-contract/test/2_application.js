@@ -91,4 +91,19 @@ contract("App", accounts => {
 		assert.equal(nMembers, 100);
 	});
 
+	/**
+	 * test the strange issue with isMember & isAdmin
+	 */
+	it("should check isMember and isAdmin", async () => {
+		// retrieve the app_address from artifacts contexts
+		var app_address = this._app_address;
+		//console.log(app_address);
+
+		// test set/get number of members
+		var app = new web3.eth.Contract(AppImpl.abi, app_address);
+		
+		// check
+		var is_admin = await app.methods.isAdmin(accounts[0]).call();
+		assert.equal(is_admin, false);
+	});
 });

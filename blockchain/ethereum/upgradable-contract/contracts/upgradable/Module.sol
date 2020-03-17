@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.5.0;
 
-import "./Upgradable.sol";
+import "./Owned.sol";
 
 /**
  * The Module contract that is upgradable (i.e. relocated to a new contract).
@@ -8,7 +8,7 @@ import "./Upgradable.sol";
  * Data is permanently stored in an external storage contract.
  * Fund will be transferred to the newly upgraded contract.
  */
-contract Module is upgradable {
+contract Module is owned {
 
     /**
      * Step 1. Deploy the newest version of the module, with an owner of either:
@@ -20,6 +20,61 @@ contract Module is upgradable {
      */
     constructor() public {
         manager = msg.sender; // this should be the factory address
+    }
+
+    /**
+     * Step 2. Setup the storage for the new module.
+     * 
+     * Only manager can initialize.
+     */
+    function setupStorage(address _legacyStorage) isRunning onlyManager public {
+        // initialize storage
+        if (_legacyStorage != address(0x0)) {
+            // use legacy storage if having one
+            _storage = KeyValueStorage(_legacyStorage);
+            // still no access, need to wait for _legacyStorage.upgradeTo() done.
+        } else if (address(_storage) == address(0x0)) {
+            // otherwise create a new storage
+            _storage = new KeyValueStorage(); // manager of the storage is Module
+        }
+    }
+    
+    /**
+     * Step 3. Transfer the fund from the old module to the new module.
+     * 
+     * Only manager can upgrade.
+     */
+    function upgradeTo(address _newModule) isRunning onlyManager public {
+        // transfer total fund to new module
+        //_newModule.transfer(getBalance());
+        bool success = Module(_newModule).receiveFund.value(getBalance())();
+        require(success, "fund transfer failed.");
+        
+        // transfer storage access
+        _storage.changeManager(_newModule);
+        
+        // deprecate the storage of the old module for avoiding misuse.
+        _storage = KeyValueStorage(address(0x0));
+        
+        // stop running
+        halt();
+    }
+    
+    /**
+     * for checking the balance of the module.
+     */
+    function getBalance() view public returns (uint256) {
+        return address(this).balance;
+    }
+    
+    /**
+     * for receiving upgrading fund transfer.
+     */
+    event FundReceived(address _sender, uint256 _amount);
+    
+    function receiveFund() external payable returns (bool) {
+        emit FundReceived(msg.sender, msg.value);
+        return true;
     }
     
     ///////////////////////////////////////////////////
