@@ -14,7 +14,7 @@ contract KeyValueStorage is managed {
     mapping(bytes32 => uint256) _uintStorage;
     mapping(bytes32 => bool) _boolStorage;
     mapping(bytes32 => string) _stringStorage;
-    mapping(bytes32 => bytes) _byteStorage;
+    mapping(bytes32 => bytes32) _byteStorage;
     mapping(bytes32 => int256) _intStorage;
 
     /**** Storage Writer Setup **/
@@ -41,7 +41,7 @@ contract KeyValueStorage is managed {
         return _stringStorage[key];
     }
 
-    function getBytes(bytes32 key) public view returns (bytes memory) {
+    function getBytes(bytes32 key) public view returns (bytes32) {
         return _byteStorage[key];
     }
 
@@ -67,7 +67,7 @@ contract KeyValueStorage is managed {
         _stringStorage[key] = value;
     }
 
-    function setBytes(bytes32 key, bytes memory value) isRunning onlyManager public {
+    function setBytes(bytes32 key, bytes32 value) isRunning onlyManager public {
         _byteStorage[key] = value;
     }
 
