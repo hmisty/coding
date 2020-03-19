@@ -103,6 +103,10 @@ contract("App", accounts => {
 		var app = new web3.eth.Contract(AppImpl.abi, app_address);
 		
 		// check
+		var is_member = await app.methods.isMember(accounts[0]).call();
+		assert.equal(is_member, false);
+
+		// check
 		var is_admin = await app.methods.isAdmin(accounts[0]).call();
 		assert.equal(is_admin, false);
 	});

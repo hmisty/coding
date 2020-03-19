@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.5.0;
 
-import "./SafeMath.sol";
 import "./upgradable/Owned.sol";
+import "./lib/SafeMath.sol";
 
 /**
  * The AppImpl contract soft upgradable that contains only the business logic.
