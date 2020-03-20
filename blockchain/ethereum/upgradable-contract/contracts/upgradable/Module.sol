@@ -33,9 +33,10 @@ contract Module is owned {
             // use legacy storage if having one
             _storage = KeyValueStorage(_legacyStorage);
             // still no access, need to wait for _legacyStorage.upgradeTo() done.
-        } else if (address(_storage) == address(0x0)) {
+        } else {
             // otherwise create a new storage
-            _storage = new KeyValueStorage(); // manager of the storage is Module
+            // manager of the storage is Module
+            initStorage();
         }
     }
     

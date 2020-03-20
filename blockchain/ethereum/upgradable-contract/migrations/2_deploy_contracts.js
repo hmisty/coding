@@ -3,6 +3,7 @@ const AppImpl = artifacts.require("AppImpl");
 const Membership = artifacts.require("Membership");
 const KeyValueStorage = artifacts.require("KeyValueStorage");
 const Managed = artifacts.require("Managed");
+const Owned = artifacts.require("Owned");
 
 module.exports = function(deployer) {
 	// for app test
@@ -14,4 +15,5 @@ module.exports = function(deployer) {
 	// for framework test cases
 	deployer.deploy(KeyValueStorage);
 	deployer.deploy(Managed);
+	deployer.deploy(Owned);
 }

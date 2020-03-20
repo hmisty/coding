@@ -25,6 +25,15 @@ contract owned is managed {
         return address(_storage);
     }
 
+    /**
+     * initialize the storage
+     * donot setStorage, because we must let Owned mananges the storage
+     */
+    function initStorage() onlyManager public {
+        require(address(_storage) == address(0x0), "storage already initialized.");
+        _storage = new KeyValueStorage();
+    }
+
     // owner
     event OwnerChanged(address _from, address _to);
 
@@ -39,7 +48,7 @@ contract owned is managed {
         return _storage.getAddress(KEY_OWNER);
     }
     
-    function changeOwner(address _newOwner) public onlyOwner {
+    function changeOwner(address _newOwner) isRunning public onlyOwner {
         require(address(_storage) != address(0x0), "storage not initialized.");
 
         address _oldOwner = getOwner();
@@ -48,7 +57,7 @@ contract owned is managed {
     }
     
     // Manager can change owner too
-    function setupOwner(address _newOwner) public onlyManager {
+    function setupOwner(address _newOwner) isRunning public onlyManager {
         require(address(_storage) != address(0x0), "storage not initialized.");
 
         address _oldOwner = getOwner();
