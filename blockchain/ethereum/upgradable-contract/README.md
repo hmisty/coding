@@ -92,7 +92,7 @@ contract TodoImpl is owned {
 	2) XXXImpl.sol只能定义constant和function，变量以及Event无效(待确认)
 
 
-5. 针对不同模块编写测试用例，放在test/目录下，叫做test/1\_YYY.js
+5. 针对不同模块编写测试用例，放在test/目录下，叫做test/3\_YYY.js
 
 
 ## 类图
@@ -115,26 +115,45 @@ $ npm install -g truffle
 $ truffle test
 ```
 
-共12个用例，测试通过：
+共25个用例，测试通过：
 
 ```
-  Contract: AppFactory
-    ✓ should create an App that has the AppImpl (354ms)
-    ✓ should soft upgrade from AppImpl to AppImpl2 (197ms)
+  Contract: Managed
+    ✓ should the managed deployed()
+    ✓ should onlyManager to changeManager while isRunning (334ms)
 
-  Contract: App
-    ✓ should have the version tag 0.0.1 (301ms)
-    ✓ should enable an App (86ms)
-    ✓ should set/get number of members (84ms)
+  Contract: Module
+    ✓ should the Module deployed()
+    ✓ should setup a new storage (115ms)
+    ✓ should setup a legacy storage (146ms)
+    ✓ should upgrade to a new module (372ms)
+    ✓ should change implementation and route function calls (112ms)
+
+  Contract: Owned
+    ✓ should the owned deployed()
+    ✓ should get/init the storage (172ms)
+    ✓ should get/setup/change owner (279ms)
 
   Contract: KeyValueStorage
     ✓ should the storage deployed()
-    ✓ should get/set address (97ms)
-    ✓ should get/set uint (92ms)
-    ✓ should get/set bool (85ms)
-    ✓ should get/set string (88ms)
-    ✓ should get/set bytes32 (82ms)
-    ✓ should get/set int (84ms)
+    ✓ should get/set address (72ms)
+    ✓ should get/set uint (72ms)
+    ✓ should get/set bool (68ms)
+    ✓ should get/set string (75ms)
+    ✓ should get/set bytes32 (63ms)
+    ✓ should get/set int (65ms)
+
+  Contract: AppFactory
+    ✓ should create an App that has the AppImpl (216ms)
+    ✓ should soft upgrade from AppImpl to AppImpl2 (197ms)
+    ✓ should create then create again succeeds (474ms)
+    ✓ should hard upgrade App v1 to App v2 (334ms)
+
+  Contract: App
+    ✓ should have the version tag 0.0.1 (209ms)
+    ✓ should enable an App (53ms)
+    ✓ should set/get number of members (64ms)
+    ✓ should check isMember and isAdmin (45ms)
 ```
 
 ## remix验证方法

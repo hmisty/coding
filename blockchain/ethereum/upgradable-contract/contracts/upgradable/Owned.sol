@@ -6,14 +6,14 @@ import "./KeyValueStorage.sol";
 /**
  * owned = own an eternal shared storage.
  *
- * The owner is stored in the key value storage with a special key:
- * KEY_OWNER = 0x00000000000000000000000000000000000000000000000000000000000000ff
+ * The owner is stored in the key value storage with a special key
  *
  */
 contract owned is managed {
     
-    // the encoded bytes of the special key "owner"
-    bytes32 constant KEY_OWNER = 0x00000000000000000000000000000000000000000000000000000000000000ff;
+    // the encoded bytes of the special key
+    // (randomly generated to avoid key conflicts)
+    bytes32 constant KEY_OWNER = 0x5a56315fb445b1a5ac55db632cdcaa16c04666bd7c0ca5f6a2808b5709b7b12c;
     
     // the external key-value storage for this module.
     KeyValueStorage _storage;
