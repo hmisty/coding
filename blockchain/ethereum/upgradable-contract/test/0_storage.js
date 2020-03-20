@@ -14,7 +14,7 @@
  * 2. $ truffle develop
  *
  * 3. truffle(develop)> migrate
- * 4. truffle(develop)> test "test/1_storage.js"
+ * 4. truffle(develop)> test "test/0_storage.js"
  *
  */
 

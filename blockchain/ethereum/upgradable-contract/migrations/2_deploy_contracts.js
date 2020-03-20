@@ -1,7 +1,8 @@
-var AppFactory = artifacts.require("AppFactory");
-var AppImpl = artifacts.require("AppImpl");
-var Membership = artifacts.require("Membership");
-var KeyValueStorage = artifacts.require("KeyValueStorage");
+const AppFactory = artifacts.require("AppFactory");
+const AppImpl = artifacts.require("AppImpl");
+const Membership = artifacts.require("Membership");
+const KeyValueStorage = artifacts.require("KeyValueStorage");
+const Managed = artifacts.require("Managed");
 
 module.exports = function(deployer) {
 	// for app test
@@ -10,6 +11,7 @@ module.exports = function(deployer) {
 	deployer.deploy(AppImpl);
 	deployer.deploy(AppFactory);
 
-	// for standalone test cases
+	// for framework test cases
 	deployer.deploy(KeyValueStorage);
+	deployer.deploy(Managed);
 }

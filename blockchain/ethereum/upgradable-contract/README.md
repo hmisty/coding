@@ -28,7 +28,12 @@
 $ truffle init
 ```
 
-2. 把upgradable/下的框架源码放到contracts/目录下
+2. 安装必要的库
+```
+$ npm install truffle-assertions
+```
+
+3. 把upgradable/下的框架源码放到contracts/目录下
 ```
 truffle project
  |
@@ -41,7 +46,7 @@ truffle project
  +- XXXImpl.sol
 ```
 
-3. 在contracts/目录下创建新应用模块（假设叫Todo）的主合约XXX.sol、工厂XXXFactory.sol以及业务逻辑实现XXXImpl.sol
+4. 在contracts/目录下创建新应用模块（假设叫Todo）的主合约XXX.sol、工厂XXXFactory.sol以及业务逻辑实现XXXImpl.sol
 ```solidity
 // Todo.sol
 
@@ -82,11 +87,12 @@ contract TodoImpl is owned {
 ```
 
 注意：
-1. 尽量把所有的业务相关定义和数据都写在XXXImpl.sol里，以便于软升级
-2. XXXImpl.sol只能定义constant和function，变量以及Event无效(待确认)
+
+	1) 尽量把所有的业务相关定义和数据都写在XXXImpl.sol里，以便于软升级
+	2) XXXImpl.sol只能定义constant和function，变量以及Event无效(待确认)
 
 
-4. 针对不同模块编写测试用例，放在test/目录下，叫做test/1\_YYY.js
+5. 针对不同模块编写测试用例，放在test/目录下，叫做test/1\_YYY.js
 
 
 ## 类图

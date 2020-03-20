@@ -9,6 +9,14 @@ contract managed {
     event ManagerChanged(address indexed _from, address indexed _to);
 
     /**
+     * setup the manager to the deployer while deployed
+     * could be possible to be overriden
+     */
+    constructor() public {
+        manager = msg.sender; // this should be the factory address
+    }
+
+    /**
      * The modifier for decorating functions.
      */ 
     modifier onlyManager {
@@ -47,7 +55,7 @@ contract managed {
     }
     
     // 4
-    function changeManager(address _newManager) public onlyManager {
+    function changeManager(address _newManager) isRunning public onlyManager {
         address oldManager = manager;
         manager = _newManager;
         emit ManagerChanged(oldManager, _newManager);
