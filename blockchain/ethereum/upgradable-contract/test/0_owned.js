@@ -45,12 +45,19 @@ contract("Owned", accounts => {
 		var stor = await contract.methods.getStorage().call();
 		assert.equal(stor, 0x0);
 
+		/*
 		// init
 		// this will fail
 		//await contract.methods.initStorage().send({from: accounts[0]});
 		var owned_deployed = await Owned.deployed();
 		// this will succeed
 		await owned_deployed.methods["initStorage()"].sendTransaction();
+		stor = await contract.methods.getStorage().call();
+		assert.notEqual(stor, 0x0);
+		*/
+		var storage_deployed = await KeyValueStorage.deployed();
+		storage_deployed.changeManager(contract._address);
+		await contract.methods.setStorage(storage_deployed.address).send({from: accounts[0]});
 		stor = await contract.methods.getStorage().call();
 		assert.notEqual(stor, 0x0);
 

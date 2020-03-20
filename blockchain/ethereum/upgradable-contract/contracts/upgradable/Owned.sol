@@ -26,12 +26,13 @@ contract owned is managed {
     }
 
     /**
-     * initialize the storage
-     * donot setStorage, because we must let Owned mananges the storage
+     * set the storage
      */
-    function initStorage() onlyManager public {
-        require(address(_storage) == address(0x0), "storage already initialized.");
-        _storage = new KeyValueStorage();
+    function setStorage(KeyValueStorage _newStorage) onlyManager public {
+        require(address(_newStorage) != address(0x0), "new storage is 0x0.");
+        require(_newStorage.manager() == address(this), "new storage is not managed by me.");
+
+        _storage = _newStorage;
     }
 
     // owner
