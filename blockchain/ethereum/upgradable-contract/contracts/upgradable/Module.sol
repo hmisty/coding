@@ -84,21 +84,17 @@ contract Module is owned {
     
     event ImplementationChanged(address _oldImpl, address _newImpl);
     
-    // the implementation instance
-    address public _implementation = address(0x0);
-    
-    function implementation() view public returns (address) {
-        return _implementation;
-    }
+    // the implementation instance, as well as a function implementation()
+    address public implementation = address(0x0);
     
     /**
      * with this you can enjoy painless "implementation upgrade" only
      * without upgrading the full module :)
      */
     function changeImplementation(address _newImpl) isRunning public onlyManager {
-        require(_implementation != _newImpl, "already using this implementation.");
-        address _oldImpl = _implementation;
-        _implementation = _newImpl;
+        require(implementation != _newImpl, "already using this implementation.");
+        address _oldImpl = implementation;
+        implementation = _newImpl;
         emit ImplementationChanged(_oldImpl, _newImpl);
     }
 
@@ -106,7 +102,7 @@ contract Module is owned {
      * the assembly trick to delegate any function call.
      */
     function () isRunning payable external {
-        address _impl = implementation();
+        address _impl = implementation;
         require(_impl != address(0));
 
         assembly {
