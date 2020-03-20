@@ -116,7 +116,7 @@ contract("Module", accounts => {
 		assert.equal(old_paused, true);
 		assert.equal(old_balance, 0);
 		
-		// check old module status
+		// check new module status
 		var new_storage = await module2.getStorage();
 		var new_paused = await module2.paused();
 		var new_balance = await module2.getBalance();

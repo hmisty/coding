@@ -6,6 +6,7 @@
  */
 
 const AppFactory = artifacts.require("AppFactory");
+const App = artifacts.require("App");
 const AppImpl = artifacts.require("AppImpl");
 const AppImpl2 = artifacts.require("AppImpl2");
 
@@ -93,7 +94,7 @@ contract("AppFactory", accounts => {
 	 * set an impl => create => success
 	 * set another impl => create => nothing?
 	 */
-	it("should create then create gain succeeds", async() => {
+	it("should create then create again succeeds", async() => {
 		var factory = await AppFactory.deployed();
 
 		// new impl
@@ -123,6 +124,54 @@ contract("AppFactory", accounts => {
 		// verify the App's impl
 		var app = new web3.eth.Contract(AppImpl2.abi, app_address);
 		var ver = await app.methods.getVersionTag().call();
+		assert.equal(ver, "0.0.2");
+	});
+
+	/**
+	 * test hard upgrade from App v1 to App v2
+	 */
+	it("should hard upgrade App v1 to App v2", async () => {
+		var factory = await AppFactory.deployed();
+
+		var app1_address = this._app_address;
+
+		// save some fund into app1
+		var app1 = new web3.eth.Contract(App.abi, app1_address);
+		await app1.methods.receiveFund().send({from: accounts[0], value: 100000});
+		var balance1 = await app1.methods.getBalance().call();
+		assert.equal(balance1, 100000);
+
+		var storage1 = await app1.methods.getStorage().call();
+		assert.notEqual(storage1, 0x0);
+
+		// create App v2 from App v1
+		var m = factory.methods["createFrom(address)"];
+		var app2_address = await m.call(app1_address);
+		await m.sendTransaction(app1_address);
+		
+		// hard upgrade
+		await factory.upgrade(app1_address, app2_address);
+
+		// check app1 status
+		var old_storage = await app1.methods.getStorage().call();
+		var old_paused = await app1.methods.paused().call();
+		var old_balance = await app1.methods.getBalance().call();
+		assert.equal(old_storage, 0x0);
+		assert.equal(old_paused, true);
+		assert.equal(old_balance, 0);
+		
+		// check app2 status
+		var app2 = new web3.eth.Contract(App.abi, app2_address);
+		var new_storage = await app2.methods.getStorage().call();
+		var new_paused = await app2.methods.paused().call();
+		var new_balance = await app2.methods.getBalance().call();
+		assert.equal(new_storage, storage1);
+		assert.equal(new_paused, false);
+		assert.equal(new_balance, balance1);
+
+		// check app2 versionTag (inherits impl2 from app1)
+		app2 = new web3.eth.Contract(AppImpl2.abi, app2_address);
+		var ver = await app2.methods.getVersionTag().call();
 		assert.equal(ver, "0.0.2");
 	});
 
