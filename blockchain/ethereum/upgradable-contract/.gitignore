@@ -5,3 +5,5 @@
 .DS_Store
 # truffle
 build
+# npm
+package-lock.json
