@@ -16,10 +16,20 @@
 应用示例共3个solidity源码文件，位于./contracts/：
 1. AppFactory.sol 工厂
 1. App.sol 主合约
-1. AppImpl.sol 业务逻辑
+1. AppImpl.sol 业务逻辑v1
+1. AppImpl2.sol 业务逻辑v2
 
-辅助功能1个文件，位于./contracts/：
+外部库1个文件，位于./contracts/lib/：
+* Membership.sol 成员相关函数，演示业务逻辑代码拆分
 * SafeMath.sol 安全计算（辅助）
+
+测试用例6个文件，位于./test/：
+* 00\_managed.js     
+* 01\_storage.js     
+* 02\_owned.js       
+* 03\_module.js      
+* 10\_upgrade.js
+* 11\_application.js
 
 ## 使用方法
 
@@ -92,7 +102,7 @@ contract TodoImpl is owned {
 	2) XXXImpl.sol只能定义constant和function，变量以及Event无效(待确认)
 
 
-5. 针对不同模块编写测试用例，放在test/目录下，叫做test/3\_YYY.js
+5. 针对不同模块编写测试用例，放在test/目录下，叫做test/20\_YYY.js
 
 
 ## 类图
