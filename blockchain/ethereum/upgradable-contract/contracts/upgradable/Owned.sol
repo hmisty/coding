@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.5.0;
 
-import "./Managed.sol";
 import "./KeyValueStorage.sol";
+import "./Managed.sol";
 
 /**
  * owned = own an eternal shared storage.
@@ -26,7 +26,7 @@ contract owned is managed {
     }
 
     /**
-     * set the storage
+     * set the storage, just for test cases
      */
     function setStorage(KeyValueStorage _newStorage) onlyManager public {
         require(address(_newStorage) != address(0x0), "new storage is 0x0.");
@@ -39,7 +39,7 @@ contract owned is managed {
     event OwnerChanged(address _from, address _to);
 
     modifier onlyOwner {
-        require(address(_storage) != address(0x0), "storage not initialized.");
+        // no need to check storage because getOwner will do it.
         require(getOwner() == msg.sender, "only owner can do this.");
         _;
     }
@@ -50,20 +50,17 @@ contract owned is managed {
     }
     
     function changeOwner(address _newOwner) isRunning public onlyOwner {
-        require(address(_storage) != address(0x0), "storage not initialized.");
-
-        address _oldOwner = getOwner();
+        // no need to check storage because onlyOwner has done it.
+        // code optimization to reduce code size
+        emit OwnerChanged(getOwner(), _newOwner);
         _storage.setAddress(KEY_OWNER, _newOwner);
-        emit OwnerChanged(_oldOwner, _newOwner);
     }
     
-    // Manager can change owner too
+    // let Manager can change owner too
     function setupOwner(address _newOwner) isRunning public onlyManager {
-        require(address(_storage) != address(0x0), "storage not initialized.");
-
+        // no need to check storage because getOwner will do it.
         address _oldOwner = getOwner();
         _storage.setAddress(KEY_OWNER, _newOwner);
         emit OwnerChanged(_oldOwner, _newOwner);
     }
-
 }

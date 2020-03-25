@@ -154,19 +154,19 @@ contract("AppFactory", accounts => {
 
 		// check app1 status
 		var old_storage = await app1.methods.getStorage().call();
-		var old_paused = await app1.methods.paused().call();
+		var old_running = await app1.methods.running().call();
 		var old_balance = await app1.methods.getBalance().call();
 		assert.equal(old_storage, 0x0);
-		assert.equal(old_paused, true);
+		assert.equal(old_running, false);
 		assert.equal(old_balance, 0);
 		
 		// check app2 status
 		var app2 = new web3.eth.Contract(App.abi, app2_address);
 		var new_storage = await app2.methods.getStorage().call();
-		var new_paused = await app2.methods.paused().call();
+		var new_running = await app2.methods.running().call();
 		var new_balance = await app2.methods.getBalance().call();
 		assert.equal(new_storage, storage1);
-		assert.equal(new_paused, false);
+		assert.equal(new_running, true);
 		assert.equal(new_balance, balance1);
 
 		// check app2 versionTag (inherits impl2 from app1)

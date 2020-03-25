@@ -1,13 +1,13 @@
 pragma solidity >=0.4.22 <0.5.0;
 
-import "./upgradable/Owned.sol";
+import "./upgradable/ModuleImpl.sol";
 import "./lib/SafeMath.sol";
 
 /**
  * The AppImpl contract soft upgradable that contains only the business logic.
  * It can be painlessly changed without upgrading the main contract ModuleA.
  */
-contract AppImpl2 is owned {
+contract AppImpl2 is ModuleImpl {
     using SafeMath for uint256;
 
     ///////////////////////////////////////////////////

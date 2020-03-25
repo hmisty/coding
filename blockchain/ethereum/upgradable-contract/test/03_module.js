@@ -110,18 +110,18 @@ contract("Module", accounts => {
 
 		// check old module status
 		var old_storage = await contract.methods.getStorage().call();
-		var old_paused = await contract.methods.paused().call();
+		var old_running = await contract.methods.running().call();
 		var old_balance = await contract.methods.getBalance().call();
 		assert.equal(old_storage, 0x0);
-		assert.equal(old_paused, true);
+		assert.equal(old_running, false);
 		assert.equal(old_balance, 0);
 		
 		// check new module status
 		var new_storage = await module2.getStorage();
-		var new_paused = await module2.paused();
+		var new_running = await module2.running();
 		var new_balance = await module2.getBalance();
 		assert.equal(new_storage, storage_address);
-		assert.equal(new_paused, false);
+		assert.equal(new_running, true);
 		assert.equal(new_balance, 100000);
 
 		// check manager of the storage

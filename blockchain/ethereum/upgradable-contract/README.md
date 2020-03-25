@@ -6,18 +6,19 @@
 
 ## 文件
 
-框架共6个solidity源码文件，位于./contracts/upgradable/：
+框架共7个solidity源码文件，位于./contracts/upgradable/：
 1. ModuleFactory.sol 工厂（父合约）
 1. Module.sol 主合约（父合约） & (硬)升级功能
+1. ModuleImpl.sol 业务逻辑合约（父合约） & (软)升级
 1. Managed.sol 合约管理者manager
 1. Owned.sol 存储\_storage & 存储所有者owner
 1. KeyValueStorage.sol KV存储
 
 应用示例共3个solidity源码文件，位于./contracts/：
-1. AppFactory.sol 工厂
-1. App.sol 主合约
-1. AppImpl.sol 业务逻辑v1
-1. AppImpl2.sol 业务逻辑v2
+1. AppFactory.sol 工厂 (is ModuleFactory)
+1. App.sol 主合约 (is Module)
+1. AppImpl.sol 业务逻辑v1 (is ModuleImpl)
+1. AppImpl2.sol 业务逻辑v2，演示软升级 (is ModuleImpl)
 
 外部库1个文件，位于./contracts/lib/：
 * Membership.sol 成员相关函数，演示业务逻辑代码拆分

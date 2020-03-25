@@ -45,21 +45,20 @@ contract("Managed", accounts => {
 		var manager = await man.methods.manager().call();
 		assert.equal(manager, accounts[0]);
 
-		// check the paused status first
-		var paused = await man.methods.paused().call();
-		assert.equal(paused, false);
+		// check the running status first
+		var running = await man.methods.running().call();
+		assert.equal(running, true);
 
 		// calling pause() with the right manager
-		await man.methods.pause().send({from: accounts[0]});
-		paused = await man.methods.paused().call();
-		assert.equal(paused, true);
+		await man.methods.setRunning(false).send({from: accounts[0]});
+		running = await man.methods.running().call();
+		assert.equal(running, false);
 
 		// calling unpause with the wrong manager
 		// this tx should fail
-		truffleAssert.reverts(man.methods.unpause().send({from: accounts[1]}));
-
-		paused = await man.methods.paused().call();
-		assert.notEqual(paused, false); // shouldn't effect
+		truffleAssert.reverts(man.methods.setRunning(true).send({from: accounts[1]}));
+		running = await man.methods.running().call();
+		assert.notEqual(running, true); // shouldn't effect
 
 		// changeManager while is not running
 		// this tx should fail
@@ -69,9 +68,9 @@ contract("Managed", accounts => {
 		assert.notEqual(manager, accounts[1]); // shouldn't effect
 		
 		// calling unpause with the right manager
-		await man.methods.unpause().send({from: accounts[0]});
-		paused = await man.methods.paused().call();
-		assert.equal(paused, false);
+		await man.methods.setRunning(true).send({from: accounts[0]});
+		running = await man.methods.running().call();
+		assert.equal(running, true);
 
 		// changeManager while is running
 		await man.methods.changeManager(accounts[1]).send({from: accounts[0]});

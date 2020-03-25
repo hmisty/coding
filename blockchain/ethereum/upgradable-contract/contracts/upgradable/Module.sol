@@ -10,6 +10,9 @@ import "./Owned.sol";
  */
 contract Module is owned {
 
+    ///////////////////////////////////////
+    //       upgrade functions           //
+    ///////////////////////////////////////
     /**
      * Step 1. Deploy the newest version of the module, with an owner of either:
      * (1) a new owner who is creating a new module.
@@ -58,7 +61,7 @@ contract Module is owned {
         _storage = KeyValueStorage(address(0x0));
         
         // stop running
-        pause();
+        setRunning(false);
     }
     
     /**

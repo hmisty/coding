@@ -98,12 +98,12 @@ contract ModuleFactory is managed {
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     // start
     function unpause(address _module) onlyManager public {
-        Module(_module).unpause();
+        Module(_module).setRunning(true);
     }
 
     // stop
     function pause(address _module) onlyManager public {
-        Module(_module).pause();
+        Module(_module).setRunning(false);
     }
 
     function setupOwner(address _module, address _newOwner) public onlyManager {
