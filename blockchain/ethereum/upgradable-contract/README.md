@@ -244,5 +244,5 @@ $ truffle test
 1. [web3js官方文档](https://web3js.readthedocs.io/)
 2. [truffle官方文档](https://www.trufflesuite.com/docs/truffle/overview)
 
-## License
-(c)2020 Evan Liu. MIT License.
+## Author
+Evan Liu. MIT License.
