@@ -107,7 +107,7 @@ contract TodoImpl is owned {
 
 ## 类图
 
-![](UpgradableContracts4.jpg)
+![](UpgradableContracts.jpg)
 
 ## truffle验证方法
 
