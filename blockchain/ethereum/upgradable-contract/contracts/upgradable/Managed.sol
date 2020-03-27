@@ -10,7 +10,30 @@ pragma solidity >=0.4.22 <0.5.0;
  * 4, change the manager address itself for transferring the responsibility to the next one
  */
 contract managed {
-    address public manager = address(0x0); // who have the permission to maintain the system
+    ///////////////////////////////////////
+    // error codes used in the framework //
+    ///////////////////////////////////////
+    /**
+       code format: x.y.z
+       x: 9 = this upgradable framework
+       y: 0 = contract managed
+          1 = contract owned
+          2 = contract Module
+          3 = contract ModuleImpl
+          5 = contract KeyValueStorage
+          9 = contract ModuleFactory
+       z: 0 = first msg
+          1 = second msg
+          2 = ...
+    
+    // only manager can do it
+    string constant public MANAGED_REQUIRE_ONLY_MANAGER = "9.0.0";
+    */
+
+    /////////////////////////////////////
+    //      manager and functions      //
+    /////////////////////////////////////
+    address public manager; // who have the permission to maintain the system
     
     event ManagerChanged(address indexed _from, address indexed _to);
 
@@ -26,7 +49,8 @@ contract managed {
      * The modifier for decorating functions.
      */ 
     modifier onlyManager {
-        require(msg.sender == manager, "only manager can do it");
+        //require(msg.sender == manager, MANAGED_REQUIRE_ONLY_MANAGER);
+        require(msg.sender == manager, "only manager");
         _;
     }
     

@@ -10,10 +10,39 @@ import "./Managed.sol";
  *
  */
 contract owned is managed {
+    ///////////////////////////////////////
+    // error codes used in the framework //
+    ///////////////////////////////////////
+    /**
+       code format: x.y.z
+       x: 9 = this upgradable framework
+       y: 0 = contract managed
+          1 = contract owned
+          2 = contract Module
+          3 = contract ModuleImpl
+          5 = contract KeyValueStorage
+          9 = contract ModuleFactory
+       z: 0 = first msg
+          1 = second msg
+          2 = ...
+
+    // only owner can do it
+    string constant public OWNED_REQUIRE_ONLY_OWNER = "9.1.0";
+    // _storage must not be 0x0
+    string constant public OWNED_REQUIRE_STORAGE = "9.1.1";
+    // new storage must not be 0x0
+    string constant public OWNED_REQUIRE_NEW_STORAGE = "9.1.2";
+    // new storage must be managed by me
+    string constant public OWNED_REQUIRE_MANAGED = "9.1.3";
+    */
+
     
-    // the encoded bytes of the special key
-    // (randomly generated to avoid key conflicts)
-    bytes32 constant KEY_OWNER = 0x5a56315fb445b1a5ac55db632cdcaa16c04666bd7c0ca5f6a2808b5709b7b12c;
+    ///////////////////////////////////////
+    // randomly generated to avoid key conflicts
+    // but the fixed bytes32 would occupy to much space
+    //bytes32 constant KEY_OWNER = 0x5a56315fb445b1a5ac55db632cdcaa16c04666bd7c0ca5f6a2808b5709b7b12c;
+    // the special key of owner in the _storage
+    bytes32 constant __OWNER__ = sha256("__owner__");
     
     // the external key-value storage for this module.
     KeyValueStorage _storage;
@@ -29,8 +58,9 @@ contract owned is managed {
      * set the storage, just for test cases
      */
     function setStorage(KeyValueStorage _newStorage) onlyManager public {
-        require(address(_newStorage) != address(0x0), "new storage is 0x0.");
-        require(_newStorage.manager() == address(this), "new storage is not managed by me.");
+        //require(address(_newStorage) != address(0x0), OWNED_REQUIRE_NEW_STORAGE);
+        //require(_newStorage.manager() == address(this), OWNED_REQUIRE_MANAGED);
+        require(address(_newStorage) != address(0x0) && _newStorage.manager() == address(this), "invalid new storage");
 
         _storage = _newStorage;
     }
@@ -40,27 +70,29 @@ contract owned is managed {
 
     modifier onlyOwner {
         // no need to check storage because getOwner will do it.
-        require(getOwner() == msg.sender, "only owner can do this.");
+        //require(msg.sender == getOwner(), OWNED_REQUIRE_ONLY_OWNER);
+        require(msg.sender == getOwner(), "only owner");
         _;
     }
     
     function getOwner() view public returns (address) {
-        require(address(_storage) != address(0x0), "storage not initialized.");
-        return _storage.getAddress(KEY_OWNER);
+        //require(address(_storage) != address(0x0), OWNED_REQUIRE_STORAGE);
+        require(address(_storage) != address(0x0), "no storage");
+        return _storage.getAddress(__OWNER__);
     }
     
     function changeOwner(address _newOwner) isRunning public onlyOwner {
         // no need to check storage because onlyOwner has done it.
         // code optimization to reduce code size
         emit OwnerChanged(getOwner(), _newOwner);
-        _storage.setAddress(KEY_OWNER, _newOwner);
+        _storage.setAddress(__OWNER__, _newOwner);
     }
     
     // let Manager can change owner too
     function setupOwner(address _newOwner) isRunning public onlyManager {
         // no need to check storage because getOwner will do it.
         address _oldOwner = getOwner();
-        _storage.setAddress(KEY_OWNER, _newOwner);
+        _storage.setAddress(__OWNER__, _newOwner);
         emit OwnerChanged(_oldOwner, _newOwner);
     }
 }

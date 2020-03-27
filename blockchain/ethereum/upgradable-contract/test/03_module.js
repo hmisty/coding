@@ -142,12 +142,12 @@ contract("Module", accounts => {
 		var impl_address = impl.address;
 
 		// check initial implementation
-		var using_impl = await contract.methods.implementation().call();
+		var using_impl = await contract.methods.getImplementation().call();
 		assert.equal(using_impl, 0x0);
 
 		// change
 		await contract.methods.changeImplementation(impl_address).send({from: accounts[0]});
-		using_impl = await contract.methods.implementation().call();
+		using_impl = await contract.methods.getImplementation().call();
 		assert.equal(using_impl, impl_address);
 
 		// route

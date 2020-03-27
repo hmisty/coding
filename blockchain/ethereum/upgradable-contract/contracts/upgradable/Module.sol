@@ -9,6 +9,33 @@ import "./Owned.sol";
  * Fund will be transferred to the newly upgraded contract.
  */
 contract Module is owned {
+    ///////////////////////////////////////
+    // error codes used in the framework //
+    ///////////////////////////////////////
+    /**
+       code format: x.y.z
+       x: 9 = this upgradable framework
+       y: 0 = contract managed
+          1 = contract owned
+          2 = contract Module
+          3 = contract ModuleImpl
+          5 = contract KeyValueStorage
+          9 = contract ModuleFactory
+       z: 0 = first msg
+          1 = second msg
+          2 = ...
+
+    // _storage must not be 0x0
+    string constant public MODULE_REQUIRE_STORAGE = "9.2.0";
+    // impl must not be 0x0
+    string constant public MODULE_REQUIRE_IMPL = "9.2.1";
+    // fund must be successfully sent
+    string constant public MODULE_REQUIRE_FUND_SENT = "9.2.2";
+    */
+
+    ///////////////////////////////////////
+    // the special key of implementation in _storage
+    bytes32 constant __IMPL__ = sha256("__impl__");
 
     ///////////////////////////////////////
     //       upgrade functions           //
@@ -52,7 +79,8 @@ contract Module is owned {
         // transfer total fund to new module
         //_newModule.transfer(getBalance());
         bool success = Module(_newModule).receiveFund.value(getBalance())();
-        require(success, "fund transfer failed.");
+        //require(success, MODULE_REQUIRE_FUND_SENT);
+        require(success, "fund sent err");
         
         // transfer storage access
         _storage.changeManager(_newModule);
@@ -88,16 +116,24 @@ contract Module is owned {
     event ImplementationChanged(address _oldImpl, address _newImpl);
     
     // the implementation instance, as well as a function implementation()
-    address public implementation = address(0x0);
+    //address public implementation = address(0x0);
+    // DO NOT INTRODUCE MORE CONTRACT VARIABLES
+    /**
+    * returns current impl
+    */
+    function getImplementation() public view returns (address) {
+        //require(_storage != address(0x0), MODULE_REQUIRE_STORAGE);
+        require(_storage != address(0x0), "no storage");
+        return _storage.getAddress(__IMPL__);
+    }
     
     /**
      * with this you can enjoy painless "implementation upgrade" only
      * without upgrading the full module :)
      */
     function changeImplementation(address _newImpl) isRunning public onlyManager {
-        require(implementation != _newImpl, "already using this implementation.");
-        address _oldImpl = implementation;
-        implementation = _newImpl;
+        address _oldImpl = getImplementation();
+        _storage.setAddress(__IMPL__, _newImpl);
         emit ImplementationChanged(_oldImpl, _newImpl);
     }
 
@@ -105,8 +141,9 @@ contract Module is owned {
      * the assembly trick to delegate any function call.
      */
     function () isRunning payable external {
-        address _impl = implementation;
-        require(_impl != address(0));
+        address _impl = getImplementation();
+        //require(_impl != address(0), MODULE_REQUIRE_IMPL);
+        require(_impl != address(0), "no impl");
 
         assembly {
             let ptr := mload(0x40)

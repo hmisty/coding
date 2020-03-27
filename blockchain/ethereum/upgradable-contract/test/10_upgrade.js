@@ -134,9 +134,12 @@ contract("AppFactory", accounts => {
 		var factory = await AppFactory.deployed();
 
 		var app1_address = this._app_address;
+		
+		// save impl for later use
+		var app1 = new web3.eth.Contract(App.abi, app1_address);
+		var impl_address = await app1.methods.getImplementation().call();
 
 		// save some fund into app1
-		var app1 = new web3.eth.Contract(App.abi, app1_address);
 		await app1.methods.receiveFund().send({from: accounts[0], value: 100000});
 		var balance1 = await app1.methods.getBalance().call();
 		assert.equal(balance1, 100000);
@@ -168,6 +171,11 @@ contract("AppFactory", accounts => {
 		assert.equal(new_storage, storage1);
 		assert.equal(new_running, true);
 		assert.equal(new_balance, balance1);
+
+		var new_owner = await app2.methods.getOwner().call();
+		var new_impl = await app2.methods.getImplementation().call();
+		assert.equal(new_owner, accounts[0]);
+		assert.equal(new_impl, impl_address);
 
 		// check app2 versionTag (inherits impl2 from app1)
 		app2 = new web3.eth.Contract(AppImpl2.abi, app2_address);
