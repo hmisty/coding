@@ -7,39 +7,9 @@ import "./Module.sol";
  * Maintains the registries of contracts for verification use.
  */
 contract ModuleFactory is managed {
+
     ///////////////////////////////////////
-    // error codes used in the framework //
-    ///////////////////////////////////////
-    /**
-       code format: x.y.z
-       x: 9 = this upgradable framework
-       y: 0 = contract managed
-          1 = contract owned
-          2 = contract Module
-          3 = contract ModuleImpl
-          5 = contract KeyValueStorage
-          9 = contract ModuleFactory
-       z: 0 = first msg
-          1 = second msg
-          2 = ...
-
-    // impl must not be 0x0
-    string constant public FACTORY_REQUIRE_IMPL = "9.9.0";
-    // module must not be 0x0
-    string constant public FACTORY_REQUIRE_MODULE = "9.9.1";
-    // legacy module must not be 0x0
-    string constant public FACTORY_REQUIRE_LEGACY_MODULE = "9.9.2";
-    // legacy storage must not be 0x0
-    string constant public FACTORY_REQUIRE_LEGACY_STORAGE = "9.9.3";
-    // legacy owner must not be 0x0
-    string constant public FACTORY_REQUIRE_LEGACY_OWNER = "9.9.4";
-    // legacy impl must not be 0x0
-    string constant public FACTORY_REQUIRE_LEGACY_IMPL = "9.9.5";
-    // only owner can do it
-    string constant public FACTORY_REQUIRE_ONLY_OWNER = "9.9.6";
-    */
-
-
+    //      implementation registry      //    
     ///////////////////////////////////////
     // the current implementation
     address _implementation = address(0x0);
@@ -73,7 +43,6 @@ contract ModuleFactory is managed {
     }
 
     function createFor(address owner) public returns (address) {
-        //require(_implementation != address(0x0), FACTORY_REQUIRE_IMPL);
         require(_implementation != address(0x0), "no impl");
 
         // FIXME 0.4.24 compatible, use address payable for 0.5.0
@@ -81,7 +50,7 @@ contract ModuleFactory is managed {
         Module _newModule = Module(_newModuleAddr);
 
         _newModule.setupStorage(address(0x0));
-        _newModule.setupOwner(owner);
+        _newModule.changeOwner(owner);
 
         // automatically associate the current implementation for the module just created.
         _newModule.changeImplementation(_implementation);
@@ -97,9 +66,7 @@ contract ModuleFactory is managed {
      */
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function createFrom(address _legacyModule) onlyManager public returns (address) {
-        //require(_legacyModule != address(0x0), FACTORY_REQUIRE_LEGACY_MODULE);
-        // no need to check, 0x0 will fail soon anyway.
-        //require(_legacyModule != address(0x0), "no legacy module");
+        // no need to check _legacyModule, 0x0 will fail soon anyway.
 
         // retrieve important data from the legacy module.
         Module _oldModule = Module(_legacyModule);
@@ -107,9 +74,6 @@ contract ModuleFactory is managed {
         address owner = _oldModule.getOwner();
         address stor = _oldModule.getStorage();
         address impl = _oldModule.getImplementation();
-        //require(stor != address(0x0), FACTORY_REQUIRE_LEGACY_STORAGE);
-        //require(owner != address(0x0), FACTORY_REQUIRE_LEGACY_OWNER);
-        //require(impl != address(0x0), FACTORY_REQUIRE_LEGACY_IMPL);
         require(stor != address(0x0), "no legacy storage");
         require(owner != address(0x0), "no legacy owner");
         require(impl != address(0x0), "no legacy impl");
@@ -147,8 +111,8 @@ contract ModuleFactory is managed {
         Module(_module).setRunning(false);
     }
 
-    function setupOwner(address _module, address _newOwner) public onlyManager {
-        Module(_module).setupOwner(_newOwner);
+    function changeOwner(address _module, address _newOwner) public onlyManager {
+        Module(_module).changeOwner(_newOwner);
     }
 
     /**
@@ -173,33 +137,29 @@ contract ModuleFactory is managed {
      * Only manager can set the current implementation address.
      */
     function setCurrentImplementation(address _newImpl) onlyManager public {
-        // no need to check _newImpl != address(0x0)
-        // nor _newImpol != getImplementation(),
-        // for compacting the code size
-
-        // register it first if not yet.
-        if (_availableImplementations[_newImpl] == false) {
-            registerImplementation(_newImpl);
+        if (_newImpl != address(0x0)) {
+            // register it first if not yet.
+            if (_availableImplementations[_newImpl] == false) {
+                registerImplementation(_newImpl);
+            }
+            // then set it to the current implementation.
+            _implementation = _newImpl;
         }
-        // then set it to the current implementation.
-        _implementation = _newImpl;
     }
 
     /**
      * Only manager can register/unregister a new implementation address.
      */
     function registerImplementation(address _newImpl) onlyManager public {
-        // no need to check _newImpl != address(0x0)
-        // nor _newImpol != getImplementation(),
-        // for compacting the code size
-        _availableImplementations[_newImpl] = true;
+        if (_newImpl != address(0x0)) {
+            _availableImplementations[_newImpl] = true;
+        }
     }
 
     function unregisterImplementation(address _newImpl) onlyManager public {
-        // no need to check _newImpl != address(0x0)
-        // nor _availableImplementations[_newImpl] == true,
-        // for compacting the code size
-        _availableImplementations[_newImpl] = false;
+        if (_newImpl != address(0x0)) {
+            _availableImplementations[_newImpl] = false;
+        }
     }
 
     /**
@@ -207,13 +167,9 @@ contract ModuleFactory is managed {
      */
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function changeImplementation(address _module, address _newImpl) onlyManager public {
-        //require(_module != address(0x0), FACTORY_REQUIRE_MODULE);
-        // no need to check, 0x0 will fail soon anyway.
-        //require(_module != address(0x0), "no module");
-        // no need to check _newImpl != address(0x0)
-        // nor _availableImplementations[_newImpl] == true,
-        // for compacting the code size
-        Module(_module).changeImplementation(_newImpl);
+        if (_module != address(0x0) && _newImpl != address(0x0)) {
+            Module(_module).changeImplementation(_newImpl);
+        }
     }
 
     /**
@@ -221,11 +177,12 @@ contract ModuleFactory is managed {
      */
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function updateImplementation(address _module) public {
-        //require(_module != address(0x0), FACTORY_REQUIRE_MODULE);
-        //require(msg.sender == Module(_module).getOwner(), FACTORY_REQUIRE_ONLY_OWNER);
-        // no need to check, 0x0 will fail soon anyway.
-        //require(_module != address(0x0), "no module");
-        require(msg.sender == Module(_module).getOwner(), "only owner");
-        Module(_module).changeImplementation(_implementation);
+        if (_module != address(0x0)) {
+            Module m = Module(_module);
+            if (msg.sender == m.getOwner()) {
+                m.changeImplementation(_implementation);
+            }
+        }
     }
+
 }

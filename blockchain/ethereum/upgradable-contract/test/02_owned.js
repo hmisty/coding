@@ -84,13 +84,15 @@ contract("Owned", accounts => {
 		assert.equal(manager, accounts[0]);
 
 		// setup owner, onlyManager
-		truffleAssert.reverts(contract.methods.setupOwner(accounts[1]).send({from: accounts[1]})); // should fail
-		await contract.methods.setupOwner(accounts[1]).send({from: accounts[0]}); // should succeed
+		// manager: accounts[0], owner: accounts[0]
+		truffleAssert.reverts(contract.methods.changeOwner(accounts[1]).send({from: accounts[1]})); // should fail
+		await contract.methods.changeOwner(accounts[1]).send({from: accounts[0]}); // should succeed
 		owner = await contract.methods.getOwner().call();
 		assert.equal(owner, accounts[1]);
 
 		// change owner, onlyOwner
-		truffleAssert.reverts(contract.methods.changeOwner(accounts[0]).send({from: accounts[0]})); // should fail
+		// manager: accounts[0], owner: accounts[1]
+		truffleAssert.reverts(contract.methods.changeOwner(accounts[0]).send({from: accounts[2]})); // should fail
 		await contract.methods.changeOwner(accounts[0]).send({from: accounts[1]}); // should succeed
 		owner = await contract.methods.getOwner().call();
 		assert.equal(owner, accounts[0]);

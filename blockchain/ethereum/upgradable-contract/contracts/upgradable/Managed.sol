@@ -10,25 +10,27 @@ pragma solidity >=0.4.22 <0.5.0;
  * 4, change the manager address itself for transferring the responsibility to the next one
  */
 contract managed {
-    ///////////////////////////////////////
-    // error codes used in the framework //
-    ///////////////////////////////////////
-    /**
-       code format: x.y.z
-       x: 9 = this upgradable framework
-       y: 0 = contract managed
-          1 = contract owned
-          2 = contract Module
-          3 = contract ModuleImpl
-          5 = contract KeyValueStorage
-          9 = contract ModuleFactory
-       z: 0 = first msg
-          1 = second msg
-          2 = ...
 
-    // only manager can do it
-    string constant public MANAGED_REQUIRE_ONLY_MANAGER = "9.0.0";
-    */
+    /////////////////////////////////////
+    //      running and functions      //
+    /////////////////////////////////////
+    /**
+     * Stoppable.
+     * only manager can halt/start the contract
+     */
+    bool public running = true;
+
+    modifier isRunning {
+        require(running);
+        _;
+    }
+
+    // "stop" conflicts with the assembly. use "pause".
+    // Warning: Variable is shadowed in inline assembly by an instruction of the same name
+    // use only one function instead of two (pause/unpause, start/stop) to reduce the code size.
+    function setRunning(bool _running) onlyManager public {
+        running = _running;
+    }
 
     /////////////////////////////////////
     //      manager and functions      //
@@ -52,24 +54,6 @@ contract managed {
         //require(msg.sender == manager, MANAGED_REQUIRE_ONLY_MANAGER);
         require(msg.sender == manager, "only manager");
         _;
-    }
-
-    /**
-     * Stoppable.
-     * only manager can halt/start the contract
-     */
-    bool public running = true;
-
-    modifier isRunning {
-        require(running);
-        _;
-    }
-
-    // "stop" conflicts with the assembly. use "pause".
-    // Warning: Variable is shadowed in inline assembly by an instruction of the same name
-    // use only one function instead of two (pause/unpause, start/stop) to reduce the code size.
-    function setRunning(bool _running) onlyManager public {
-        running = _running;
     }
 
     /**

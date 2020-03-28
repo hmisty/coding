@@ -1,4 +1,5 @@
 const AppFactory = artifacts.require("AppFactory");
+const App = artifacts.require("App");
 const AppImpl = artifacts.require("AppImpl");
 const Membership = artifacts.require("Membership");
 const KeyValueStorage = artifacts.require("KeyValueStorage");
@@ -12,6 +13,7 @@ module.exports = function(deployer) {
 	deployer.link(Membership, AppImpl);
 	deployer.deploy(AppImpl);
 	deployer.deploy(AppFactory);
+	deployer.deploy(App); //only for testing deployment
 
 	// for framework test cases
 	deployer.deploy(KeyValueStorage);

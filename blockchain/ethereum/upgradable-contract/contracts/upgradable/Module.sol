@@ -9,29 +9,6 @@ import "./Owned.sol";
  * Fund will be transferred to the newly upgraded contract.
  */
 contract Module is owned {
-    ///////////////////////////////////////
-    // error codes used in the framework //
-    ///////////////////////////////////////
-    /**
-       code format: x.y.z
-       x: 9 = this upgradable framework
-       y: 0 = contract managed
-          1 = contract owned
-          2 = contract Module
-          3 = contract ModuleImpl
-          5 = contract KeyValueStorage
-          9 = contract ModuleFactory
-       z: 0 = first msg
-          1 = second msg
-          2 = ...
-
-    // _storage must not be 0x0
-    string constant public MODULE_REQUIRE_STORAGE = "9.2.0";
-    // impl must not be 0x0
-    string constant public MODULE_REQUIRE_IMPL = "9.2.1";
-    // fund must be successfully sent
-    string constant public MODULE_REQUIRE_FUND_SENT = "9.2.2";
-    */
 
     ///////////////////////////////////////
     // the special key of implementation in _storage
@@ -77,10 +54,8 @@ contract Module is owned {
      */
     function upgradeTo(address _newModule) isRunning onlyManager public {
         // transfer total fund to new module
-        //_newModule.transfer(getBalance());
         bool success = Module(_newModule).receiveFund.value(getBalance())();
-        //require(success, MODULE_REQUIRE_FUND_SENT);
-        //require(success, "fund sent err");
+        // we do not use require(success) for less deployment gas
         if (success) {
             // transfer storage access
             _storage.changeManager(_newModule);
@@ -118,14 +93,13 @@ contract Module is owned {
 
     // the implementation instance, as well as a function implementation()
     //address public implementation = address(0x0);
-    // DO NOT INTRODUCE MORE CONTRACT VARIABLES
+    // WARNING: DO NOT INTRODUCE MORE CONTRACT VARIABLES
+    
     /**
     * returns current impl
     */
     function getImplementation() public view returns (address) {
-        //require(_storage != address(0x0), MODULE_REQUIRE_STORAGE);
-        // no need to check, 0x0.getAddress will fail anyway.
-        //require(_storage != address(0x0), "no storage");
+        // no need to check _storage, 0x0.getAddress will fail anyway.
         return _storage.getAddress(__IMPL__);
     }
 
@@ -144,7 +118,6 @@ contract Module is owned {
      */
     function () isRunning payable external {
         address _impl = getImplementation();
-        //require(_impl != address(0), MODULE_REQUIRE_IMPL);
         require(_impl != address(0), "no impl");
 
         assembly {
