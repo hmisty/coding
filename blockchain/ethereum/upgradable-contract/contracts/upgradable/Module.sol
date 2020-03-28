@@ -4,7 +4,7 @@ import "./Owned.sol";
 
 /**
  * The Module contract that is upgradable (i.e. relocated to a new contract).
- * 
+ *
  * Data is permanently stored in an external storage contract.
  * Fund will be transferred to the newly upgraded contract.
  */
@@ -35,7 +35,7 @@ contract Module is owned {
 
     ///////////////////////////////////////
     // the special key of implementation in _storage
-    bytes32 constant __IMPL__ = sha256("__impl__");
+    bytes32 internal constant __IMPL__ = sha256("__impl__");
 
     ///////////////////////////////////////
     //       upgrade functions           //
@@ -46,7 +46,7 @@ contract Module is owned {
      * (2) the owner of the legacy module.
      *
      * NOTICE: Let only the factory deploy!
-     * 
+     *
      */
     constructor() public {
         manager = msg.sender; // this should be the factory address
@@ -54,7 +54,7 @@ contract Module is owned {
 
     /**
      * Step 2. Setup the storage for the new module.
-     * 
+     *
      * Only manager can initialize.
      */
     function setupStorage(address _legacyStorage) isRunning onlyManager public {
@@ -69,10 +69,10 @@ contract Module is owned {
             _storage = new KeyValueStorage();
         }
     }
-    
+
     /**
      * Step 3. Transfer the fund from the old module to the new module.
-     * 
+     *
      * Only manager can upgrade.
      */
     function upgradeTo(address _newModule) isRunning onlyManager public {
@@ -80,41 +80,42 @@ contract Module is owned {
         //_newModule.transfer(getBalance());
         bool success = Module(_newModule).receiveFund.value(getBalance())();
         //require(success, MODULE_REQUIRE_FUND_SENT);
-        require(success, "fund sent err");
-        
-        // transfer storage access
-        _storage.changeManager(_newModule);
-        
-        // deprecate the storage of the old module for avoiding misuse.
-        _storage = KeyValueStorage(address(0x0));
-        
-        // stop running
-        setRunning(false);
+        //require(success, "fund sent err");
+        if (success) {
+            // transfer storage access
+            _storage.changeManager(_newModule);
+
+            // deprecate the storage of the old module for avoiding misuse.
+            _storage = KeyValueStorage(address(0x0));
+
+            // stop running
+            setRunning(false);
+        }
     }
-    
+
     /**
      * for checking the balance of the module.
      */
     function getBalance() view public returns (uint256) {
         return address(this).balance;
     }
-    
+
     /**
      * for receiving upgrading fund transfer.
      */
     event FundReceived(address _sender, uint256 _amount);
-    
+
     function receiveFund() external payable returns (bool) {
         emit FundReceived(msg.sender, msg.value);
         return true;
     }
-    
+
     ///////////////////////////////////////////////////
     //           use delegated implementation        //
     ///////////////////////////////////////////////////
-    
+
     event ImplementationChanged(address _oldImpl, address _newImpl);
-    
+
     // the implementation instance, as well as a function implementation()
     //address public implementation = address(0x0);
     // DO NOT INTRODUCE MORE CONTRACT VARIABLES
@@ -123,10 +124,11 @@ contract Module is owned {
     */
     function getImplementation() public view returns (address) {
         //require(_storage != address(0x0), MODULE_REQUIRE_STORAGE);
-        require(_storage != address(0x0), "no storage");
+        // no need to check, 0x0.getAddress will fail anyway.
+        //require(_storage != address(0x0), "no storage");
         return _storage.getAddress(__IMPL__);
     }
-    
+
     /**
      * with this you can enjoy painless "implementation upgrade" only
      * without upgrading the full module :)

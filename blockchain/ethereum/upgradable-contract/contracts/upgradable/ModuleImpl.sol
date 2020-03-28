@@ -11,7 +11,7 @@ import "./Owned.sol";
  *
  */
 contract ModuleImpl is owned {
-    
+
     // just for being inherited
 
 }

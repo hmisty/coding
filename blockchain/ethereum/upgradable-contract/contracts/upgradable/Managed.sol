@@ -25,7 +25,7 @@ contract managed {
        z: 0 = first msg
           1 = second msg
           2 = ...
-    
+
     // only manager can do it
     string constant public MANAGED_REQUIRE_ONLY_MANAGER = "9.0.0";
     */
@@ -34,7 +34,7 @@ contract managed {
     //      manager and functions      //
     /////////////////////////////////////
     address public manager; // who have the permission to maintain the system
-    
+
     event ManagerChanged(address indexed _from, address indexed _to);
 
     /**
@@ -47,13 +47,13 @@ contract managed {
 
     /**
      * The modifier for decorating functions.
-     */ 
+     */
     modifier onlyManager {
         //require(msg.sender == manager, MANAGED_REQUIRE_ONLY_MANAGER);
         require(msg.sender == manager, "only manager");
         _;
     }
-    
+
     /**
      * Stoppable.
      * only manager can halt/start the contract
@@ -64,14 +64,14 @@ contract managed {
         require(running);
         _;
     }
-    
+
     // "stop" conflicts with the assembly. use "pause".
     // Warning: Variable is shadowed in inline assembly by an instruction of the same name
     // use only one function instead of two (pause/unpause, start/stop) to reduce the code size.
     function setRunning(bool _running) onlyManager public {
         running = _running;
     }
-    
+
     /**
      * only manager can change manager
      */

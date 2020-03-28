@@ -10,12 +10,12 @@ contract KeyValueStorage is managed {
      * bytes32 <= keccak256(abi.encodePacked(A,B,C,....))
      * which is just a raw hex
      */
-    mapping(bytes32 => address) _addressStorage;
-    mapping(bytes32 => uint256) _uintStorage;
-    mapping(bytes32 => bool) _boolStorage;
-    mapping(bytes32 => string) _stringStorage;
-    mapping(bytes32 => bytes32) _byteStorage;
-    mapping(bytes32 => int256) _intStorage;
+    mapping(bytes32 => address) internal _addressStorage;
+    mapping(bytes32 => uint256) internal _uintStorage;
+    mapping(bytes32 => bool) internal _boolStorage;
+    mapping(bytes32 => string) internal _stringStorage;
+    mapping(bytes32 => bytes32) internal _byteStorage;
+    mapping(bytes32 => int256) internal _intStorage;
 
     /**** Storage Writer Setup **/
     // called by the Module

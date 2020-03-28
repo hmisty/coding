@@ -36,16 +36,16 @@ contract owned is managed {
     string constant public OWNED_REQUIRE_MANAGED = "9.1.3";
     */
 
-    
+
     ///////////////////////////////////////
     // randomly generated to avoid key conflicts
     // but the fixed bytes32 would occupy to much space
     //bytes32 constant KEY_OWNER = 0x5a56315fb445b1a5ac55db632cdcaa16c04666bd7c0ca5f6a2808b5709b7b12c;
     // the special key of owner in the _storage
-    bytes32 constant __OWNER__ = sha256("__owner__");
-    
+    bytes32 internal constant __OWNER__ = sha256("__owner__");
+
     // the external key-value storage for this module.
-    KeyValueStorage _storage;
+    KeyValueStorage internal _storage;
 
     /**
      * returns the external storage address
@@ -55,12 +55,16 @@ contract owned is managed {
     }
 
     /**
-     * set the storage, just for test cases
+     * set the storage, just for test cases.
+     * in normal scenario, only ModuleFactory, i.e. the manager of Module
+     * can call this. however, ModuleFactory does not expose this function
+     * to the external world.
      */
     function setStorage(KeyValueStorage _newStorage) onlyManager public {
         //require(address(_newStorage) != address(0x0), OWNED_REQUIRE_NEW_STORAGE);
         //require(_newStorage.manager() == address(this), OWNED_REQUIRE_MANAGED);
-        require(address(_newStorage) != address(0x0) && _newStorage.manager() == address(this), "invalid new storage");
+        // no need to check. this func should be only used for testing.
+        //require(address(_newStorage) != address(0x0) && _newStorage.manager() == address(this), "invalid new storage");
 
         _storage = _newStorage;
     }
@@ -74,20 +78,21 @@ contract owned is managed {
         require(msg.sender == getOwner(), "only owner");
         _;
     }
-    
+
     function getOwner() view public returns (address) {
         //require(address(_storage) != address(0x0), OWNED_REQUIRE_STORAGE);
-        require(address(_storage) != address(0x0), "no storage");
+        // no need to check, 0x0.getAddress will fail anyway.
+        //require(address(_storage) != address(0x0), "no storage");
         return _storage.getAddress(__OWNER__);
     }
-    
+
     function changeOwner(address _newOwner) isRunning public onlyOwner {
         // no need to check storage because onlyOwner has done it.
         // code optimization to reduce code size
         emit OwnerChanged(getOwner(), _newOwner);
         _storage.setAddress(__OWNER__, _newOwner);
     }
-    
+
     // let Manager can change owner too
     function setupOwner(address _newOwner) isRunning public onlyManager {
         // no need to check storage because getOwner will do it.

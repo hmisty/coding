@@ -57,7 +57,7 @@ contract ModuleFactory is managed {
     /**
      * Abstract function TO BE IMPLEMENTED.
      * returns a new instance of Module.
-     */ 
+     */
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function newModule() public returns (address);
 
@@ -98,7 +98,8 @@ contract ModuleFactory is managed {
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function createFrom(address _legacyModule) onlyManager public returns (address) {
         //require(_legacyModule != address(0x0), FACTORY_REQUIRE_LEGACY_MODULE);
-        require(_legacyModule != address(0x0), "no legacy module");
+        // no need to check, 0x0 will fail soon anyway.
+        //require(_legacyModule != address(0x0), "no legacy module");
 
         // retrieve important data from the legacy module.
         Module _oldModule = Module(_legacyModule);
@@ -175,7 +176,7 @@ contract ModuleFactory is managed {
         // no need to check _newImpl != address(0x0)
         // nor _newImpol != getImplementation(),
         // for compacting the code size
-        
+
         // register it first if not yet.
         if (_availableImplementations[_newImpl] == false) {
             registerImplementation(_newImpl);
@@ -207,7 +208,8 @@ contract ModuleFactory is managed {
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
     function changeImplementation(address _module, address _newImpl) onlyManager public {
         //require(_module != address(0x0), FACTORY_REQUIRE_MODULE);
-        require(_module != address(0x0), "no module");
+        // no need to check, 0x0 will fail soon anyway.
+        //require(_module != address(0x0), "no module");
         // no need to check _newImpl != address(0x0)
         // nor _availableImplementations[_newImpl] == true,
         // for compacting the code size
@@ -221,7 +223,8 @@ contract ModuleFactory is managed {
     function updateImplementation(address _module) public {
         //require(_module != address(0x0), FACTORY_REQUIRE_MODULE);
         //require(msg.sender == Module(_module).getOwner(), FACTORY_REQUIRE_ONLY_OWNER);
-        require(_module != address(0x0), "no module");
+        // no need to check, 0x0 will fail soon anyway.
+        //require(_module != address(0x0), "no module");
         require(msg.sender == Module(_module).getOwner(), "only owner");
         Module(_module).changeImplementation(_implementation);
     }

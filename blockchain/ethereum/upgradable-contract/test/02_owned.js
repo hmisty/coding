@@ -56,7 +56,7 @@ contract("Owned", accounts => {
 		assert.notEqual(stor, 0x0);
 		*/
 		var storage_deployed = await KeyValueStorage.deployed();
-		truffleAssert.reverts(contract.methods.setStorage(storage_deployed.address).send({from: accounts[0]})); // should fail
+		truffleAssert.reverts(contract.methods.setStorage(storage_deployed.address).send({from: accounts[1]})); // should fail
 		// must change manager first
 		storage_deployed.changeManager(contract._address); 
 		await contract.methods.setStorage(storage_deployed.address).send({from: accounts[0]});
