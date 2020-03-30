@@ -40,7 +40,7 @@ contract ModuleFactory is managed {
         return createFor(msg.sender);
     }
 
-    function createFor(address owner) public returns (address) {
+    function createFor(address owner) isRunning public returns (address) {
         require(_implementation != address(0x0), "no impl");
 
         // FIXME 0.4.24 compatible, use address payable for 0.5.0
@@ -155,7 +155,7 @@ contract ModuleFactory is managed {
      * Only owner can update to the current implementation (the newest version).
      */
     // FIXME 0.4.24 compatible, use address payable for 0.5.0
-    function updateImplementation(address _module) public {
+    function updateImplementation(address _module) isRunning public {
         if (_module != address(0x0)) {
             Module m = Module(_module);
             if (msg.sender == m.getOwner()) {

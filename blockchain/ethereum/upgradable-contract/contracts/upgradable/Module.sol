@@ -33,8 +33,11 @@ contract Module is owned {
      * Step 2. Setup the storage for the new module.
      *
      * Only manager can initialize.
+     *
+     * do not use isRunning, for 1) manager can start; 2) convenient for
+     * manager to maintain the system while it is not runnning
      */
-    function setupStorage(address _legacyStorage) isRunning onlyManager public {
+    function setupStorage(address _legacyStorage) onlyManager public {
         // initialize storage
         if (_legacyStorage != address(0x0)) {
             // use legacy storage if having one
@@ -51,8 +54,11 @@ contract Module is owned {
      * Step 3. Transfer the fund from the old module to the new module.
      *
      * Only manager can upgrade.
+     *
+     * do not use isRunning, for 1) manager can start; 2) convenient for
+     * manager to maintain the system while it is not runnning
      */
-    function upgradeTo(address _newModule) isRunning onlyManager public {
+    function upgradeTo(address _newModule) onlyManager public {
         // transfer total fund to new module
         bool success = Module(_newModule).receiveFund.value(getBalance())();
         // we do not use require(success) for less deployment gas
@@ -106,8 +112,11 @@ contract Module is owned {
     /**
      * with this you can enjoy painless "implementation upgrade" only
      * without upgrading the full module :)
+     *
+     * do not use isRunning, for 1) manager can start; 2) convenient for
+     * manager to maintain the system while it is not runnning
      */
-    function changeImplementation(address _newImpl) isRunning public onlyManager {
+    function changeImplementation(address _newImpl) public onlyManager {
         address _oldImpl = getImplementation();
         _storage.setAddress(__IMPL__, _newImpl);
         emit ImplementationChanged(_oldImpl, _newImpl);

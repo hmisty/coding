@@ -58,6 +58,8 @@ contract managed {
 
     /**
      * only manager can change manager
+     *
+     * this isRunning is not meaningful but only for test case to verify it works.
      */
     function changeManager(address _newManager) isRunning public onlyManager {
         // code optimization to reduce code size
