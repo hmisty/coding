@@ -109,6 +109,9 @@ contract ModuleFactory is managed {
         Module(_module).setRunning(false);
     }
 
+    /**
+     * allow system manager to manually change the owner of a module
+     */
     function changeOwner(address _module, address _newOwner) public onlyManager {
         Module(_module).changeOwner(_newOwner);
     }

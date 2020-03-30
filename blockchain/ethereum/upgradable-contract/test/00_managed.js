@@ -1,18 +1,15 @@
 /**
- * test cases for contracts/upgradable/Managed.sol, including:
- * 1. onlyManager modifier 
- * 2. isRunning modifier 
- * 3. change manager
- * 4. pause/unpause
+ * test cases for contracts/upgradable/Managed.sol. features vs coverage:
+ * 1. onlyManager modifier: YES covered.
+ * 2. isRunning modifier: YES covered.
+ * 3. change manager: YES covered.
+ * 4. pause/unpause by setRunning(bool): YES covered.
  *
  * How to Use:
  * 1. add to migrations/2_deploy_contracts.js:
  * deployer.deploy(Managed);
- *
  * 2. $ truffle develop
- *
- * 3. truffle(develop)> migrate
- * 4. truffle(develop)> test "test/0_managed.js"
+ * 3. truffle(develop)> test "test/00_managed.js"
  *
  */
 const truffleAssert = require('truffle-assertions');

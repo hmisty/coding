@@ -3,7 +3,18 @@
  * 1. deployment
  * 2. soft upgrade
  * 3. hard upgrade
+ *
+ * features vs coverage:
+ * 1. create & createFor, isRunning, impl != 0x0: YES covered.
+ * 2. createFrom, onlyManager: YES covered.
+ * 3. pause/unpause, onlyManager: YES covered.
+ * 4. changeOwner, onlyManager: YES covered.
+ * 5. upgrade, onlyManager: YES covered.
+ * 6. get/set current implementation, set onlyManager: YES covered.
+ * 7. changeImplementation, onlyManager: YES covered.
+ * 8. updateImplementation, isRunning, only owner: YES covered.
  */
+const truffleAssert = require('truffle-assertions');
 
 const AppFactory = artifacts.require("AppFactory");
 const App = artifacts.require("App");
@@ -23,13 +34,26 @@ contract("AppFactory", accounts => {
 		var impl = await AppImpl.deployed();
 		//console.log(factory);
 
+		// prepare to create an App
+		var m = factory.methods["create()"];
+
+		// no impl, cannot create
+		truffleAssert.reverts(m.call()); // should fail
+
 		// use impl
+		// test only manager
+		truffleAssert.reverts(factory.setCurrentImplementation(impl.address, {from: accounts[1]})); // should fail
 		var tx = await factory.setCurrentImplementation(impl.address);
 		//console.log(tx);
 
-		// create an App
-		var m = factory.methods["create()"];
-		var app_address = await m.call();
+		// stop the contract
+		await factory.setRunning(false);
+		truffleAssert.reverts(m.call()); // should fail
+		// restart the contract
+		await factory.setRunning(true);
+
+		// can create() & createFor() now
+		var app_address = await m.call(); 
 		//console.log(app_address);
 
 		tx = await m.sendTransaction();
@@ -42,6 +66,83 @@ contract("AppFactory", accounts => {
 		var app = new web3.eth.Contract(AppImpl.abi, app_address);
 		var ver = await app.methods.getVersionTag().call();
 		assert.equal(ver, "0.0.1");
+	});
+
+	/**
+	 * test only manager can change implementation
+	 */
+	it("should only manager can change implementation", async () => {
+		var factory = await AppFactory.deployed();
+		var impl = await AppImpl.deployed();
+
+		// change impl
+		var zero_address = web3.utils.padLeft(0, 40);
+		truffleAssert.reverts(factory.changeImplementation(this._app_address, zero_address, {from: accounts[1]})); // should fail
+		await factory.changeImplementation(this._app_address, zero_address); // should succeed
+		// verify, should not effect
+		var app = new web3.eth.Contract(App.abi, this._app_address);
+		var impl_addr = await app.methods.getImplementation().call();
+		assert.notEqual(impl_addr, 0x0);
+
+		// try again with non-zero address
+		var fake_address = web3.utils.padLeft(1, 40);
+		await factory.changeImplementation(this._app_address, fake_address);
+		// verify, should effect
+		var impl_addr2 = await app.methods.getImplementation().call();
+		assert.equal(impl_addr2, 0x1);
+
+		// change back
+		await factory.changeImplementation(this._app_address, impl.address);
+		// verify
+		var impl_addr3 = await app.methods.getImplementation().call();
+		assert.equal(impl_addr3, impl.address);
+
+	});
+
+	/**
+	 * test only manager can pause/unpause an app
+	 */
+	it("should only manager can pause/unpause an app", async () => {
+		var factory = await AppFactory.deployed();
+
+		// pause
+		truffleAssert.reverts(factory.pause(this._app_address, {from: accounts[1]})); // should fail
+		await factory.pause(this._app_address); // should succeed
+		// verify
+		var app = new web3.eth.Contract(App.abi, this._app_address);
+		var running = await app.methods.running().call();
+		assert.equal(running, false);
+
+		// unpause
+		truffleAssert.reverts(factory.unpause(this._app_address, {from: accounts[1]})); // should fail
+		await factory.unpause(this._app_address); // should succeed
+		// verify
+		var running = await app.methods.running().call();
+		assert.equal(running, true);
+
+	});
+
+	/**
+	 * test only manager can change owner
+	 */
+	it("should only manager can change owner", async () => {
+		var factory = await AppFactory.deployed();
+
+		// change owner to accounts[1]
+		truffleAssert.reverts(factory.changeOwner(this._app_address, accounts[1], {from: accounts[1]})); // should fail
+		await factory.changeOwner(this._app_address, accounts[1]); // should succeed
+		// verify
+		var app = new web3.eth.Contract(App.abi, this._app_address);
+		var owner = await app.methods.getOwner().call();
+		assert.equal(owner, accounts[1]);
+
+		// change owner back to accounts[0]
+		truffleAssert.reverts(factory.changeOwner(this._app_address, accounts[0], {from: accounts[1]})); // should fail
+		await factory.changeOwner(this._app_address, accounts[0]); // should succeed
+		// verify
+		var owner = await app.methods.getOwner().call();
+		assert.equal(owner, accounts[0]);
+
 	});
 
 	/**
@@ -79,12 +180,25 @@ contract("AppFactory", accounts => {
 
 		// retrieve the app_address from artifacts contexts
 		var app_address = this._app_address;
+
+		// stop
+		await factory.setRunning(false);
 		// update the app's implementation to the latest version :)
-		tx = await factory.updateImplementation(app_address);
-		//console.log(tx);
+		truffleAssert.reverts(factory.updateImplementation(app_address)); // should fail
+		// restart
+		await factory.setRunning(true);
+		// not owner, can call, but no change
+		await factory.updateImplementation(app_address, {from: accounts[1]});
 
 		// verify the App's impl
 		var app = new web3.eth.Contract(AppImpl.abi, app_address);
+		var ver = await app.methods.getVersionTag().call();
+		assert.equal(ver, "0.0.1");
+
+		// owner to update impl
+		await factory.updateImplementation(app_address, {from: accounts[0]});
+
+		// changed
 		var ver = await app.methods.getVersionTag().call();
 		assert.equal(ver, "0.0.2");
 	});
@@ -150,9 +264,12 @@ contract("AppFactory", accounts => {
 		// create App v2 from App v1
 		var m = factory.methods["createFrom(address)"];
 		var app2_address = await m.call(app1_address);
+		// test only manager
+		truffleAssert.reverts(m.sendTransaction(app1_address, {from: accounts[1]})); // should fail
 		await m.sendTransaction(app1_address);
 		
 		// hard upgrade
+		truffleAssert.reverts(factory.upgrade(app1_address, app2_address, {from: accounts[1]})); // should fail
 		await factory.upgrade(app1_address, app2_address);
 
 		// check app1 status

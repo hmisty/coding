@@ -1,19 +1,17 @@
 /**
- * test cases for contracts/upgradable/Owned.sol, including:
- * 1. onlyOwner modifier 
- * 2. get the owned storage
- * 3. get owner
- * 4. onlyOwner change owner 
- * 5. onlyManager setupOwner
+ * test cases for contracts/upgradable/Owned.sol. features vs coverage:
+ * 1. get the owned _storage: YES covered.
+ * 2. onlyManager init the _storage: YES covered.
+ * 3. onlyOwner modifier: YES covered.
+ * 4. get owner: YES covered.
+ * 5. owner/manager can change owner: YES covered.
+ * 6. fail to change owner when not isRunning: YES covered.
  *
  * How to Use:
  * 1. add to migrations/2_deploy_contracts.js:
  * deployer.deploy(Owned);
- *
  * 2. $ truffle develop
- *
- * 3. truffle(develop)> migrate
- * 4. truffle(develop)> test "test/0_owned.js"
+ * 3. truffle(develop)> test "test/02_owned.js"
  *
  */
 const truffleAssert = require('truffle-assertions');
@@ -40,10 +38,14 @@ contract("Owned", accounts => {
 	/**
 	 * test get/init storage
 	 */
-	it("should get/init the storage", async () => {
+	it("should get/init the _storage", async () => {
 		// check storage is not initialized
 		var stor = await contract.methods.getStorage().call();
 		assert.equal(stor, 0x0);
+
+		// check manager of it
+		var mgr = await contract.methods.manager().call();
+		assert.equal(mgr, accounts[0]);
 
 		/*
 		// init
@@ -83,20 +85,42 @@ contract("Owned", accounts => {
 		var manager = await contract.methods.manager().call();
 		assert.equal(manager, accounts[0]);
 
-		// setup owner, onlyManager
+		// manager to change owner
 		// manager: accounts[0], owner: accounts[0]
 		truffleAssert.reverts(contract.methods.changeOwner(accounts[1]).send({from: accounts[1]})); // should fail
 		await contract.methods.changeOwner(accounts[1]).send({from: accounts[0]}); // should succeed
 		owner = await contract.methods.getOwner().call();
 		assert.equal(owner, accounts[1]);
 
-		// change owner, onlyOwner
+		// owner to change owner
 		// manager: accounts[0], owner: accounts[1]
 		truffleAssert.reverts(contract.methods.changeOwner(accounts[0]).send({from: accounts[2]})); // should fail
 		await contract.methods.changeOwner(accounts[0]).send({from: accounts[1]}); // should succeed
 		owner = await contract.methods.getOwner().call();
 		assert.equal(owner, accounts[0]);
 
+	});
+
+	/**
+	 * test change owner when not isRunning
+	 */
+	it("should fail to change owner when not isRunning", async () => {
+		// change owner to accounts[1]
+		await contract.methods.changeOwner(accounts[1]).send({from: accounts[0]});
+
+		// stop the contract
+		await contract.methods.setRunning(false).send({from: accounts[0]});
+
+		// owner to change owner, should fail
+		truffleAssert.reverts(contract.methods.changeOwner(accounts[0]).send({from: accounts[1]}));
+		// manager to change owner, should fail
+		truffleAssert.reverts(contract.methods.changeOwner(accounts[0]).send({from: accounts[0]}));
+
+		// restart the contract
+		await contract.methods.setRunning(true).send({from: accounts[0]});
+
+		// change owner back to accounts[0]
+		await contract.methods.changeOwner(accounts[0]).send({from: accounts[0]}); // should succeed
 	});
 
 });

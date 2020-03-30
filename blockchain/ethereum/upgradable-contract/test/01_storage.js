@@ -1,22 +1,21 @@
 /**
- * test cases for verifying the key-value storage, including:
- * 1. get/set address
- * 2. get/set uint256
- * 3. get/set bool
- * 4. get/set string
- * 5. get/set bytes32
- * 6. get/set int256
+ * test cases for verifying the key-value storage. features vs coverage:
+ * 1. get/set address: YES covered.
+ * 2. get/set uint256: YES covered.
+ * 3. get/set bool: YES covered.
+ * 4. get/set string: YES covered.
+ * 5. get/set bytes32: YES covered.
+ * 6. get/set int256: YES covered.
+ * 7. fail to set anything when not isRunning: YES covered.
  *
  * How to Use:
  * 1. add to migrations/2_deploy_contracts.js:
  * deployer.deploy(KeyValueStorage);
- *
  * 2. $ truffle develop
- *
- * 3. truffle(develop)> migrate
- * 4. truffle(develop)> test "test/0_storage.js"
+ * 3. truffle(develop)> test "test/01_storage.js"
  *
  */
+const truffleAssert = require('truffle-assertions');
 
 const AppFactory = artifacts.require("AppFactory");
 const KeyValueStorage = artifacts.require("KeyValueStorage");
@@ -83,15 +82,15 @@ contract("KeyValueStorage", accounts => {
 
 		var storage = new web3.eth.Contract(KeyValueStorage.abi, storage_address);
 
-		// test get uint
+		// test get bool
 		var key = web3.utils.toHex("the key");
-		var val = await storage.methods.getUint(key).call();
-		assert.equal(val, 0);
+		var val = await storage.methods.getBool(key).call();
+		assert.equal(val, false);
 
-		// test set uint
-		var expect = 1; // true will fail
-		await storage.methods.setUint(key, expect).send({from: accounts[0]}); // not call()!
-		var val = await storage.methods.getUint(key).call();
+		// test set bool 
+		var expect = true;
+		await storage.methods.setBool(key, expect).send({from: accounts[0]}); // not call()!
+		var val = await storage.methods.getBool(key).call();
 		assert.equal(val, expect);
 	});
 
@@ -104,12 +103,12 @@ contract("KeyValueStorage", accounts => {
 
 		var storage = new web3.eth.Contract(KeyValueStorage.abi, storage_address);
 
-		// test get uint
+		// test get string
 		var key = "0x12345678".valueOf();
 		var val = await storage.methods.getString(key).call();
 		assert.equal(val, "");
 
-		// test set uint
+		// test set string
 		var expect = "hello world";
 		await storage.methods.setString(key, expect).send({from: accounts[0]}); // not call()!
 		var val = await storage.methods.getString(key).call();
@@ -125,12 +124,12 @@ contract("KeyValueStorage", accounts => {
 
 		var storage = new web3.eth.Contract(KeyValueStorage.abi, storage_address);
 
-		// test get uint
+		// test get bytes32
 		var key = "0x12345678".valueOf();
 		var val = await storage.methods.getBytes(key).call();
 		assert.equal(val, 0x0);
 
-		// test set uint
+		// test set bytes32
 		var expect = web3.utils.padLeft("0x123456789".valueOf(), 64);
 		await storage.methods.setBytes(key, expect).send({from: accounts[0]}); // not call()!
 		var val = await storage.methods.getBytes(key).call();
@@ -146,16 +145,53 @@ contract("KeyValueStorage", accounts => {
 
 		var storage = new web3.eth.Contract(KeyValueStorage.abi, storage_address);
 
-		// test get uint
+		// test get int
 		var key = "0x12345678".valueOf();
 		var val = await storage.methods.getInt(key).call();
 		assert.equal(val, 0x0);
 
-		// test set uint
+		// test set int
 		var expect = 1024;
 		await storage.methods.setInt(key, expect).send({from: accounts[0]}); // not call()!
 		var val = await storage.methods.getInt(key).call();
 		assert.equal(val, expect);
+	});
+
+	/**
+	 * test fail to set anything when not isRunning
+	 */
+	it("should fail to set anything when not isRunning", async () => {
+		var storage_deployed = await KeyValueStorage.deployed();
+		var storage_address = storage_deployed.address;
+
+		var storage = new web3.eth.Contract(KeyValueStorage.abi, storage_address);
+
+		// stop the contract
+		await storage.methods.setRunning(false).send({from: accounts[0]});
+
+		// test set uint
+		var key = web3.utils.fromAscii("hello");
+		var expect = 1024;
+		truffleAssert.reverts(storage.methods.setInt(key, expect).send({from: accounts[0]}));
+		// test set bytes32
+		var expect = web3.utils.padLeft("0x123456789".valueOf(), 64);
+		truffleAssert.reverts(storage.methods.setBytes(key, expect).send({from: accounts[0]}));
+		// test set string
+		var expect = "hello world";
+		truffleAssert.reverts(storage.methods.setString(key, expect).send({from: accounts[0]}));
+		// test set bool 
+		var expect = true;
+		truffleAssert.reverts(storage.methods.setBool(key, expect).send({from: accounts[0]}));
+		// test set uint
+		var expect = 10;
+		truffleAssert.reverts(storage.methods.setUint(key, expect).send({from: accounts[0]}));
+		// test set address
+		var expect = accounts[0];
+		truffleAssert.reverts(storage.methods.setAddress(key, expect).send({from: accounts[0]}));
+
+		// restart the deployed contract
+        // otherwise the following test cases (e.g. test/02_owned.js) might be affected...
+		await storage.methods.setRunning(true).send({from: accounts[0]});
 	});
 
 });

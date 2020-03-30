@@ -1,5 +1,5 @@
 /**
- * test cases for verifying the App business logic:
+ * test cases for verifying the App business logic, just for demonstration purpose:
  * 1. get version tag
  * 2. enable
  * 3. get/set number of members

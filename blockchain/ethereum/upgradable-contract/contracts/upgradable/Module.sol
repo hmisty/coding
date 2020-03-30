@@ -10,8 +10,9 @@ import "./Owned.sol";
  */
 contract Module is owned {
 
-    ///////////////////////////////////////
-    // the special key of implementation in _storage
+    ///////////////////////////////////////////////////
+    // the special key of implementation in _storage //
+    ///////////////////////////////////////////////////
     bytes32 internal constant __IMPL__ = sha256("__impl__");
 
     ///////////////////////////////////////
@@ -25,9 +26,10 @@ contract Module is owned {
      * NOTICE: Let only the factory deploy!
      *
      */
-    constructor() public {
+    // exactly the same with the inherited. no need to override.
+    /*constructor() public {
         manager = msg.sender; // this should be the factory address
-    }
+    }*/
 
     /**
      * Step 2. Setup the storage for the new module.
