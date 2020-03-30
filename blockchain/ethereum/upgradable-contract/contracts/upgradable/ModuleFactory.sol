@@ -13,8 +13,6 @@ contract ModuleFactory is managed {
     ///////////////////////////////////////
     // the current implementation
     address _implementation = address(0x0);
-    // all available implementations
-    mapping(address => bool) _availableImplementations;
 
     /**
      * NOTICE: Let only the system manager deploy!
@@ -138,27 +136,8 @@ contract ModuleFactory is managed {
      */
     function setCurrentImplementation(address _newImpl) onlyManager public {
         if (_newImpl != address(0x0)) {
-            // register it first if not yet.
-            if (_availableImplementations[_newImpl] == false) {
-                registerImplementation(_newImpl);
-            }
             // then set it to the current implementation.
             _implementation = _newImpl;
-        }
-    }
-
-    /**
-     * Only manager can register/unregister a new implementation address.
-     */
-    function registerImplementation(address _newImpl) onlyManager public {
-        if (_newImpl != address(0x0)) {
-            _availableImplementations[_newImpl] = true;
-        }
-    }
-
-    function unregisterImplementation(address _newImpl) onlyManager public {
-        if (_newImpl != address(0x0)) {
-            _availableImplementations[_newImpl] = false;
         }
     }
 
