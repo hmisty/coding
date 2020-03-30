@@ -17,7 +17,6 @@
  */
 const truffleAssert = require('truffle-assertions');
 
-const AppFactory = artifacts.require("AppFactory");
 const KeyValueStorage = artifacts.require("KeyValueStorage");
 
 contract("KeyValueStorage", accounts => {

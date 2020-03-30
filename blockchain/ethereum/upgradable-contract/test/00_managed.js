@@ -14,7 +14,6 @@
  */
 const truffleAssert = require('truffle-assertions');
 
-const AppFactory = artifacts.require("AppFactory");
 const Managed = artifacts.require("Managed");
 
 contract("Managed", accounts => {

@@ -20,7 +20,6 @@
  */
 const truffleAssert = require('truffle-assertions');
 
-const AppFactory = artifacts.require("AppFactory");
 const KeyValueStorage = artifacts.require("KeyValueStorage");
 const AppImpl = artifacts.require("AppImpl");
 const Module = artifacts.require("Module");
