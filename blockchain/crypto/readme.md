@@ -4,6 +4,12 @@
 
 ## ecdsa
 
+install
+```
+$ pip3 install ecdsa
+```
+
+
 ## Steganography
 
 install 7z on macosx.
