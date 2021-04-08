@@ -12,6 +12,10 @@ Bundle 'gmarik/vundle'
 "$ mvim +BundleInstall +qall
 "-- original repos on github
 
+"-- typescript
+Bundle 'leafgarland/typescript-vim'
+Bundle 'peitalin/vim-jsx-typescript'
+
 "-- Ethereum solidity
 Bundle 'tomlion/vim-solidity'
 "-- nodejs

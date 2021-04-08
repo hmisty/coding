@@ -1,6 +1,7 @@
 [user]
     name = Evan Liu
-    email = hmisty@gmail.com
+    email = evanliuchina@gmail.com
+		signingkey = 5A2F50928A8D4A4C0327ACCF9621393ACAD9B63B
 
 [alias]
     ad = add
@@ -12,9 +13,11 @@
     lg = log -p
     ps = push
     pl = pull
-    d = difftool
+	  d  = difftool
 
 [diff]
-    tool = vimdiff
+	tool = vimdiff
 [difftool]
-    prompt = false
+	prompt = false
+[gpg]
+	program = gpg
