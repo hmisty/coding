@@ -1,4 +1,5 @@
 #coding:utf-8
+#!/usr/bin/env python
 import sys
 from getpass import getpass
 from bitcoin import *
