@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ln -s ~/coding/home/bash_aliases ~/.bash_aliases
 ln -s ~/coding/home/gitconfig ~/.gitconfig
