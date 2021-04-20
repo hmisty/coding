@@ -1,5 +1,9 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3");
+require("@nomiclabs/hardhat-etherscan");
+
+//.secrets format: { "privkey":"....", "alchemyapikey":"...." }
+const { privkey, alchemy_apikey, etherscan_apikey } = require("./.secrets.json");
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -30,5 +34,15 @@ task("balance", "Prints an account's balance [Evan's]")
 module.exports = {
   //solidity: "0.7.3",
   solidity: "0.8.0",
+	networks: {
+		rinkeby: {
+			url: `https://eth-rinkeby.alchemyapi.io/v2/${alchemy_apikey}`,
+			accounts: [`0x${privkey}`]
+		}
+	},
+	etherscan: {
+		apiKey: etherscan_apikey
+	}
+
 };
 
