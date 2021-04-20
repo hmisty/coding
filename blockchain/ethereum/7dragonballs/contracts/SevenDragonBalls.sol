@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 contract SevenDragonBalls is ERC1155 {
+    string public name = "7 Dragon Balls";
+    string public symbol = "7DB";
 
     constructor() ERC1155("ipfs://ipfs/QmdEanCBF6fWhA3nfg23dyacTsGiBygHyXgxoCU4KfsQy3/7meta/{id}.json") {
         _mint(msg.sender, 0, 5000, "");
