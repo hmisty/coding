@@ -4,8 +4,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract CryptoScientists is ERC721 {
+    uint256 public token_count = 0; // total count of token
+
     address _minter;
-    uint256 public __token_id = 0; // next id
     mapping(uint256 => string) _token_hash; // ipfs hash for token[id]
     mapping(string => bool) _hash_exists;
 
@@ -26,8 +27,8 @@ contract CryptoScientists is ERC721 {
         require(_hash_exists[hash] == false, "already minted");
         _hash_exists[hash] = true;
 
-        uint256 id = __token_id;
-        __token_id += 1;
+        uint256 id = token_count;
+        token_count += 1;
 
         _token_hash[id] = hash;
         _safeMint(msg.sender, id);
