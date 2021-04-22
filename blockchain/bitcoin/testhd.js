@@ -1,3 +1,6 @@
+//usage:
+//$ npm install --save-dev bip32 bip39 ethereumjs-utils chai
+//$ node testhd.js
 const chai = require("chai");
 const assert = chai.assert;
 const bs58check = require('bs58check');
