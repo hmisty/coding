@@ -64,7 +64,7 @@ verified by https://iancoleman.io/bip39/ and metamask
 var puzzle = "treasury island map & nobody knows";
 //$ echo "treasury island map & nobody knows" | shasum -a 256
 //1943970f6a4a59ea3875fe6582d8ed324dd77d8a68da0eb99e463e947112daea  - //WRONG! echo will append an extra \n
-//$ perl -e 'print qq(treasury island m6
+//$ perl -e 'print qq(treasury island map & nobody knows)' | shasum -a 256
 //a8fd89fcc8496d1536b57d91ba60eda4069dbb4ec62bea889b2ca510c6419f14  -
 
 var entropy = createHash("sha256").update(puzzle).digest().toString("hex");
