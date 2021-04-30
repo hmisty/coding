@@ -35,7 +35,7 @@ prompt.get(prop, function (err, result) {
 	
 	// get priv key
 	const privkey = Buffer.from(entropy, 'hex');
-	const compressed = true;
+	const compressed = true; // default true since 2021/5/1
 	const keyPair = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: compressed });
 
 	const wif_privkey = keyPair.toWIF();
@@ -49,9 +49,11 @@ prompt.get(prop, function (err, result) {
 
 	// get mnemonic
 	const mnemonic = bip39.entropyToMnemonic(entropy);
-	console.log("mnemonic words (24): " + mnemonic); 
+	console.log("mnemonic words (24): \033[37;47m" + mnemonic + "\033[0m"); 
 	const words24 = mnemonic.split(" ");
-	console.log(words24);
+	const copy = [];
+	words24.forEach((w, i) => { copy.push((i+1) + ":" + w) });
+	console.log("indexed: \033[37;47m" + copy.join(" ") + "\033[0m");
 
 	const passphrase = ""; // use no passphrase
 	const seed = bip39.mnemonicToSeedSync(mnemonic, passphrase);
