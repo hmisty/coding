@@ -1,0 +1,7 @@
+.actions li {
+	list-style: none;
+}
+
+.actions li + li {
+	margin-top: 20px;
+}
