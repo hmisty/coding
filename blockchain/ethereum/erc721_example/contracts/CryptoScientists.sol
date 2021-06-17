@@ -7,7 +7,7 @@ contract CryptoScientists is ERC721 {
     uint256 public token_count = 0; // total count of token
 
     address _minter;
-    mapping(uint256 => string) _token_hash; // ipfs hash for token[id]
+    mapping(uint256 => string) _token_hash; // ipfs hash for token[id] metadata
     mapping(string => bool) _hash_exists;
 
     modifier onlyMinter {
