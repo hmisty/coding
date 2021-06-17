@@ -79,6 +79,7 @@ contract LazyPurchase {
     {
         emit Aborted();
         state = State.Inactive;
+        //no need to refund the seller because of lazy lock-up
     }
 
     /// Confirm the purchase as buyer.

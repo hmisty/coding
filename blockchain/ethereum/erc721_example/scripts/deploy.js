@@ -1,8 +1,8 @@
 async function main() {
-	const [deployer] = await ethers.getSigners();
+	const [user] = await ethers.getSigners();
 
-	console.log("Deploying contracts with the account:", deployer.address);
-	console.log("Account balance:", (await deployer.getBalance()).toString());
+	console.log("Deploying contracts with the account:", user.address);
+	console.log("Account balance:", (await user.getBalance()).toString());
 
 	const CSNFT = await ethers.getContractFactory("CryptoScientists");
 	const csnft = await CSNFT.deploy();

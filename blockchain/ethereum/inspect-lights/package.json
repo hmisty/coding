@@ -1,0 +1,11 @@
+{
+  "name": "inspect-lights",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.1.0",
+    "yargs": "^15.4.1"
+  },
+  "scripts": {
+    "main": "truffle exec main.js --network main -C"
+  },
+  "license": "MIT"
+}
