@@ -7,6 +7,12 @@ const createHash = require('create-hash');
 
 const prop = [
 	{
+		name: 'compressed',
+		description: 'compressed (true/false)?',
+		type: 'boolean',
+		default: true
+	},
+	{
 		name: 'password',
 		hidden: true,
 		replace: '*'
@@ -23,7 +29,10 @@ prompt.start();
 prompt.get(prop, function (err, result) {
 	if (err) { return onErr(err); }
 
-	if (result.password !== result.again) { return onErr('mismatched passwords. quit...'); }
+	// empty again hints recovery intention instead of generating
+	if (result.again != "" && result.password !== result.again) {
+		return onErr('mismatched passwords. quit...'); 
+	}
 
 	// calculate the entropy = sha256(password)
 	const password = result.password;
@@ -35,7 +44,8 @@ prompt.get(prop, function (err, result) {
 	
 	// get priv key
 	const privkey = Buffer.from(entropy, 'hex');
-	const compressed = true; // default true since 2021/5/1
+	//const compressed = true; // default true since 2021/5/1
+	const compressed = result.compressed;
 	const keyPair = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: compressed });
 
 	const wif_privkey = keyPair.toWIF();
