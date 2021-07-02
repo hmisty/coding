@@ -49,8 +49,6 @@ contract AnyTokenEscrowV1 {
     {
         require(State.Inactive == transactions[msg.sender].state, "State not Inactive");
 
-        IERC20(_token).transferFrom(msg.sender, address(this), _amount.mul(2));
-
         Transaction memory txn = Transaction({
             token: _token,
             amount: _amount,
@@ -62,6 +60,7 @@ contract AnyTokenEscrowV1 {
         transactions[msg.sender] = txn;
 
         emit Created();
+        IERC20(_token).transferFrom(msg.sender, address(this), _amount.mul(2));
     }
 
     // Buyer can abort the transaction and reclaim the token
@@ -74,10 +73,11 @@ contract AnyTokenEscrowV1 {
         //refund the buyer
         address token = transactions[msg.sender].token;
         uint amount = transactions[msg.sender].amount;
-        IERC20(token).transfer(msg.sender, amount.mul(2));
 
         emit Aborted();
         transactions[msg.sender].state = State.Inactive;
+
+        IERC20(token).transfer(msg.sender, amount.mul(2)); //transfer first and change state second will cause reentrance loophole
     }
 
     // Seller accepts the sale
@@ -90,10 +90,11 @@ contract AnyTokenEscrowV1 {
 
         address token = transactions[_buyer].token;
         uint amount = transactions[_buyer].amount;
-        IERC20(token).transferFrom(msg.sender, address(this), amount.mul(2));
 
         emit Accepted();
         transactions[_buyer].state = State.Locked;
+
+        IERC20(token).transferFrom(msg.sender, address(this), amount.mul(2));
     }
 
     // Seller confirms to close the deal
@@ -106,11 +107,12 @@ contract AnyTokenEscrowV1 {
 
         address token = transactions[_buyer].token;
         uint amount = transactions[_buyer].amount;
-        IERC20(token).transfer(msg.sender, amount);
-        IERC20(token).transfer(_buyer, amount.mul(3));
 
         emit Confirmed();
         transactions[_buyer].state = State.Inactive;
+
+        IERC20(token).transfer(msg.sender, amount);
+        IERC20(token).transfer(_buyer, amount.mul(3));
     }
 
 }
