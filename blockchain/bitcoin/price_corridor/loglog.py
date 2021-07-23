@@ -57,7 +57,9 @@ ax.get_xaxis().set_major_formatter(formatter_x)
 ax.grid(True, linestyle='dotted')
 ax.grid(True, which='minor', axis='y', linestyle='dotted')
 
-plt.xticks(rotation=90)
+ax.tick_params(axis='x', which='major', rotation=90)
+ax.tick_params(axis='x', which='minor', bottom=False, top=False, labelbottom=False)
+#plt.xticks(rotation=90)
 plt.plot(xs, ys)
 plt.show()
 
