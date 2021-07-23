@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter, FuncFormatter
 import datetime
+import math
 
 genesis = datetime.date(2009, 1, 3)
 
@@ -25,9 +26,9 @@ ys.reverse()
 #--- prepare figure ---
 
 min_x = 1000
-max_x = 5000
+max_x = 6000
 min_y = 1
-max_y = 100000
+max_y = 1000000
 
 fig, ax = plt.subplots(figsize=(16,9))
 ax.axis([min_x, max_x, min_y, max_y])
@@ -61,6 +62,15 @@ ax.tick_params(axis='x', which='major', rotation=90)
 ax.tick_params(axis='x', which='minor', bottom=False, top=False, labelbottom=False)
 #plt.xticks(rotation=90)
 plt.plot(xs, ys)
+
+#--- regression ---
+fit = lambda x: 10**(-17.01593313+5.84509376*math.log10(x))
+support = lambda x: 10**(-17.45+5.84509376*math.log10(x))
+top = lambda x: 10**(-13.35+5.02927337*math.log10(x))
+plt.plot([min_x, max_x], [fit(min_x), fit(max_x)])
+plt.plot([min_x, max_x], [support(min_x), support(max_x)])
+plt.plot([min_x, max_x], [top(min_x), top(max_x)])
+
 plt.show()
 
 #plt.savefig("out.png")
