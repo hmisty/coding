@@ -61,7 +61,13 @@ ax.grid(True, which='minor', axis='y', linestyle='dotted')
 ax.tick_params(axis='x', which='major', rotation=90)
 ax.tick_params(axis='x', which='minor', bottom=False, top=False, labelbottom=False)
 #plt.xticks(rotation=90)
-plt.plot(xs, ys)
+
+#regression: till 2019/9/3
+end = datetime.date(2019, 9, 3)
+n = (end - genesis).days
+i = xs.index(n)
+plt.plot(xs[:i], ys[:i])
+plt.plot(xs[i:], ys[i:], 'r') #using red
 
 #--- regression ---
 fit = lambda x: 10**(-17.01593313+5.84509376*math.log10(x))
