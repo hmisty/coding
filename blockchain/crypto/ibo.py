@@ -1,29 +1,27 @@
 #!/usr/bin/env python3
+import pyinputplus as inp
 
-DECIMALS = 3
+## precision of floats
+DECIMALS = 4
 
 ## ask for some facts
-symbolA = input('[?]Symbol A: ')
-symbolB = input('[?]Symbol B: ')
+symbolA = inp.inputStr('[?]Symbol A: ')
+symbolB = inp.inputStr('[?]Symbol B: ')
 symbolAB = symbolA + '/' + symbolB
 
-conn_weight = float(input('[?]Connected Weight(0-1): '))
-initial_price = float(input('[?]Initial price of ' + symbolAB + ': '))
+conn_weight = inp.inputNum('[?]Connected Weight(0-1): ', greaterThan=0, max=1)
+initial_price = inp.inputNum('[?]Initial price of ' + symbolAB + ': ', greaterThan=0)
 
-max_supplyA = float(input('[?]Total amount of ' + symbolA + ' to be sold: '))
+max_supplyA = inp.inputNum('[?]Total amount of ' + symbolA + ' to be sold: ', greaterThan=0)
 contract_balanceA = max_supplyA # put token A into the contract
+contract_balanceB = 0 # one-way swap
 
 ## initialize
 initializedA = 1000 # just for initial pricing
+initializedB = initial_price * initializedA * conn_weight # max_supplyA - liquidityA = initializedA
+
 liquidityA = contract_balanceA - initializedA
-
-contract_balanceB = 0 # one-way swap
-initializedB = initial_price * (max_supplyA - liquidityA) * conn_weight
-liquidityB = initializedB + contract_balanceB 
-
-liquidityA = round(liquidityA, DECIMALS)
-initializedB = round(initializedB, DECIMALS)
-liquidityB = round(liquidityB, DECIMALS)
+liquidityB = contract_balanceB + initializedB
 
 print()
 
@@ -33,21 +31,19 @@ if not 0 <= conn_weight <= 1:
 else:
     while True:
         spot_price = liquidityB / ((max_supplyA - liquidityA) * conn_weight)
-        spot_price = round(spot_price, DECIMALS)
 
-        print('[=]Spot price of ' + symbolAB + ': ', spot_price)
+        print('[=]Spot price of ' + symbolAB + ': ', round(spot_price, DECIMALS))
         print()
 
-        inB = float(input('[?]Input amount of ' + symbolB + ' (0 to quit): '))
+        inB = inp.inputNum('[?]Input amount of ' + symbolB + ' (0 to quit): ', min=0)
 
         if inB > 0:
             outA = (max_supplyA - liquidityA) * ((1 + inB/liquidityB)**conn_weight - 1)
-            outA = round(outA, DECIMALS)
 
             if contract_balanceA < outA:
-                print('[!]Not enough liquidity for ' + symbolA, '(', contract_balanceA, '<', outA, ')')
+                print('[!]Not enough liquidity for ' + symbolA, '(', contract_balanceA, '<', round(outA, DECIMALS), ')')
             else:
-                print('[=]Output amount of ' + symbolA + ': ', outA)
+                print('[=]Output amount of ' + symbolA + ': ', round(outA, DECIMALS))
                 print('[=]Effective price of ' + symbolAB + ': ', round(inB/outA, DECIMALS))
 
                 # update facts
@@ -58,17 +54,11 @@ else:
                 liquidityA = contract_balanceA - initializedA
                 liquidityB = contract_balanceB + initializedB
 
-                # round
-                contract_balanceA = round(contract_balanceA, DECIMALS)
-                contract_balanceB = round(contract_balanceB, DECIMALS)
-                liquidityA = round(liquidityA, DECIMALS)
-                liquidityB = round(liquidityB, DECIMALS)
-
                 print('[=]Sold ' + symbolA + ': ', round(max_supplyA - contract_balanceA, DECIMALS))
-                print('[=]Remaining ' + symbolA + ': ', contract_balanceA)
-                print('[=]Raised ' + symbolB + ': ', contract_balanceB)
+                print('[=]Remaining ' + symbolA + ': ', round(contract_balanceA, DECIMALS))
+                print('[=]Raised ' + symbolB + ': ', round(contract_balanceB, DECIMALS))
 
-                if contract_balanceA == 0:
+                if round(contract_balanceA, DECIMALS) == 0:
                     print()
                     print('Sold out.')
                     break
