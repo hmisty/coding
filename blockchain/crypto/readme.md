@@ -47,13 +47,20 @@ CW = Connected Weight, 0-100%
 pricing:
 
 ```
-spot price = balance(B) / (supply(A) * CW)
+spot_price(A) = liquidity(B) / ((max_supply(A) - liquidity(A)) * CW)
 ```
 
 swap:
 
 ```
-out(A) = supply(A) * ((1 + in(B)/balance(B))^CW - 1)
+out(A) = (max_supply(A) - liquidity(A)) * ((1 + in(B)/liquidity(B))^CW - 1)
 ```
 
+where,
+```
+liquidity(A) = contract_balance(A) - initialized(A)
+liquidity(B) = contract_balance(B) + initialized(B)
+```
+
+reference: Bancor Protocol whitepaper. Mar 18, 2018.
 
