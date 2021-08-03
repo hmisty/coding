@@ -39,9 +39,9 @@ else:
                 amountA = round(amountA - outA, DECIMALS)
                 balanceB = round(balanceB + inB, DECIMALS)
 
-                print('[=]Sold ' + symbolA + ': ', supplyA - initialA)
+                print('[=]Sold ' + symbolA + ': ', round(supplyA - initialA, DECIMALS))
                 print('[=]Remaining ' + symbolA + ': ', amountA)
-                print('[=]Raised ' + symbolB + ': ', balanceB - initialB)
+                print('[=]Raised ' + symbolB + ': ', round(balanceB - initialB, DECIMALS))
 
                 if amountA == 0:
                     print()
