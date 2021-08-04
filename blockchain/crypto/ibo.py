@@ -35,7 +35,8 @@ else:
         print('[=]Spot price of ' + symbolAB + ': ', round(spot_price, DECIMALS))
         print()
 
-        inB = inp.inputNum('[?]Input amount of ' + symbolB + ' (0 to quit): ', min=0)
+        # branch 1: given in(B) to calculate out(A)
+        inB = inp.inputNum('[?]Amount of ' + symbolB + ' to spend (0 to skip): ', min=0)
 
         if inB > 0:
             outA = (max_supplyA - liquidityA) * ((1 + inB/liquidityB)**conn_weight - 1)
@@ -64,6 +65,37 @@ else:
                     break
 
             print()
-        else:
-            break
+            continue
             
+        # branch 2: given out(A) to calculate in(B)
+        outA = inp.inputNum('[?]Amount of ' + symbolA + ' to buy (0 to quit): ', min=0)
+
+        if outA > 0:
+            if contract_balanceA < outA:
+                print('[!]Not enough liquidity for ' + symbolA, '(', contract_balanceA, '<', round(outA, DECIMALS), ')')
+            else:
+                inB = ((1 + outA/(max_supplyA - liquidityA))**(1/conn_weight) - 1) * liquidityB
+
+                print('[=]Input amount of ' + symbolB + ': ', round(inB, DECIMALS))
+                print('[=]Effective price of ' + symbolAB + ': ', round(inB/outA, DECIMALS))
+
+                # update facts
+                contract_balanceA -= outA
+                contract_balanceB += inB
+
+                # do math
+                liquidityA = contract_balanceA - initializedA
+                liquidityB = contract_balanceB + initializedB
+
+                print('[=]Sold ' + symbolA + ': ', round(max_supplyA - contract_balanceA, DECIMALS))
+                print('[=]Remaining ' + symbolA + ': ', round(contract_balanceA, DECIMALS))
+                print('[=]Raised ' + symbolB + ': ', round(contract_balanceB, DECIMALS))
+
+                if round(contract_balanceA, DECIMALS) == 0:
+                    print()
+                    print('Sold out.')
+                    break
+
+            print()
+            continue
+
