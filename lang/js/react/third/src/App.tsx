@@ -33,15 +33,14 @@ class App extends React.Component<Props, State> {
 	};
 
 	render() {
+		const { searchTerm, list } = this.state;
+
 		return (
 			<div className="App">
 				<header className="App-header">
 					<form>
-						<input type="text" onChange={this.onSearchChange} />
+						<input type="text" value={searchTerm} onChange={this.onSearchChange} />
 					</form>
-					<div>
-						{ this.state.list.filter(this.isSearched(this.state.searchTerm)) }
-					</div>
 					<p>
 						Check out "hello" + "4" = { concat("hello", "3") }.
 					</p>
@@ -49,14 +48,15 @@ class App extends React.Component<Props, State> {
 						{ `Here's an interpolated string of concat("hello", "3") = ${ concat("hello", "3") }. Amazing?` }
 					</p>
 
-					{ this.state.list.map((item: string) => 
-							<div key={ `id-${item}` }>
-								<p>{item}</p>
-								<button onClick={() => this.onClick(`id-${item}`)} type="button">
-									Dismiss
-								</button>
-							</div>
-						)
+					{ list.filter(this.isSearched(searchTerm))
+							.map((item: string) => 
+									<div key={ `id-${item}` }>
+										<p>{item}</p>
+										<button onClick={() => this.onClick(`id-${item}`)} type="button">
+											Dismiss
+										</button>
+									</div>
+							)
 					}
 				</header>
 			</div>
