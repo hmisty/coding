@@ -2,6 +2,7 @@ const prompt = require('prompt');
 const bitcoin = require('bitcoinjs-lib');
 const bip39 = require("bip39");
 const bip32 = require("bip32");
+const base58check = require('base58check');
 const ethUtils = require('ethereumjs-util');
 const createHash = require('create-hash');
 const createKeccakHash = require('keccak');
@@ -15,8 +16,8 @@ function onErr(err) {
 	return 1;
 }
 
-function genAddrETH(privkey, compressed) {
-	const ec = new EC('secp256k1'); // secp256k1
+function _genPubKeyKeccak(curve, privkey, compressed) {
+	const ec = new EC(curve); // secp256k1, or p256 for secp256r1
 	const ecparams = ec.curve;
 
   const pubKey = Buffer.from(ec.keyFromPrivate(privkey).getPublic(compressed, true)).slice(1);
@@ -30,12 +31,50 @@ function genAddrETH(privkey, compressed) {
 	return checksumAddr;
 }
 
+function genAddrETH(privkey, compressed) {
+	return _genPubKeyKeccak('secp256k1', privkey, compressed);
+};
+
+function genAddrNEW(privkey, compressed) {
+	const NewChainDevNetId = 1002;
+	const NewChainTestNetId = 1007;
+	const NewChainMainNetId = 1012;
+	const PREFIX = 'NEW';
+
+	const hexAddress2NewAddress = function (hexAddress, chainId) {
+		if (hexAddress === undefined) {
+			return ''
+		}
+		hexAddress = hexAddress.trim()
+		if (typeof (hexAddress) === 'string' && hexAddress.startsWith(PREFIX)) {
+			return hexAddress
+		}
+		if (hexAddress.startsWith('0x')) {
+			hexAddress = hexAddress.slice(2)
+		}
+		if (hexAddress.length !== 40) {
+			return null
+		}
+		chainId = Number(chainId)
+		let data = chainId.toString(16).slice(-8) + hexAddress
+		if (data.length % 2 !== 0) {
+			data = '0' + data
+		}
+		return PREFIX + base58check.encode(data)
+	}
+
+	const addrETH = _genPubKeyKeccak('p256', privkey, compressed);
+	const addrNEW = hexAddress2NewAddress(addrETH, NewChainMainNetId);
+	return addrNEW;
+}
+
 //----------------------------------------------
 const tests = {
 	"entropy": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
 	"privkey": "5K2YUVmWfxbmvsNxCsfvArXdGXm7d5DC9pn4yD75k2UaSYgkXTh",
 	"addrBTC": "1HKqKTMpBTZZ8H5zcqYEWYBaaWELrDEXeE",
 	"addrETH": "0x2a260a110bc7b03f19C40a0BD04FF2C5DCB57594",
+	"addrNEW": "NEW182Z4JpaaNQpD5ejJHEKatFRzNpd1XWwBMJ2",
 	"mnemonic": "panel custom call awesome sick ready hamster wool patch client reduce clip desk pole hole gesture lion grief firm subway force job choice bargain",
 	"ledgerBTC0": "1FT2xCHANeDPNdG1QtZbuRytpZYn9AJSZg",
 	"ledgerBTC1": "1M88LeBTcoiKQ2x6QfztdzaHPsiZWinpif",
@@ -48,7 +87,7 @@ const tests = {
 	"ledgerETH2": "0xB2909C993D9eBaB2a3F6333d4254D8f93cf2d96b"
 };
 
-var checklog = (function () {
+const checklog = (function () {
 	var success = 0, fail = 0;
 	const N = Object.keys(tests).length;
 
@@ -123,11 +162,11 @@ prompt.get(prop, function (err, result) {
 	const keyPair = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: compressed });
 
 	const wif_privkey = keyPair.toWIF();
-	console.log("bitcoin private key" + (compressed ? " (compressed)" : "") + ": \033[37;47m" + wif_privkey + "\033[0m");
+	console.log("BTC private key" + (compressed ? " (compressed)" : "") + ": \033[37;47m" + wif_privkey + "\033[0m");
 	if (testing) checklog('privkey', wif_privkey);
 
 	const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-	console.log("bitcoin address: " + address);
+	console.log("BTC address: " + address);
 	if (testing) checklog('addrBTC', address);
 
 	// ethereum only uses uncompressed ec
@@ -137,10 +176,15 @@ prompt.get(prop, function (err, result) {
 
 		// gen Ethereum address, use compressed = false for compatibility
 		const eth_address = genAddrETH(privkey, compressed);
-		console.log("ethereum private key: the same as entropy");
-		console.log("ethereum address: " + eth_address);
+		console.log("ETH private key: the same as entropy");
+		console.log("ETH address: " + eth_address);
 		if (testing) checklog('addrETH', eth_address);
 
+		// gen NEW address, use compressed = false for compatibility
+		const new_address = genAddrNEW(privkey, compressed);
+		console.log("NEW private key: the same as entropy");
+		console.log("NEW address: " + new_address);
+		if (testing) checklog('addrNEW', new_address);
 	}
 
 	// split
