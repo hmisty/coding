@@ -22,7 +22,7 @@ Bundle 'tomlion/vim-solidity'
 Bundle "myhere/vim-nodejs-complete"
 "-- markdown instant preview
 " also requires: $ npm install -g install instant-markdown-d
-Bundle "suan/vim-instant-markdown"
+"Bundle "suan/vim-instant-markdown"
 "-- motion
 Bundle 'Lokaltog/vim-easymotion'
 :let mapleader=","
