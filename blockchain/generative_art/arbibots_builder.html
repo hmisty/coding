@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- on-chain generative icon. web-version builder by hmisty.
+		re-written from https://arbiscan.io/address/0xc1fcf330b4b4c773fa7e6835f681e8f798e9ebff#code -->
+		<style>
+			label {
+				word-break: break-all;
+			}
+		</style>
+		<script>
+			///////////////////////////////////////////////////////////////////////////
+			// A React Like Functional HTML Library that supports stateless and stateful
+			// components as well as component composition in less than 20 lines
+			//
+			let render = function (component, initState = {}, mountNode = 'app') {
+							initState.render = function( stateRepresentation, options = {} ) {
+											const start = (options.focus) ? document.getElementById(options.focus).selectionStart : 0;
+											(document.getElementById(mountNode) || {}).innerHTML = stateRepresentation
+											if (options.focus) {
+															let f = document.getElementById(options.focus)
+															f.selectionStart = start
+															f.focus()
+														}
+										}
+
+							let stateRepresentation = component(initState)
+
+							initState.render((typeof stateRepresentation === 'function' ) ? stateRepresentation() : stateRepresentation)
+						}
+
+			let intent = function(i, f) {
+							window[i || '_'] = f
+						}
+
+			let value = function(el) {
+							return document.getElementById(el).value
+						}
+
+			///////////////////////////////////////////////////////////////////////////
+			// helper functions
+
+			const $ = document.querySelector.bind(document); //function alias
+			const $$ = document.querySelectorAll.bind(document); //function alias
+
+			function hex2bin(hex) {
+							var bytes = [];
+							for(var i = 0; i < hex.length - 1; i += 2) {
+											bytes.push(parseInt(hex.substr(i, 2), 16));
+										}
+							return String.fromCharCode.apply(String, bytes);
+						}
+
+			function bin2hex(bin) {
+							var hex = [];
+							for(var i = 0; i < bin.length; i++) {
+											hex.push(bin.charCodeAt(i).toString(16).padStart(2, "0"));
+										}
+							return hex.join("");
+						}
+
+			///////////////////////////////////////////////////////////////////////////
+			// data
+			
+			let palettes = [["#b5eaea", "#edf6e5", "#f38ba0"],
+							["#b5c7ea", "#e5f6e8", "#f3bb8b"],
+							["#eab6b5", "#eee5f6", "#8bf3df"],
+							["#c3eab5", "#f6e9e5", "#c18bf3"],
+							["#eab5d9", "#e5e8f6", "#8bf396"]];
+
+			let bodies = [hex2bin('ff00ba0001010404010111000101060301010f000101080301010d000101090301010d000101090301010d00010109030101'),
+							hex2bin('ff00ba0001010404010111000101060301010f000101080301010d000101090301010d000101090301010d00010109030101'),
+							hex2bin('ff00b90001010504010111000101050301011100010105030101110001010503010111000101050301011100010105030101'),
+							hex2bin('ff00ba000101030401011200010105030101100001010104010103030101010401010e00010103040301030401010c0001010b0401010a0001010d040101'),
+							hex2bin('ff00b9000101050301010f0002010104010103030101010402010c00010104040301040401010a0001010d040101090001010d040101090001010d040101'),
+							hex2bin('ff00ba00010103030101120001010104010101030101010401011000010103040101030401010f000101070401010f000101070401010f00010107040101'),
+							hex2bin('ff00ba0001010104010101030101010401011000010103040101020401010f00010104040101030401010e00010104040101040401010d00010104040101040401010d0001010404010104040101')];
+
+			let heads = [hex2bin('96000c010b0001010c030101090001010e030101080001010e030101080001010e030101080001010e030101080001010e030101080001010e030101080001010e030101080001010e030101080001010e03010109000e01'),
+							hex2bin('97000a010d0001010a0301010b0001010c030101090001010e030101080001010e030101080001010e030101080001010e030101080001010e030101080001010e030101090001010c0301010b0001010a0301010d000a01'),
+							hex2bin('9400100107000101100401010600010101040e03010401010600010101040e03010401010600010101040e03010401010600010101040e03010401010600010101040e03010401010600010101040e03010401010600010101040e03010401010600010101040e0301040101060001011004010107001001'),
+							hex2bin('96000c010b0001010c030101090001010e030101070001011003010105000101120301010400010112030101040001011203010104000101120301010500010110030101070001010d030201090001010b0301010c000b01'),
+							hex2bin('9400100107000101100301010600010110030101060001011003010106000101100301010600010110030101070001010e030101080001010e030101090001010c0301010a0001010c0301010b0001010a0301010d000a01')];
+
+			let eyes = [hex2bin('ff0010000201070002010d0001010104070001010104ff00'),
+							hex2bin('ff001000030105000301ff00'),
+							hex2bin('f8000101070001010e000101010001010500010101000101ff00'),
+							hex2bin('df000301050003010d000301050003010e00010107000101ff00'),
+							hex2bin('ff0011000101070001010f00010107000101ff00'),
+							hex2bin('ff00100001010100010105000101010001010e00010107000101ff00')];
+
+			let mouths = [hex2bin('ff004300010101000101010001011400010101000101'),
+							hex2bin('ff00450001011600010101000101'),
+							hex2bin('ff005c000401'),
+							hex2bin('ff00440001010200010115000201'),
+							hex2bin('ff0044000401140001010204010115000201')];
+
+			let headgears = [hex2bin('37000101080001010d0001010100010106000101010001010e000101060001011000010106000101ff00'),
+							hex2bin('240001011600010101000101150001011700010117000101ff00'),
+							hex2bin('0c000201150001010200010114000101010001010104010113000101020001011400010117000101ff00'),
+							hex2bin('68000101060001010f000101010301010400010101030101ff00'),
+							hex2bin('50000101060001010f0001010103010104000101010301010e000101020301010200010102030101ff00')];
+
+			///////////////////////////////////////////////////////////////////////////
+			// some components
+			//
+
+			// stateless components
+			let ColoredText = ({colors}) => colors.map(color => `
+							<span style="background: ${color};">${color}</span>
+							`).join(", ")
+
+			/*let Palette = ({n}) => [...Array(n).keys()].map(i => `
+							<div>
+							<input type="radio" name="palettes" id="palette${i}" value="${i}">
+							<label for="palette${i}" id="palette${i}-label">${ColoredText({colors: palettes[i]})}</label>
+							</div>
+							`).join("")
+			*/
+			let PalettesList = () => palettes.map((palette, i) => `
+							<div>
+							<input type="radio" name="palettes" id="palette${i}" value="${i}">
+							<label for="palette${i}" id="palette${i}-label">${ColoredText({colors: palette})}</label>
+							</div>
+							`).join("")
+
+			let BodiesList = () => bodies.map((body, i) => `
+							<div>
+							<input type="radio" name="bodies" id="body${i}" value="${i}">
+							<label for="body${i}" id="body${i}-label">${bin2hex(body)}</label>
+							</div>
+							`).join("")
+
+			let HeadsList = () => heads.map((head, i) => `
+							<div>
+							<input type="radio" name="heads" id="head${i}" value="${i}">
+							<label for="head${i}" id="head${i}-label">${bin2hex(head)}</label>
+							</div>
+							`).join("")
+
+			let EyesList = () => eyes.map((eye, i) => `
+							<div>
+							<input type="radio" name="eyes" id="eye${i}" value="${i}">
+							<label for="eye${i}" id="eye${i}-label">${bin2hex(eye)}</label>
+							</div>
+							`).join("")
+
+			let MouthsList = () => mouths.map((mouth, i) => `
+							<div>
+							<input type="radio" name="mouths" id="mouth${i}" value="${i}">
+							<label for="mouth${i}" id="mouth${i}-label">${bin2hex(mouth)}</label>
+							</div>
+							`).join("")
+
+			let HeadgearsList = () => headgears.map((headgear, i) => `
+							<div>
+							<input type="radio" name="headgears" id="headgear${i}" value="${i}">
+							<label for="headgear${i}" id="headgear${i}-label">${bin2hex(headgear)}</label>
+							</div>
+							`).join("")
+
+		</script>
+	</head>
+	<body>
+		<div style="border: 1px solid; position: -webkit-sticky; position: sticky; top: 0;">
+			<div id="icon" style="float: right;">
+			</div>
+		</div>
+
+		<div style="border: 1px solid; display: flex; margin-left: 10px; margin-right: 10px;">
+			<div style="border: 1px solid; float: left;">
+
+				<p>palettes:</p>
+				<div id="palettes-list"></div>
+
+				<p>bodies:</p>
+				<div id="bodies-list"></div>
+
+				<p>heads:</p>
+				<div id="heads-list"></div>
+
+				<p>eyes:</p>
+				<div id="eyes-list"></div>
+
+				<p>mouths:</p>
+				<div id="mouths-list"></div>
+
+				<p>headgears:</p>
+				<div id="headgears-list"></div>
+
+			</div>
+		</div>
+
+		<script>
+			///////////////////////////////////////////////////////////////////////////
+			// render svg
+
+			function renderRects(data, palette) {
+							var rects = [];
+							var position = 0;
+
+							for (var i = 0; i < data.length; i += 2) {
+											var run_length = data.charCodeAt(i);
+											var color_index = data.charCodeAt(i+1);
+
+											if (color_index != 0) { //non-transparent
+															var x = position % 24;
+															var y = position / 24 >> 0; //integer part
+															var color = "#000000";
+															if (color_index > 1) 
+																color = palette[color_index - 2];
+
+															rects.push('<rect width="', run_length, '" height="1" x="', x, '" y="', y, '" fill="', color, '" />'); 
+														}
+
+											position += run_length;
+										}
+
+							return rects.join("");
+						}
+
+			function renderSVG() {
+							var svg = [];
+
+							var palette_index = body_index = head_index = eye_index = mouth_index = headgear_index = 0; //default
+
+							var palette_chosen = $("input[name=palettes]:checked");
+							var body_chosen = $("input[name=bodies]:checked");
+							var head_chosen = $("input[name=heads]:checked");
+							var eye_chosen = $("input[name=eyes]:checked");
+							var mouth_chosen = $("input[name=mouths]:checked");
+							var headgear_chosen = $("input[name=headgears]:checked");
+
+							if (palette_chosen) palette_index = parseInt(palette_chosen.value);
+							if (body_chosen) body_index = parseInt(body_chosen.value);
+							if (head_chosen) head_index = parseInt(head_chosen.value);
+							if (eye_chosen) eye_index = parseInt(eye_chosen.value);
+							if (mouth_chosen) mouth_index = parseInt(mouth_chosen.value);
+							if (headgear_chosen) headgear_index = parseInt(headgear_chosen.value);
+							
+							var palette = palettes[palette_index];
+
+							svg.push('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="crispEdges" width="256" height="256">');
+							svg.push('<rect width="100%" height="100%" fill="', palette[0], '" />');
+
+							svg.push(renderRects(bodies[body_index], palette));
+							svg.push(renderRects(heads[head_index], palette));
+							svg.push(renderRects(eyes[eye_index], palette));
+							svg.push(renderRects(mouths[mouth_index], palette));
+							svg.push(renderRects(headgears[headgear_index], palette));
+
+							svg.push('</svg>');
+
+							var image = svg.join("");
+							$("#icon").innerHTML = image;
+						}
+			
+
+			///////////////////////////////////////////////////////////////////////////
+			// Display Components
+			//render(Palette, {n: palettes.length}, "palettes-list")
+			render(PalettesList, {}, "palettes-list")
+			render(BodiesList, {}, "bodies-list")
+			render(HeadsList, {}, "heads-list")
+			render(EyesList, {}, "eyes-list")
+			render(MouthsList, {}, "mouths-list")
+			render(HeadgearsList, {}, "headgears-list")
+
+			// Display Icon
+			renderSVG();
+
+			// bind event
+			$$("input").forEach((input) => {
+							input.onchange = renderSVG
+						})
+		</script>
+	</body>
+</html>
