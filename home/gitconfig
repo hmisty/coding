@@ -1,7 +1,7 @@
 [user]
     name = 
     email = 
-		signingkey = 5A2F50928A8D4A4C0327ACCF9621393ACAD9B63B
+	signingkey = 9621393ACAD9B63B
 
 [alias]
     ad = add

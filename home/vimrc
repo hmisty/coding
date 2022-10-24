@@ -56,6 +56,12 @@ Bundle 'tpope/vim-classpath'
 
 "-- dir tree
 Bundle 'scrooloose/nerdtree'
+
+nnoremap <C-t> :NERDTreeToggle<CR>
+
+let g:NERDTreeDirArrowExpandable="+"
+let g:NERDTreeDirArrowCollapsible="-"
+
 "-- auto snippet
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"

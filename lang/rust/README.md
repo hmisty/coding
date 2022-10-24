@@ -28,6 +28,8 @@ $ cargo new hello_cargo --bin
 
 --bin means to genearte executable instead of library
 
+no --bin will be the same by default
+
 ```
 $ cargo build
 ```
