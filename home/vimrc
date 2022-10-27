@@ -64,7 +64,10 @@ let g:NERDTreeDirArrowCollapsible="-"
 
 "-- auto snippet
 Bundle "MarcWeber/vim-addon-mw-utils"
+
+"fix: https://github.com/tomtom/tlib_vim/pull/30/files
 Bundle "tomtom/tlib_vim"
+
 Bundle "garbas/vim-snipmate"
 Bundle "honza/vim-snippets"
 imap <C-J> <Plug>snipMateNextOrTrigger

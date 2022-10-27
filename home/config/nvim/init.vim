@@ -11,7 +11,11 @@ call plug#begin()
 
 "Plug 'dikiaap/minimalist' "colorscheme minimalist
 Plug 'vim-airline/vim-airline' "Status bar
-Plug 'preservim/nerdtree' "NerdTree
+
+"XXX for compatible with vim (parsing ~/.NERDTreeBookmarks)
+Plug 'scrooloose/nerdtree'
+"Plug 'preservim/nerdtree' "NerdTree
+
 Plug 'tpope/vim-surround' "Surrounding ysw
 Plug 'tpope/vim-fugitive' "git
 "Plug 'gabrielelana/vim-markdown' "markdown
@@ -19,9 +23,14 @@ Plug 'tpope/vim-fugitive' "git
 Plug 'neoclide/coc.nvim', {'branch': 'release'}  "code completion
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } "for golang
 
+Plug 'ray-x/starry.nvim' "colorschemes
+
 call plug#end()
 
-colorscheme desert 
+"colorscheme desert 
+"colorscheme moonlight
+"colorscheme monokai
+colorscheme emerald
 
 "nnoremap <C-g> :NERDTreeFocus<CR>
 "nnoremap <C-n> :NERDTree<CR>
