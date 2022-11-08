@@ -13,8 +13,8 @@ call plug#begin()
 Plug 'vim-airline/vim-airline' "Status bar
 
 "XXX for compatible with vim (parsing ~/.NERDTreeBookmarks)
-Plug 'scrooloose/nerdtree'
-"Plug 'preservim/nerdtree' "NerdTree
+"Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree' "NerdTree
 
 Plug 'tpope/vim-surround' "Surrounding ysw
 Plug 'tpope/vim-fugitive' "git
@@ -38,6 +38,8 @@ nnoremap <C-t> :NERDTreeToggle<CR>
 
 let g:NERDTreeDirArrowExpandable="+"
 let g:NERDTreeDirArrowCollapsible="-"
+
+let g:NERDTreeBookmarksFile=expand('$HOME').'/.NERDTreeBookmarks.nvim'
 
 " remember the last editing position
 if has("autocmd")  

@@ -55,7 +55,8 @@ Bundle 'tpope/vim-fireplace'
 Bundle 'tpope/vim-classpath'
 
 "-- dir tree
-Bundle 'scrooloose/nerdtree'
+"Bundle 'scrooloose/nerdtree'
+Bundle 'preservim/nerdtree'
 
 nnoremap <C-t> :NERDTreeToggle<CR>
 
