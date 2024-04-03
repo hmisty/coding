@@ -25,7 +25,7 @@ function _genPubKeyKeccak(curve, privkey, compressed) {
 
 	var hash = createKeccakHash('keccak256');
 	hash.update(pubKey);
-	const addr = hash.digest().slice(-20).toString('hex');
+	const addr = '0x' + hash.digest().slice(-20).toString('hex');
 	const checksumAddr = ethUtils.toChecksumAddress(addr);
 
 	return checksumAddr;
@@ -225,7 +225,7 @@ prompt.get(prop, function (err, result) {
 	//-------- hd wallet ---------
 	for (var x = 0; x < 3; x++) {
 		const node = master.derivePath(eth_derivation_metamask + "/" + x);
-		const addr = ethUtils.toChecksumAddress(ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
+		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
 		console.log("eth account #0 address #" + x + ": " + addr);
 		if (testing) checklog('metamaskETH'+x, addr);
 	}
@@ -235,7 +235,7 @@ prompt.get(prop, function (err, result) {
 
 	for (var x = 0; x < 3; x++) {
 		const node = master.derivePath(eth_derivation_ledger_live + "/" + x + "'/0/0");
-		const addr = ethUtils.toChecksumAddress(ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
+		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
 		console.log("eth account #" + x + ": " + addr);
 		if (testing) checklog('ledgerETH'+x, addr);
 	}
