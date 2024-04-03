@@ -73,6 +73,8 @@ const tests = {
 	"entropy": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
 	"privkey": "5K2YUVmWfxbmvsNxCsfvArXdGXm7d5DC9pn4yD75k2UaSYgkXTh",
 	"addrBTC": "1HKqKTMpBTZZ8H5zcqYEWYBaaWELrDEXeE",
+	"privkeyC": "L2ZovMyTxxQVJmMtfQemgVcB5YmiEDapDwsvX6RqvuWibgUNRiHz",
+	"segwit": "bc1qtmrl9526rusw4dnavrcfal72tz6ram5lqzutru",
 	"addrETH": "0x2a260a110bc7b03f19C40a0BD04FF2C5DCB57594",
 	"addrNEW": "NEW182Z4JpaaNQpD5ejJHEKatFRzNpd1XWwBMJ2",
 	"mnemonic": "panel custom call awesome sick ready hamster wool patch client reduce clip desk pole hole gesture lion grief firm subway force job choice bargain",
@@ -166,8 +168,18 @@ prompt.get(prop, function (err, result) {
 	if (testing) checklog('privkey', wif_privkey);
 
 	const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-	console.log("BTC address: " + address);
+	console.log("BTC address: " + address + (compressed ? " (compressed)":" (uncompressed)"));
 	if (testing) checklog('addrBTC', address);
+
+	// segwit can use only compressed privkey
+	const keyPairC = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: true});
+	const wif_privkeyC = keyPairC.toWIF();
+	console.log("segwit private key (compressed)" + ": \033[37;47m" + wif_privkeyC + "\033[0m");
+	if (testing) checklog('privkeyC', wif_privkeyC);
+
+	const { address: segwit_address } = bitcoin.payments.p2wpkh({ pubkey: keyPairC.publicKey });
+	console.log("segwit address: " + segwit_address);
+	if (testing) checklog('segwit', segwit_address);
 
 	// ethereum only uses uncompressed ec
 	if (compressed == false) {
