@@ -1,0 +1,12 @@
+node_modules
+
+#Hardhat files
+cache
+artifacts
+
+#secret keys
+.secrets.json
+
+#temp files
+.*~
+
