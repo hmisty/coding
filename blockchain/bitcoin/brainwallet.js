@@ -1,3 +1,4 @@
+// npm install -g prompt bitcoinjs-lib ecpair tiny-secp256k1 bip39 bip32 base58check ethereumjs-util create-hash keccak bn.js elliptic
 const prompt = require('prompt');
 const bitcoin = require('bitcoinjs-lib');
 const bip39 = require("bip39");
@@ -8,6 +9,12 @@ const createHash = require('create-hash');
 const createKeccakHash = require('keccak');
 const BN = require('bn.js');
 const EC = require('elliptic').ec;
+
+const ECPairFactory = require('ecpair').default;
+const ecc = require('tiny-secp256k1');
+
+const ECPair = ECPairFactory(ecc);
+const BIP32 = bip32.BIP32Factory(ecc);
 
 //----------------------------------------------
 
@@ -163,23 +170,27 @@ prompt.get(prop, function (err, result) {
 	const privkey = Buffer.from(entropy, 'hex'); // privkey is Buffer(entropy)
 
 	const compressed = result.compressed || false; // use uncompressed by default
-	const keyPair = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: compressed });
+	//const keyPair = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: compressed }); //bitcoinjs-lib < 5.x.x
+	const keyPair = ECPair.fromPrivateKey(privkey, { compressed: compressed });
 
 	const wif_privkey = keyPair.toWIF();
 	console.log("BTC private key" + (compressed ? " (compressed)" : "") + ": \033[37;47m" + wif_privkey + "\033[0m");
 	if (testing) checklog('privkey', wif_privkey);
 
-	const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+	//const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+	const { address } = bitcoin.payments.p2pkh({ pubkey: Buffer.from(keyPair.publicKey) });
 	console.log("BTC address: " + address + (compressed ? " (compressed)":" (uncompressed)"));
 	if (testing) checklog('addrBTC', address);
 
 	// segwit can use only compressed privkey
-	const keyPairC = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: true});
+	//const keyPairC = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: true}); //bitcoinjs-lib < 5.x.x
+	const keyPairC = ECPair.fromPrivateKey(privkey, { compressed: true});
 	const wif_privkeyC = keyPairC.toWIF();
 	console.log("segwit private key (compressed)" + ": \033[37;47m" + wif_privkeyC + "\033[0m");
 	if (testing) checklog('privkeyC', wif_privkeyC);
 
-	const { address: segwit_address } = bitcoin.payments.p2wpkh({ pubkey: keyPairC.publicKey });
+	//const { address: segwit_address } = bitcoin.payments.p2wpkh({ pubkey: keyPairC.publicKey });
+	const { address: segwit_address } = bitcoin.payments.p2wpkh({ pubkey: Buffer.from(keyPairC.publicKey) });
 	console.log("segwit address: " + segwit_address);
 	if (testing) checklog('segwit', segwit_address);
 
@@ -218,7 +229,8 @@ prompt.get(prop, function (err, result) {
 
 	const passphrase = ""; // use no passphrase
 	const seed = bip39.mnemonicToSeedSync(mnemonic, passphrase);
-	const master = bip32.fromSeed(seed); // m
+	//const master = bip32.fromSeed(seed); // m
+	const master = BIP32.fromSeed(seed);
 
 	// generate bitcoin addresses
 	// following ledger live standard
@@ -227,7 +239,8 @@ prompt.get(prop, function (err, result) {
 	
 	for (var x = 0; x < 3; x++) {
 		const node = master.derivePath(btc_derivation_ledger_live + "/" + x + "'/0/0");
-		const { address } = bitcoin.payments.p2pkh({ pubkey: node.publicKey });
+		//const { address } = bitcoin.payments.p2pkh({ pubkey: node.publicKey });
+		const { address } = bitcoin.payments.p2pkh({ pubkey: Buffer.from(node.publicKey) });
 		console.log("btc account #" + x + ": " + address);
 		if (testing) checklog('ledgerBTC'+x, address);
 	}
@@ -239,7 +252,8 @@ prompt.get(prop, function (err, result) {
 	//-------- hd wallet ---------
 	for (var x = 0; x < 3; x++) {
 		const node = master.derivePath(eth_derivation_metamask + "/" + x);
-		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
+		//const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
+		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(Buffer.from(node.publicKey), true).toString("hex"));
 		console.log("eth account #0 address #" + x + ": " + addr);
 		if (testing) checklog('metamaskETH'+x, addr);
 	}
@@ -249,7 +263,8 @@ prompt.get(prop, function (err, result) {
 
 	for (var x = 0; x < 3; x++) {
 		const node = master.derivePath(eth_derivation_ledger_live + "/" + x + "'/0/0");
-		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
+		//const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
+		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(Buffer.from(node.publicKey), true).toString("hex"));
 		console.log("eth account #" + x + ": " + addr);
 		if (testing) checklog('ledgerETH'+x, addr);
 	}
