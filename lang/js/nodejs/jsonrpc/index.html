@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>JSON-RPC Hash Calculator</title>
+  </head>
+  <body>
+    <label for="input">Input:</label>
+    <input type="text" id="input" name="input">
+    <br>
+    <button id="calculate-button">Calculate Hash</button>
+    <br>
+    <label for="output">Output:</label>
+    <input type="text" id="output" name="output" readonly>
+    <script>
+      const apiUrl = 'http://localhost:3000';
+      
+      async function calculateHash() {
+        const input = document.getElementById('input').value;
+        const request = {
+          jsonrpc: '2.0',
+          method: 'hash',
+          params: [input],
+          id: 1,
+        };
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(request),
+        });
+        const result = await response.json();
+        document.getElementById('output').value = result.result;
+      }
+      
+      document.getElementById('calculate-button').addEventListener('click', calculateHash);
+    </script>
+  </body>
+</html>
+

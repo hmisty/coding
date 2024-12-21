@@ -119,11 +119,13 @@ const prop = [
 	{
 		name: 'password',
 		description: 'password (type "test" for running tests)',
+		//hidden: false,
 		hidden: true,
 		replace: '*'
 	},
 	{
 		name: 'again',
+		//hidden: false,
 		hidden: true,
 		replace: '*'
 	}

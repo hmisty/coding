@@ -4,7 +4,8 @@
   "description": "",
   "main": "brainwallet.js",
   "dependencies": {
-    "base58check": "^2.0.0"
+    "base58check": "^2.0.0",
+    "ethereumjs-util": "^7.1.5"
   },
   "devDependencies": {
     "bip32": "^2.0.6",

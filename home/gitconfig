@@ -1,7 +1,8 @@
 [user]
     name = 
-    email = 
+	email = evan@blockcoach.com
 	signingkey = 9621393ACAD9B63B
+	name = Evan
 
 [alias]
     ad = add

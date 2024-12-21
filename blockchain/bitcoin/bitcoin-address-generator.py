@@ -1,18 +1,15 @@
 import os
 import hashlib
 
-
 def sha256(data):
     digest = hashlib.new("sha256")
     digest.update(data)
     return digest.digest()
 
-
 def ripemd160(x):
     d = hashlib.new("ripemd160")
     d.update(x)
     return d.digest()
-
 
 def b58(data):
     B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
@@ -27,7 +24,6 @@ def b58(data):
         x = x // 58
 
     return ret
-
 
 class Point:
     def __init__(self,
@@ -79,7 +75,6 @@ class Point:
         y = self.y.to_bytes(32, "big")
         return b"\x04" + x + y
 
-
 def getPublicKey(privkey):
     SPEC256k1 = Point()
     pk = int.from_bytes(privkey, "big")
@@ -89,12 +84,10 @@ def getPublicKey(privkey):
     address = b58(address + sha256(sha256(address))[:4])
     return address
 
-
 def getWif(privkey):
     wif = b"\x80" + privkey
     wif = b58(wif + sha256(sha256(wif))[:4])
     return wif
-
 
 if __name__ == "__main__":
     randomBytes = os.urandom(32)

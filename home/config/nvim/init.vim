@@ -19,6 +19,8 @@ Plug 'preservim/nerdtree' "NerdTree
 Plug 'tpope/vim-surround' "Surrounding ysw
 Plug 'tpope/vim-fugitive' "git
 "Plug 'gabrielelana/vim-markdown' "markdown
+"Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} "markdown-preview
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' } 
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}  "code completion
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } "for golang
@@ -48,3 +50,24 @@ autocmd BufReadPost *
     \   exe "normal! g`\"" |  
     \endif  
 endif
+
+" typescript
+au BufNewFile,BufRead *.ts,*.tsx
+      \ set tabstop=2 |
+      \ set softtabstop=2 |
+      \ set shiftwidth=2 |
+      \ set textwidth=79 |
+      \ set expandtab |
+      \ set autoindent |
+      \ set fileformat=unix
+
+" solidity
+"      \ set textwidth=79 |
+au BufNewFile,BufRead *.sol
+      \ set tabstop=4 |
+      \ set softtabstop=4 |
+      \ set shiftwidth=4 |
+      \ set expandtab |
+      \ set autoindent |
+      \ set fileformat=unix
+
