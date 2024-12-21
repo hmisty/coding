@@ -1,6 +1,11 @@
 #!/bin/bash
 
 ln -s ~/coding/home/bash_aliases ~/.bash_aliases
+#
+# bash: edit ~/.bash_profile to add: source ~/.bash_aliases
+# zsh: edit ~/.zshrc to add: source ~/.bash_aliases
+#
+
 ln -s ~/coding/home/gitconfig ~/.gitconfig
 ln -s ~/coding/home/screenrc ~/.screenrc
 
@@ -17,5 +22,5 @@ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 vim +BundleInstall +qall
 
 ## nvim
-ln -s ~/coding/home/config/nvim/init.vim ~/.config/nvim/init.vim
-nvim +BundleInstall +qall
+#ln -s ~/coding/home/config/nvim/init.vim ~/.config/nvim/init.vim
+#nvim +BundleInstall +qall

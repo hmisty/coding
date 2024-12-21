@@ -12,13 +12,9 @@ alias ls='ls -G'
 alias nb='jupyter notebook'
 
 # python virtualenv
-alias cmsenv='source ~/.env/cms/bin/activate'
+#alias cmsenv='source ~/.env/cms/bin/activate'
 
 # logins
-#source ~/.bash_aliases_local
-#alias cms1='ssh 10.174.89.71'
-#alias api1='ssh 10.80.236.161'
-#alias api2='ssh 10.30.49.170'
 
 # ss
-alias ss='/usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json'
+#alias ss='/usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json'
