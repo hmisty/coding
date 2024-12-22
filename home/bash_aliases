@@ -2,6 +2,7 @@ alias g=git
 alias vi=vim
 #alias m=mvim
 alias nv=nvim
+alias python=python3
 
 # for mac
 alias ls='ls -G'

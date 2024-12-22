@@ -12,6 +12,9 @@ Bundle 'gmarik/vundle'
 "$ mvim +BundleInstall +qall
 "-- original repos on github
 
+Bundle "tpope/vim-surround"
+Bundle "tpope/vim-fugitive"
+
 "-- typescript
 Bundle 'leafgarland/typescript-vim'
 Bundle 'peitalin/vim-jsx-typescript'
@@ -27,23 +30,35 @@ Bundle "myhere/vim-nodejs-complete"
 Bundle 'Lokaltog/vim-easymotion'
 :let mapleader=","
 "-- colorscheme
-Bundle 'nielsmadan/harlequin'
-":colorscheme harlequin
-:colorscheme desert
+"XXX 'ayu-theme/ayu-vim' 'nielsmadan/harlequin'
+"Bundle 'NLKNguyen/papercolor-theme'
+"set background=dark
+":colorscheme PaperColor
+"Bundle 'dracula/vim'
+":colorscheme dracula
+"Bundle 'morhetz/gruvbox'
+"set background=dark
+":colorscheme gruvbox
+Bundle 'sonph/onehalf', {'rtp': 'vim/'}
+:colorscheme onehalfdark
+":colorscheme desert
+
 "-- auto complete
 "Bundle 'Valloric/YouCompleteMe'
 Bundle 'ervandew/supertab'
 "-- javascript
 Bundle 'pangloss/vim-javascript'
 "-- clojure
-Bundle 'guns/vim-clojure-static'
+"Bundle 'guns/vim-clojure-static'
 Bundle 'kien/rainbow_parentheses.vim'
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
-Bundle 'tpope/vim-sensible'
 Bundle 'vim-scripts/paredit.vim'
+
+"-- very important for coloring!
+Bundle 'tpope/vim-sensible'
 
 " for clojure REPL support
 "Bundle 'tpope/vim-salve'
@@ -127,9 +142,9 @@ endif
 "-- old --"
 source $VIMRUNTIME/vimrc_example.vim
 set nobackup
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
 set autoindent
 set smarttab
 set formatoptions=croql
