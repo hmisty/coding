@@ -22,3 +22,5 @@
 	prompt = false
 [gpg]
 	program = gpg
+[push]
+	default = simple

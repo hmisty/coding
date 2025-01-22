@@ -30,7 +30,8 @@ Bundle "myhere/vim-nodejs-complete"
 Bundle 'Lokaltog/vim-easymotion'
 :let mapleader=","
 "-- colorscheme
-"XXX 'ayu-theme/ayu-vim' 'nielsmadan/harlequin'
+"GOOD: 'sonph/onehalf' 'crusoexia/vim-monokai'
+"NOTGOOD: 'ayu-theme/ayu-vim' 'nielsmadan/harlequin'
 "Bundle 'NLKNguyen/papercolor-theme'
 "set background=dark
 ":colorscheme PaperColor
@@ -41,6 +42,9 @@ Bundle 'Lokaltog/vim-easymotion'
 ":colorscheme gruvbox
 Bundle 'sonph/onehalf', {'rtp': 'vim/'}
 :colorscheme onehalfdark
+"Bundle 'crusoexia/vim-monokai'
+"syntax on
+"colorscheme monokai
 ":colorscheme desert
 
 "-- auto complete
@@ -109,7 +113,8 @@ Bundle "vim-scripts/DrawIt"
 "-- manual config --"
 set viminfo+=!
 set modelines=1
-set nu
+set number
+"set relativenumber
 
 " highlight current line
 "TEMPORARY XXX
@@ -149,8 +154,10 @@ set autoindent
 set smarttab
 set formatoptions=croql
 set encoding=utf-8
+set mouse=a
 " don't expandtab by default. e.g. github markdown use TAB for auto code block
 "set expandtab
+set statusline=%f%m%r%=%l,%c\ %l/%L\ %p%%\ %{FugitiveStatusline()}
 
 "
 " for python, ref: https://segmentfault.com/a/1190000003962806
