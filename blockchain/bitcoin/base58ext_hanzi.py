@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+#
+# Evan Liu <evan at blockcoach.com>. 2025.2.20
+#
 import re
 import sys
 
@@ -12,15 +15,17 @@ base58ext_chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 # Ar B C Dy Er F Ga H Jin(Au) K Li Mg N P Qian(Pb) Rn S Ti U V W Xe Y Zn
 # v0: 常见字
 # ai bei cao deng e feng guo hua yi jia kai men niu o piao quan ren shi tian u (yv) wen xing yang zi 
-#(v0)base58ext_hanzi = "一二三四五六七八九氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌爱贝草灯鹅风果花衣家开门牛哦票泉人石田乌鱼文星羊子"
+#(v0)base58_hanzi = "一二三四五六七八九氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌爱贝草灯鹅风果花衣家开门牛哦票泉人石田乌鱼文星羊子"
 # v1: 科学家名字
 # a爱 b本 c聪 d顿 e耳 f伏 g高 h霍 i因 j焦 k克 m麦 n牛 o欧 p帕 q钱 r瑞 s斯 t坦 u尤 v冯 w韦 x薛 y杨 z中
 # 牛顿 高斯 焦耳 爱因斯坦 麦克斯韦 欧(拉) 帕斯(卡) 钱(学森) 尤(里) 冯(诺伊曼) 伏(特) 霍(金) 薛(定谔) 杨(振宁) 瑞(利)
-#(v1)base58ext_hanzi = "一二三四五六七八九氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌爱本聪顿耳伏高霍因焦克麦牛欧帕钱瑞斯坦尤冯韦薛杨中"
+#(v1)base58_hanzi = "一二三四五六七八九氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌爱本聪顿耳伏高霍因焦克麦牛欧帕钱瑞斯坦尤冯韦薛杨中"
 # v2: 百家姓
 # a安 b白 c陈 d邓 e鄂 f冯 g高 h韩 i伊 j蒋 k孔 m毛 n牛 o欧 p潘 q钱 r任 s孙 t唐 u乌 v俞 w王 x许 y杨 z赵
-#base58ext_hanzi = "壹贰叁肆伍陆柒捌玖氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌安白陈邓鄂冯高韩伊蒋孔毛牛欧潘钱任孙唐乌俞王许杨赵"
-base58ext_hanzi = "零壹贰叁肆伍陆柒捌玖氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌安白陈邓鄂冯高韩伊蒋孔李毛牛欧潘钱任孙唐乌俞王许杨赵"
+#base58_hanzi = "壹贰叁肆伍陆柒捌玖氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌安白陈邓鄂冯高韩伊蒋孔毛牛欧潘钱任孙唐乌俞王许杨赵"
+#base58ext_hanzi = "零壹贰叁肆伍陆柒捌玖氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌安白陈邓鄂冯高韩伊蒋孔李毛牛欧潘钱任孙唐乌俞王许杨赵"
+# v3: 优化百家姓，挑选字形区别更大（偏旁各不相同）的姓氏
+base58ext_hanzi = "零壹贰叁肆伍陆柒捌玖氩硼碳镝铒氟镓氢金钾锂镁氮磷铅氡硫钛铀钒钨氙钇锌安白程戴鄂冯高韩伊蒋孔李毛牛欧潘秦任孙唐乌俞王谢杨赵"
 
 # 创建双向映射字典
 base58ext_to_hanzi = {c: h for c, h in zip(base58ext_chars, base58ext_hanzi)}
@@ -107,8 +112,11 @@ def main():
 def run_test_cases():
     #test_cases = ["BTC", "硼钛碳", "1Love", "0OIl", "错误字符串$", "1ApQhLN6Rxu8P2gkpWMNYdtw4ZQjFxYXq", "KypbGTSbWygTSBeHsFz1g4yg5VqvcTNMJDFW54eXm8EJmVVC7336", "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "一氩一中磷一耳磷五铅镓耳伏因二镝镁磷钛伏钛锂五硫锂麦冯七镝因冯伏氮爱"]
     #expected_outputs = ['硼钛碳', 'BTC', '一锂欧冯耳', None, None, '一氩帕铅霍锂氮六氡薛尤八磷二高克帕钨镁氮钇顿坦韦四锌铅焦氟薛钇氙钱', '钾杨帕本镓钛硫本钨杨高钛硫硼耳氢斯氟中一高四杨高五钒钱冯聪钛氮镁金镝氟钨五四耳氙麦八铒金麦钒钒碳七三三六', '一氩一中磷一耳磷五铅镓耳伏因二镝镁磷钛伏钛锂五硫锂麦冯七镝因冯伏氮爱', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa']
+    #test_cases = ["BTC", "硼钛碳", "1Love", "0OIl", "错误字符串$", "1ApQhLN6Rxu8P2gkpWMNYdtw4ZQjFxYXq", "KypbGTSbWygTSBeHsFz1g4yg5VqvcTNMJDFW54eXm8EJmVVC7336", "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "壹氩壹赵磷壹鄂磷伍铅镓鄂冯伊贰镝镁磷钛冯钛锂伍硫锂毛俞柒镝伊俞冯氮安", "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"]
+    #expected_outputs = ['硼钛碳', 'BTC', '壹锂欧俞鄂', None, None, '壹氩潘铅韩锂氮陆氡许乌捌磷贰高孔潘钨镁氮钇邓唐王肆锌铅蒋氟许钇氙钱', '钾杨潘白镓钛硫白钨杨高钛硫硼鄂氢孙氟赵壹高肆杨高伍钒钱俞陈钛氮镁金镝氟钨伍肆鄂氙毛捌铒金毛钒钒碳柒叁叁陆', '壹氩壹赵磷壹鄂磷伍铅镓鄂冯伊贰镝镁磷钛冯钛锂伍硫锂毛俞柒镝伊俞冯氮安', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', '白陈壹钱安任零孙任任任柒许冯孔俞杨伍李陆肆叁李杨邓牛王玖任鄂伍玖高唐赵赵王冯伍毛邓钱']
     test_cases = ["BTC", "硼钛碳", "1Love", "0OIl", "错误字符串$", "1ApQhLN6Rxu8P2gkpWMNYdtw4ZQjFxYXq", "KypbGTSbWygTSBeHsFz1g4yg5VqvcTNMJDFW54eXm8EJmVVC7336", "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "壹氩壹赵磷壹鄂磷伍铅镓鄂冯伊贰镝镁磷钛冯钛锂伍硫锂毛俞柒镝伊俞冯氮安", "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"]
-    expected_outputs = ['硼钛碳', 'BTC', '壹锂欧俞鄂', None, None, '壹氩潘铅韩锂氮陆氡许乌捌磷贰高孔潘钨镁氮钇邓唐王肆锌铅蒋氟许钇氙钱', '钾杨潘白镓钛硫白钨杨高钛硫硼鄂氢孙氟赵壹高肆杨高伍钒钱俞陈钛氮镁金镝氟钨伍肆鄂氙毛捌铒金毛钒钒碳柒叁叁陆', '壹氩壹赵磷壹鄂磷伍铅镓鄂冯伊贰镝镁磷钛冯钛锂伍硫锂毛俞柒镝伊俞冯氮安', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', '白陈壹钱安任零孙任任任柒许冯孔俞杨伍李陆肆叁李杨邓牛王玖任鄂伍玖高唐赵赵王冯伍毛邓钱']
+    expected_outputs = ['硼钛碳', 'BTC', '壹锂欧俞鄂', None, None, '壹氩潘铅韩锂氮陆氡谢乌捌磷贰高孔潘钨镁氮钇戴唐王肆锌铅蒋氟谢钇氙秦', '钾杨潘白镓钛硫白钨杨高钛硫硼鄂氢孙氟赵壹高肆杨高伍钒秦俞程钛氮镁金镝氟钨伍肆鄂氙毛捌铒金毛钒钒碳柒叁叁陆', '壹氩壹赵磷壹鄂磷伍铅镓鄂冯伊贰镝镁磷钛冯钛锂伍硫锂毛俞柒镝伊俞冯氮安', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', '白程壹秦安任零孙任任任柒谢冯孔俞杨伍李陆肆叁李杨戴牛王玖任鄂伍玖高唐赵赵王冯伍毛戴秦']
+     
     count = success = fail = 0
     for case, expected in zip(test_cases, expected_outputs):
         count += 1
@@ -139,6 +147,6 @@ if __name__ == "__main__":
     main()
 
 # 私钥：
-# 钾杨潘白镓/钛硫白钨杨高钛/硫硼鄂氢孙氟赵//壹高肆杨高伍钒//钱俞陈钛氮镁金//镝氟钨伍肆/鄂氙毛捌铒金毛/钒钒碳柒叁叁陆
+# 钾杨潘白镓/钛硫白钨杨高钛/硫硼鄂氢孙氟赵//壹高肆杨高伍钒//秦俞程钛氮镁金//镝氟钨伍肆/鄂氙毛捌铒金毛/钒钒碳柒叁叁陆
 # 5+7+7, 7, 7, 5+7+7
 # 19+7+7+19 = 52
