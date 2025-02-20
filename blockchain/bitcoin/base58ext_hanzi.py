@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 #
 # Evan Liu <evan at blockcoach.com>. 2025.2.20
+# github: https://github.com/hmisty/base58ext-hanzi
 #
 import re
 import sys
