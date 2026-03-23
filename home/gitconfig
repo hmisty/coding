@@ -14,7 +14,7 @@
     lg = log -p
     ps = push
     pl = pull
-	  d  = difftool
+    d  = difftool
 
 [diff]
 	tool = vimdiff
@@ -24,3 +24,5 @@
 	program = gpg
 [push]
 	default = simple
+[core]
+	quotepath = false
