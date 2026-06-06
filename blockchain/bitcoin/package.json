@@ -1,25 +1,29 @@
 {
   "name": "brainwallet",
   "version": "0.0.1",
-  "description": "",
+  "description": "Brain wallet generator for BTC, ETH, and NEW addresses",
   "main": "brainwallet.js",
   "dependencies": {
     "base58check": "^2.0.0",
-    "ethereumjs-util": "^7.1.5"
+    "bip32": "4.0.0",
+    "bip39": "3.1.0",
+    "bitcoinjs-lib": "^5.2.0",
+    "bn.js": "^5.2.1",
+    "bs58check": "^2.1.2",
+    "create-hash": "^1.2.0",
+    "ecpair": "2.1.0",
+    "elliptic": "^6.5.4",
+    "ethereumjs-util": "^7.1.5",
+    "keccak": "^3.0.2",
+    "prompt": "^1.3.0",
+    "tiny-secp256k1": "2.2.1"
   },
   "devDependencies": {
-    "bip32": "^2.0.6",
-    "bip39": "^3.0.3",
-    "bitcoinjs-lib": "^5.2.0",
-    "bs58check": "^2.1.2",
-    "chai": "^4.3.4",
-    "create-hash": "^1.2.0",
-    "ethereumjs-utils": "^5.2.5",
-    "prompt": "^1.1.0",
-    "wif": "^2.0.6"
+    "chai": "^4.3.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node brainwallet.js"
   },
   "author": "Evan Liu",
   "license": "WTFPL"

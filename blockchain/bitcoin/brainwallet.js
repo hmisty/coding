@@ -88,6 +88,9 @@ const tests = {
 	"ledgerBTC0": "1FT2xCHANeDPNdG1QtZbuRytpZYn9AJSZg",
 	"ledgerBTC1": "1M88LeBTcoiKQ2x6QfztdzaHPsiZWinpif",
 	"ledgerBTC2": "1w5t6PBfXd2Y3ofkZ4dnVjZhyoQucy3BL",
+	"bip39segwit0": "bc1qquzeycp8sfh6jwdm9pq92m6zp8vgv3p0l5fuyz",
+	"bip39segwit1": "bc1qv5u53h298fh3htgyxe32fwuvt9huz8e4rjjqnh",
+	"bip39segwit2": "bc1qcfk9m6m87068jcqtxhqrsssp478x9grjjcssqs",
 	"metamaskETH0": "0xc399E4e21ECE8E2a34150A17d248d0C8a77C1d06",
 	"metamaskETH1": "0x110efe73740AB7F42BC16652497B85b533C5ae7C",
 	"metamaskETH2": "0xf86f3D9fCF9C836FAAa9829dfe5FA16D059346e9",
@@ -232,10 +235,24 @@ prompt.get(prop, function (err, result) {
 	//const master = bip32.fromSeed(seed); // m
 	const master = BIP32.fromSeed(seed);
 
+	console.log("m/purpose'/coin_type'/account'/change/address_index");
+
 	// generate bitcoin addresses
+	// 新增：Native SegWit（m/84'）
+	const btc_derivation_native = "m/84'/0'/0'/0"; // m/84'/0'/0'/0/x
+	console.log("\nBTC - Native SegWit (" + btc_derivation_native + "):");
+
+	for (var x = 0; x < 3; x++) {
+		// Native SegWit（新增）
+		const nodeNative = master.derivePath(`${btc_derivation_native}/${x}`);
+		const { address: nativeAddr } = bitcoin.payments.p2wpkh({ pubkey: Buffer.from(nodeNative.publicKey) });
+		console.log("native segwit #" + x + ": " + nativeAddr);
+		if (testing) checklog('bip39segwit'+x, nativeAddr);
+	}
+
 	// following ledger live standard
 	const btc_derivation_ledger_live = "m/44'/0'"; // m/44'/0'/x'/0/0
-	console.log("BTC - Ledger Live (" + btc_derivation_ledger_live + "):");
+	console.log("\nBTC - Ledger Live (" + btc_derivation_ledger_live + "):");
 	
 	for (var x = 0; x < 3; x++) {
 		const node = master.derivePath(btc_derivation_ledger_live + "/" + x + "'/0/0");
@@ -247,7 +264,7 @@ prompt.get(prop, function (err, result) {
 	
 	// generate ethereum addresses
 	const eth_derivation_metamask = "m/44'/60'/0'/0"; // m/44'60'/0'/0/x
-	console.log("ETH - Metamask (" + eth_derivation_metamask + "):");
+	console.log("\nETH - Metamask (" + eth_derivation_metamask + "):");
 
 	//-------- hd wallet ---------
 	for (var x = 0; x < 3; x++) {
@@ -259,7 +276,7 @@ prompt.get(prop, function (err, result) {
 	}
 
 	const eth_derivation_ledger_live = "m/44'/60'"; // m/44'/60'/x'/0/0
-	console.log("ETH - Ledger Live (" + eth_derivation_ledger_live + "):");
+	console.log("\nETH - Ledger Live (" + eth_derivation_ledger_live + "):");
 
 	for (var x = 0; x < 3; x++) {
 		const node = master.derivePath(eth_derivation_ledger_live + "/" + x + "'/0/0");
