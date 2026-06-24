@@ -154,24 +154,56 @@ const tests = {
 	"ledgerETH1": "0xA50846e3CCF8b72ab304B3E169425F9678F9524b",
 	"ledgerETH1_12": "0xF6FE4347f2313f8Ae70B072D1DaAF0172993E2e9",
 	"ledgerETH2": "0xB2909C993D9eBaB2a3F6333d4254D8f93cf2d96b",
-	"ledgerETH2_12": "0x553225CD475947abfd6037ED5C110A7E8e348A81"
+	"ledgerETH2_12": "0x553225CD475947abfd6037ED5C110A7E8e348A81",
+
+	"entropy_9999": "068ab2b4a069c2ccba8267fce87433c9e259a509009b781b661c7f3e6932c521",
+	"privkey_9999": "5HsAgYyyKzhH45Axx4P7umAkcRXM2DuyKJGaP87CjzZJjLZUZxo",
+	"addrBTC_9999": "1Mig3mSpDzbkfZ91UJsTjDnF7QJtxWtmoN",
+	"privkeyC_9999": "KwSRjaATcqemrZQyx1vdVsx3VMEwNPzoZmDkLeNNpm3bFmeUD3Dr",
+	"segwit_9999": "bc1qvktvghw9veesuucxaqmsh2u20na7gedhh9f86s",
+	"addrETH_9999": "0x99048aA36B69C0f8e2EE64Db17a568d142B55017",
+	"addrNEW_9999": "NEW182NaFoqMeP47UpoX5BdTfzEztsUVrReVCAC",
+	"mnemonic_9999": "alley few pudding dolphin order green tube erupt woman dry artefact need cereal spoon catch beach job swamp mandate wrist track offer behind disease",
+	"mnemonic12_9999": "alley few pudding dolphin order green tube erupt woman dry artefact nasty",
+	"bip39segwit0_9999": "bc1qh67chfkpnmtp5qvs9zh9xm5meff7h4s5xcg4gn",
+	"bip39segwit1_9999": "bc1q4evqkr6sul6d30qeru4sswvu98lmcaxa9d2qy9",
+	"bip39segwit2_9999": "bc1qmv9f2mjkxf7469kgzh0qdkpl3q74k8trathl3l",
+	"ledgerBTC0_9999": "1DvEPiAkV4eRrM4VfvfexEMeqmPGFBkAN2",
+	"ledgerBTC1_9999": "1N4G5a7PzhJSpkuroHotPtKXUcnqmJ5TT1",
+	"ledgerBTC2_9999": "1Gx5BkC4DytBm7cofefDn1n236cP19yHPf",
+	"metamaskETH0_9999": "0xd7e6640059bD31ED2bba3f1dAB95348E4A7e3Bfd",
+	"metamaskETH1_9999": "0xd5fFd8103f1D59d75422EdA8E0999a97465313b3",
+	"metamaskETH2_9999": "0x470dC3812D9B7933C3895BAB8bA21CB2D2eDCE18",
+	"ledgerETH0_9999": "0xd7e6640059bD31ED2bba3f1dAB95348E4A7e3Bfd",
+	"ledgerETH1_9999": "0x76c1bFAA2A92f64b2C5b7518243E219fdF4299E5",
+	"ledgerETH2_9999": "0xBa00289Bd76609028B43669648F5D08Af2C848BB",
+
+	"bip39segwit0_9999_12": "bc1qudnacy6s0dp5zxy4qfe38dn58kdnk8pcfw5pyx",
+	"bip39segwit1_9999_12": "bc1qrsfn9rv7l073x76ftv2plc4nh8ahqxch3325fa",
+	"bip39segwit2_9999_12": "bc1q49ghnhnuq2999a0vj778rnsqjqrpj7l3zwfqtv",
+	"ledgerBTC0_9999_12": "1C42C2g12JuVBhb25rzvCxHfWgXeM3AkiL",
+	"ledgerBTC1_9999_12": "1MBHA3mUwyfPCNXXiHec6JafuKQDriJFkX",
+	"ledgerBTC2_9999_12": "1HPszFMZ41u3HYoMFqBqpP9yytg5ZXHhwp",
+	"metamaskETH0_9999_12": "0xCe7c3f8802726c1451807A24f3fCA88a7043B6f7",
+	"metamaskETH1_9999_12": "0x8582F37b8bEAe573F73060d860f60EbC0Cea7dB3",
+	"metamaskETH2_9999_12": "0x0434bA42F57c4E4280E8E5ef2F35e220E2786FC4",
+	"ledgerETH0_9999_12": "0xCe7c3f8802726c1451807A24f3fCA88a7043B6f7",
+	"ledgerETH1_9999_12": "0xcF9F2225dB15B1D7CB694ec7a92A204c72C7D38c",
+	"ledgerETH2_9999_12": "0xBeB9Cf1816f68cA887fc16Ec7F6eE4e3C3a4a9ce"
 };
 
 const checklog = (function () {
-	var success = 0, fail = 0;
-	const N = Object.keys(tests).length;
+	var success = 0, fail = 0, called = 0;
 
 	return function (key, value) {
+		if (!(key in tests)) return;
+		called++;
 		if (tests[key] == value) {
 			console.log("\u2705 " + key + " is correct");
 			success += 1;
 		} else {
-			console.log("\u274C " + key + " is incorrect");
+			console.log("\u274C " + key + " is incorrect (expected: " + tests[key] + ")");
 			fail += 1;
-		}
-
-		if (success + fail == N) {
-			console.log("\u{1F590} ...all tests are finished: " + success + " succeeded, " + fail + " failed.");
 		}
 	};
 
@@ -227,13 +259,15 @@ prompt.get(prop, function (err, result) {
 
 	// calculate entropy from password with optional iterations
 	var iterations = result.iterations || 1;
+	var suffix = (testing && iterations != 1) ? '_' + iterations : '';
+	var testEq = function (key, value) { if (testing) checklog(key + suffix, value); };
 	var hash = createHash("sha256").update(password).digest();
 	for (var i = 1; i < iterations; i++) {
 		hash = createHash("sha256").update(hash).digest();
 	}
 	var entropy = hash.toString("hex");
 	console.log("SHA256 x" + iterations + " entropy: \033[37;47m" + entropy + "\033[0m");
-	if (testing) checklog('entropy', entropy);
+	testEq('entropy', entropy);
 
 	// split
 	console.log("=============================================");
@@ -247,24 +281,24 @@ prompt.get(prop, function (err, result) {
 
 	const wif_privkey = keyPair.toWIF();
 	console.log("BTC private key" + (compressed ? " (compressed)" : "") + ": \033[37;47m" + wif_privkey + "\033[0m");
-	if (testing) checklog('privkey', wif_privkey);
+	testEq('privkey', wif_privkey);
 
 	//const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
 	const { address } = bitcoin.payments.p2pkh({ pubkey: Buffer.from(keyPair.publicKey) });
 	console.log("BTC address: " + address + (compressed ? " (compressed)":" (uncompressed)"));
-	if (testing) checklog('addrBTC', address);
+	testEq('addrBTC', address);
 
 	// segwit can use only compressed privkey
 	//const keyPairC = bitcoin.ECPair.fromPrivateKey(privkey, { compressed: true}); //bitcoinjs-lib < 5.x.x
 	const keyPairC = ECPair.fromPrivateKey(privkey, { compressed: true});
 	const wif_privkeyC = keyPairC.toWIF();
 	console.log("segwit private key (compressed)" + ": \033[37;47m" + wif_privkeyC + "\033[0m");
-	if (testing) checklog('privkeyC', wif_privkeyC);
+	testEq('privkeyC', wif_privkeyC);
 
 	//const { address: segwit_address } = bitcoin.payments.p2wpkh({ pubkey: keyPairC.publicKey });
 	const { address: segwit_address } = bitcoin.payments.p2wpkh({ pubkey: Buffer.from(keyPairC.publicKey) });
 	console.log("segwit address: " + segwit_address);
-	if (testing) checklog('segwit', segwit_address);
+	testEq('segwit', segwit_address);
 
 	// ethereum only uses uncompressed ec
 	if (compressed == false) {
@@ -275,13 +309,13 @@ prompt.get(prop, function (err, result) {
 		const eth_address = genAddrETH(privkey, compressed);
 		console.log("ETH private key: the same as entropy");
 		console.log("ETH address: " + eth_address);
-		if (testing) checklog('addrETH', eth_address);
+		testEq('addrETH', eth_address);
 
 		// gen NEW address, use compressed = false for compatibility
 		const new_address = genAddrNEW(privkey, compressed);
 		console.log("NEW private key: the same as entropy");
 		console.log("NEW address: " + new_address);
-		if (testing) checklog('addrNEW', new_address);
+		testEq('addrNEW', new_address);
 	}
 
 	// split
@@ -296,7 +330,7 @@ prompt.get(prop, function (err, result) {
 	//---------------------------------------------
 	const mnemonic24 = bip39.entropyToMnemonic(entropy);
 	console.log("mnemonic words (24): \033[37;47m" + mnemonic24 + "\033[0m"); 
-	if (testing) checklog('mnemonic', mnemonic24);
+	testEq('mnemonic', mnemonic24);
 
 	const words24 = mnemonic24.split(" ");
 	const copy24 = [];
@@ -304,7 +338,7 @@ prompt.get(prop, function (err, result) {
 	console.log("indexed: \033[37;47m" + copy24.join(" ") + "\033[0m");
 
 	const seed24 = bip39.mnemonicToSeedSync(mnemonic24, passphrase);
-	printHdWallet(seed24, "24 words", "", testing);
+	printHdWallet(seed24, "24 words", suffix, testing);
 
 	//---------------------------------------------
 	// 12-word mnemonic
@@ -313,7 +347,7 @@ prompt.get(prop, function (err, result) {
 	const entropy12 = entropy.slice(0, 32);
 	const mnemonic12 = bip39.entropyToMnemonic(entropy12);
 	console.log("mnemonic words (12): \033[37;47m" + mnemonic12 + "\033[0m");
-	if (testing) checklog('mnemonic12', mnemonic12);
+	testEq('mnemonic12', mnemonic12);
 
 	const words12 = mnemonic12.split(" ");
 	const copy12 = [];
@@ -321,6 +355,6 @@ prompt.get(prop, function (err, result) {
 	console.log("indexed: \033[37;47m" + copy12.join(" ") + "\033[0m");
 
 	const seed12 = bip39.mnemonicToSeedSync(mnemonic12, passphrase);
-	printHdWallet(seed12, "12 words", "_12", testing);
+	printHdWallet(seed12, "12 words", suffix + '_12', testing);
 
 });
