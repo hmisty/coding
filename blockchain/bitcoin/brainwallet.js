@@ -75,6 +75,51 @@ function genAddrNEW(privkey, compressed) {
 	return addrNEW;
 }
 
+function printHdWallet(seed, label, testSuffix, testing) {
+	const master = BIP32.fromSeed(seed);
+	console.log("m/purpose'/coin_type'/account'/change/address_index [" + label + "]");
+
+	// BTC - Native SegWit
+	const btc_derivation_native = "m/84'/0'/0'/0";
+	console.log("\nBTC - Native SegWit (" + btc_derivation_native + ") [" + label + "]:");
+	for (var x = 0; x < 3; x++) {
+		const nodeNative = master.derivePath(`${btc_derivation_native}/${x}`);
+		const { address: nativeAddr } = bitcoin.payments.p2wpkh({ pubkey: Buffer.from(nodeNative.publicKey) });
+		console.log("native segwit #" + x + ": " + nativeAddr);
+		if (testing) checklog('bip39segwit'+x+testSuffix, nativeAddr);
+	}
+
+	// BTC - Ledger Live
+	const btc_derivation_ledger_live = "m/44'/0'";
+	console.log("\nBTC - Ledger Live (" + btc_derivation_ledger_live + ") [" + label + "]:");
+	for (var x = 0; x < 3; x++) {
+		const node = master.derivePath(btc_derivation_ledger_live + "/" + x + "'/0/0");
+		const { address } = bitcoin.payments.p2pkh({ pubkey: Buffer.from(node.publicKey) });
+		console.log("btc account #" + x + ": " + address);
+		if (testing) checklog('ledgerBTC'+x+testSuffix, address);
+	}
+
+	// ETH - Metamask
+	const eth_derivation_metamask = "m/44'/60'/0'/0";
+	console.log("\nETH - Metamask (" + eth_derivation_metamask + ") [" + label + "]:");
+	for (var x = 0; x < 3; x++) {
+		const node = master.derivePath(eth_derivation_metamask + "/" + x);
+		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(Buffer.from(node.publicKey), true).toString("hex"));
+		console.log("eth account #0 address #" + x + ": " + addr);
+		if (testing) checklog('metamaskETH'+x+testSuffix, addr);
+	}
+
+	// ETH - Ledger Live
+	const eth_derivation_ledger_live = "m/44'/60'";
+	console.log("\nETH - Ledger Live (" + eth_derivation_ledger_live + ") [" + label + "]:");
+	for (var x = 0; x < 3; x++) {
+		const node = master.derivePath(eth_derivation_ledger_live + "/" + x + "'/0/0");
+		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(Buffer.from(node.publicKey), true).toString("hex"));
+		console.log("eth account #" + x + ": " + addr);
+		if (testing) checklog('ledgerETH'+x+testSuffix, addr);
+	}
+}
+
 //----------------------------------------------
 const tests = {
 	"entropy": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
@@ -85,18 +130,31 @@ const tests = {
 	"addrETH": "0x2a260a110bc7b03f19C40a0BD04FF2C5DCB57594",
 	"addrNEW": "NEW182Z4JpaaNQpD5ejJHEKatFRzNpd1XWwBMJ2",
 	"mnemonic": "panel custom call awesome sick ready hamster wool patch client reduce clip desk pole hole gesture lion grief firm subway force job choice bargain",
+	"mnemonic12": "panel custom call awesome sick ready hamster wool patch client reduce clay",
 	"ledgerBTC0": "1FT2xCHANeDPNdG1QtZbuRytpZYn9AJSZg",
+	"ledgerBTC0_12": "17Pdu784JVMZCJvSf11FdszjCXJtLGgqxf",
 	"ledgerBTC1": "1M88LeBTcoiKQ2x6QfztdzaHPsiZWinpif",
+	"ledgerBTC1_12": "1Lf843ZUgyuqZ4XqAqjthgZ3BNrb3p2oqY",
 	"ledgerBTC2": "1w5t6PBfXd2Y3ofkZ4dnVjZhyoQucy3BL",
+	"ledgerBTC2_12": "1HW8G8CTh1m4nWb4fn5iwp1MievCGKZYez",
 	"bip39segwit0": "bc1qquzeycp8sfh6jwdm9pq92m6zp8vgv3p0l5fuyz",
+	"bip39segwit0_12": "bc1qlhycuafdegfkcdx435t2glqkyrrrrqfpdjd2nq",
 	"bip39segwit1": "bc1qv5u53h298fh3htgyxe32fwuvt9huz8e4rjjqnh",
+	"bip39segwit1_12": "bc1qn6y5jfdf5069w9mxcwjp3qeazqrvr8vltfkv4n",
 	"bip39segwit2": "bc1qcfk9m6m87068jcqtxhqrsssp478x9grjjcssqs",
+	"bip39segwit2_12": "bc1q9urqudztnhffup66l8hs4zzcm3a3e2v63w06fe",
 	"metamaskETH0": "0xc399E4e21ECE8E2a34150A17d248d0C8a77C1d06",
+	"metamaskETH0_12": "0xEfc03835916c8403e29B0EC0Cf2c1DE248cde7bf",
 	"metamaskETH1": "0x110efe73740AB7F42BC16652497B85b533C5ae7C",
+	"metamaskETH1_12": "0x555bf7f0193969D0f9Eb16D086064ade4cbB3f35",
 	"metamaskETH2": "0xf86f3D9fCF9C836FAAa9829dfe5FA16D059346e9",
+	"metamaskETH2_12": "0x5707962250E998ab76620742925f8235BB48e0fB",
 	"ledgerETH0": "0xc399E4e21ECE8E2a34150A17d248d0C8a77C1d06",
+	"ledgerETH0_12": "0xEfc03835916c8403e29B0EC0Cf2c1DE248cde7bf",
 	"ledgerETH1": "0xA50846e3CCF8b72ab304B3E169425F9678F9524b",
-	"ledgerETH2": "0xB2909C993D9eBaB2a3F6333d4254D8f93cf2d96b"
+	"ledgerETH1_12": "0xF6FE4347f2313f8Ae70B072D1DaAF0172993E2e9",
+	"ledgerETH2": "0xB2909C993D9eBaB2a3F6333d4254D8f93cf2d96b",
+	"ledgerETH2_12": "0x553225CD475947abfd6037ED5C110A7E8e348A81"
 };
 
 const checklog = (function () {
@@ -126,6 +184,12 @@ const prop = [
 		type: 'boolean',
 		default: false
 	},*/
+	{
+		name: 'iterations',
+		description: 'SHA256 iterations (default: 1)',
+		type: 'integer',
+		default: 1
+	},
 	{
 		name: 'password',
 		description: 'password (type "test" for running tests)',
@@ -161,9 +225,14 @@ prompt.get(prop, function (err, result) {
 	// split
 	console.log("=============================================");
 
-	// calculate entropy from password
-	var entropy = createHash("sha256").update(password).digest().toString("hex");
-	console.log("entropy: \033[37;47m" + entropy + "\033[0m");
+	// calculate entropy from password with optional iterations
+	var iterations = result.iterations || 1;
+	var hash = createHash("sha256").update(password).digest();
+	for (var i = 1; i < iterations; i++) {
+		hash = createHash("sha256").update(hash).digest();
+	}
+	var entropy = hash.toString("hex");
+	console.log("SHA256 x" + iterations + " entropy: \033[37;47m" + entropy + "\033[0m");
 	if (testing) checklog('entropy', entropy);
 
 	// split
@@ -219,71 +288,39 @@ prompt.get(prop, function (err, result) {
 	console.log("---------------------------------------------");
 
 	//!!! below are unware of compressed or uncompressed above
+
+	const passphrase = "";
 	
-	// get mnemonic
-	const mnemonic = bip39.entropyToMnemonic(entropy);
-	console.log("mnemonic words (24): \033[37;47m" + mnemonic + "\033[0m"); 
-	if (testing) checklog('mnemonic', mnemonic);
+	//---------------------------------------------
+	// 24-word mnemonic
+	//---------------------------------------------
+	const mnemonic24 = bip39.entropyToMnemonic(entropy);
+	console.log("mnemonic words (24): \033[37;47m" + mnemonic24 + "\033[0m"); 
+	if (testing) checklog('mnemonic', mnemonic24);
 
-	const words24 = mnemonic.split(" ");
-	const copy = [];
-	words24.forEach((w, i) => { copy.push((i+1) + ":" + w) });
-	console.log("indexed: \033[37;47m" + copy.join(" ") + "\033[0m");
+	const words24 = mnemonic24.split(" ");
+	const copy24 = [];
+	words24.forEach((w, i) => { copy24.push((i+1) + ":" + w) });
+	console.log("indexed: \033[37;47m" + copy24.join(" ") + "\033[0m");
 
-	const passphrase = ""; // use no passphrase
-	const seed = bip39.mnemonicToSeedSync(mnemonic, passphrase);
-	//const master = bip32.fromSeed(seed); // m
-	const master = BIP32.fromSeed(seed);
+	const seed24 = bip39.mnemonicToSeedSync(mnemonic24, passphrase);
+	printHdWallet(seed24, "24 words", "", testing);
 
-	console.log("m/purpose'/coin_type'/account'/change/address_index");
+	//---------------------------------------------
+	// 12-word mnemonic
+	//---------------------------------------------
+	console.log("---------------------------------------------");
+	const entropy12 = entropy.slice(0, 32);
+	const mnemonic12 = bip39.entropyToMnemonic(entropy12);
+	console.log("mnemonic words (12): \033[37;47m" + mnemonic12 + "\033[0m");
+	if (testing) checklog('mnemonic12', mnemonic12);
 
-	// generate bitcoin addresses
-	// 新增：Native SegWit（m/84'）
-	const btc_derivation_native = "m/84'/0'/0'/0"; // m/84'/0'/0'/0/x
-	console.log("\nBTC - Native SegWit (" + btc_derivation_native + "):");
+	const words12 = mnemonic12.split(" ");
+	const copy12 = [];
+	words12.forEach((w, i) => { copy12.push((i+1) + ":" + w) });
+	console.log("indexed: \033[37;47m" + copy12.join(" ") + "\033[0m");
 
-	for (var x = 0; x < 3; x++) {
-		// Native SegWit（新增）
-		const nodeNative = master.derivePath(`${btc_derivation_native}/${x}`);
-		const { address: nativeAddr } = bitcoin.payments.p2wpkh({ pubkey: Buffer.from(nodeNative.publicKey) });
-		console.log("native segwit #" + x + ": " + nativeAddr);
-		if (testing) checklog('bip39segwit'+x, nativeAddr);
-	}
+	const seed12 = bip39.mnemonicToSeedSync(mnemonic12, passphrase);
+	printHdWallet(seed12, "12 words", "_12", testing);
 
-	// following ledger live standard
-	const btc_derivation_ledger_live = "m/44'/0'"; // m/44'/0'/x'/0/0
-	console.log("\nBTC - Ledger Live (" + btc_derivation_ledger_live + "):");
-	
-	for (var x = 0; x < 3; x++) {
-		const node = master.derivePath(btc_derivation_ledger_live + "/" + x + "'/0/0");
-		//const { address } = bitcoin.payments.p2pkh({ pubkey: node.publicKey });
-		const { address } = bitcoin.payments.p2pkh({ pubkey: Buffer.from(node.publicKey) });
-		console.log("btc account #" + x + ": " + address);
-		if (testing) checklog('ledgerBTC'+x, address);
-	}
-	
-	// generate ethereum addresses
-	const eth_derivation_metamask = "m/44'/60'/0'/0"; // m/44'60'/0'/0/x
-	console.log("\nETH - Metamask (" + eth_derivation_metamask + "):");
-
-	//-------- hd wallet ---------
-	for (var x = 0; x < 3; x++) {
-		const node = master.derivePath(eth_derivation_metamask + "/" + x);
-		//const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
-		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(Buffer.from(node.publicKey), true).toString("hex"));
-		console.log("eth account #0 address #" + x + ": " + addr);
-		if (testing) checklog('metamaskETH'+x, addr);
-	}
-
-	const eth_derivation_ledger_live = "m/44'/60'"; // m/44'/60'/x'/0/0
-	console.log("\nETH - Ledger Live (" + eth_derivation_ledger_live + "):");
-
-	for (var x = 0; x < 3; x++) {
-		const node = master.derivePath(eth_derivation_ledger_live + "/" + x + "'/0/0");
-		//const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(node.publicKey, true).toString("hex"));
-		const addr = ethUtils.toChecksumAddress('0x' + ethUtils.pubToAddress(Buffer.from(node.publicKey), true).toString("hex"));
-		console.log("eth account #" + x + ": " + addr);
-		if (testing) checklog('ledgerETH'+x, addr);
-	}
-	
 });
